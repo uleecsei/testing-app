@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+- '10'
+before_install:
+- npm install -g @angular/cli
+install: npm install
+branches:
+  only:
+  - master
+deploy:
+  provider: heroku
+  app: testing-app-fe-project
+  skip_cleanup: true
+  api_key:
+    secure: hW8Z8EKQ0sSimhhmMq19UCQjN/cbKyvFucSR+Yx3pLzmg5/0xGTTAcQBDL2ZtV52t8jAsT6UhaZ9PtgZHb1xGovTaW93DMz+5+3SOP4r6SsAuXWJY2fM9pi/Pq9TB7tjvUAZsFUvtpkG+++awxK0qupaANXpdhONR6Su1cWt2rXOctTGn5WuRzNS/OeXx8oaEbJr8YjviF1ZYz9Hu7CB9l0Ww0lVzEVdARCcgL8jN6JVsjc2LtSnsVidKygSLA3Anhn/0M7ljgZz+t4IJe+HYOHq7vYDCM5WA2yDlSdlptaneZWVghMTVEiJi7PUQN7QCSsfKv79l6KOpnSWNjOsIw6/zO36WXZVFtCRoW1di8YZ4imYGw6oe2xE54tNvsjUyVaTU7ysW3008Igr2b4EWKqJTNxidOR8qLg9CPutsiWXA5FhId68zifRDy5m0Yzg3wg66NE6rzvhbvgNVgyhUNXyz1Lc8g/7onJfWy+f524ByR2m2qNRlsqFbDOLgfPgQsL+RamNX6sCqMdb4/I2LXH2AawpXHbInTUb3GybVYzGIKedmdIvSTp2QY3h/CEHNsnWMH8HSvkhdoSzY4Eh8Ur/dFcQTEzIYhx35LHGGa4yMDho+JfPjyBw3rBFXVEOgB2J2cYb99Y4mIr37zTTixl+OXpFhRwF7eEJV6Hyi3s=
