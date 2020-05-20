@@ -1,0 +1,30 @@
+<div class="reg">
+  <mat-toolbar class="reg_toolbar" align="center">
+    <button mat-button routerLink="/registration" class="header_button">
+      Registration
+    </button>
+    <button mat-button routerLink="/home" class="header_button">
+      Home
+    </button>
+    <h1 class="reg_title">Login</h1>
+  </mat-toolbar>
+  <mat-card  class="reg_card">
+    <mat-card-content>
+      <form class="reg_form form" [formGroup]="loginForm">
+        <mat-form-field  floatLabel="auto" appearance="outline" class="form_element">
+          <mat-label class="form_label">Email</mat-label>
+          <input   type="email" matInput required formControlName="email">
+          <mat-hint class="form_hint">Field are required!</mat-hint>
+        </mat-form-field>
+        <mat-form-field  floatLabel="auto" appearance="outline" class="form_element">
+          <mat-label class="form_label">Password (at least 6 characters)</mat-label>
+          <input min="6" type="password" matInput required formControlName="password" autocomplete >
+          <mat-hint class="form_hint">Field are required!</mat-hint>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+    <mat-card-actions  class="reg_actions">
+      <button mat-raised-button (click)="login()" color="primary" [disabled]="disabled">LOGIN</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

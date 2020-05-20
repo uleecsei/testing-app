@@ -8,10 +8,6 @@ import { TestService } from './shared/test.service';
 })
 export class AppComponent {
   title = 'testing-app';
-  status: string;
-  constructor(private test: TestService) {
-    this.test.getTest().subscribe((data) => {
-      this.status = data.test;
-    });
+  constructor() {
   }
 }

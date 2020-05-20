@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const testRoute = require("./server/routes/test");
+const testsRoute = require("./server/routes/tests");
+const loginRoute = require("./server/routes/auth/login");
+const regRoute = require("./server/routes/auth/registration");
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -20,6 +23,9 @@ mongoose.connect(process.env.DATABASE_URI, {
 });
 
 app.use("/api/test", testRoute);
+app.use("/api", testsRoute);
+app.use("/api/auth", loginRoute);
+app.use("/api/auth", regRoute);
 
 app.use(express.static(__dirname + "/dist/testing-app"));
 
