@@ -1,0 +1,26 @@
+.reg {
+  max-width: 1400px;
+  padding: 20px 10px;
+
+  &_title {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .form{
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+
+    &_element {
+      width: 100%;
+    }
+  }
+
+  &_actions {
+    text-align: center;
+  }
+
+}
