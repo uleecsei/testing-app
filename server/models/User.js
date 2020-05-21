@@ -1,9 +1,7 @@
-const uniqueValidator = require('mongoose-unique-validator');
 const {Schema, model, Types} = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
-  username: {type: String},
   email: {
     type: String,
     index: true,
@@ -11,12 +9,12 @@ const UserSchema = new Schema({
     required: true,
     uniqueCaseInsensitive: true,
   },
-  password: {type: String, required: true},
+  googleId: {type: String},
+  password: {type: String},
+  firstName: {type: String, required: true},
+  lastName: {type: String, required: true},  
   tests: [{type: Types.ObjectId, ref: 'Tests'}],
 });
-
-UserSchema.plugin(uniqueValidator,
-    {message: 'Error, expected {PATH} to be unique.'});
 
 UserSchema.pre('save', function(next) {
   const User = this;
@@ -37,11 +35,5 @@ UserSchema.pre('save', function(next) {
     return next();
   }
 });
-
-
-UserSchema.methods.validatePassword = function(data) {
-  return bcrypt.compareSync(data, this.password);
-};
-
 
 module.exports = model('User', UserSchema);
