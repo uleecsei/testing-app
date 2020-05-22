@@ -16,7 +16,7 @@ fi
 # Define send message function. parse_mode can be changed to
 # HTML, depending on how you want to format your message:
 send_msg () {
-    curl -s -X POST ${BOT_URL} -d chat_id=$TELEGRAM_CHAT_ID \
+    curl -s -X POST ${BOT_URL} -d chat_id=$2 \
         -d text="$1" -d parse_mode=${PARSE_MODE}
 }
 
@@ -32,5 +32,48 @@ Travis build *${build_status}!*
 ${TRAVIS_COMMIT_MESSAGE}
 [Job Log here](${TRAVIS_JOB_WEB_URL})
 --------------------------------------
-"
+" TELEGRAM_CHAT_ID1
 
+send_msg "
+-------------------------------------
+Travis build *${build_status}!*
+\`Repository:  ${TRAVIS_REPO_SLUG}\`
+\`Branch:      ${TRAVIS_BRANCH}\`
+*Commit Msg:*
+${TRAVIS_COMMIT_MESSAGE}
+[Job Log here](${TRAVIS_JOB_WEB_URL})
+--------------------------------------
+" TELEGRAM_CHAT_ID2
+
+send_msg "
+-------------------------------------
+Travis build *${build_status}!*
+\`Repository:  ${TRAVIS_REPO_SLUG}\`
+\`Branch:      ${TRAVIS_BRANCH}\`
+*Commit Msg:*
+${TRAVIS_COMMIT_MESSAGE}
+[Job Log here](${TRAVIS_JOB_WEB_URL})
+--------------------------------------
+" TELEGRAM_CHAT_ID3
+
+send_msg "
+-------------------------------------
+Travis build *${build_status}!*
+\`Repository:  ${TRAVIS_REPO_SLUG}\`
+\`Branch:      ${TRAVIS_BRANCH}\`
+*Commit Msg:*
+${TRAVIS_COMMIT_MESSAGE}
+[Job Log here](${TRAVIS_JOB_WEB_URL})
+--------------------------------------
+" TELEGRAM_CHAT_ID4
+
+send_msg "
+-------------------------------------
+Travis build *${build_status}!*
+\`Repository:  ${TRAVIS_REPO_SLUG}\`
+\`Branch:      ${TRAVIS_BRANCH}\`
+*Commit Msg:*
+${TRAVIS_COMMIT_MESSAGE}
+[Job Log here](${TRAVIS_JOB_WEB_URL})
+--------------------------------------
+" TELEGRAM_CHAT_ID5
