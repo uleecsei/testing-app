@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>Create a Quiz</h1>
+<form [formGroup]="createQuizFrom" (ngSubmit)="onSubmit()">
+  <div class="dialog-wrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Quiz name</mat-label>
+      <input matInput formControlName="title" />
+      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+      <mat-hint>Hint</mat-hint>
+    </mat-form-field>
+
+    <div>
+        <mat-form-field appearance="fill">
+            <mat-label>Choose a topic</mat-label>
+            <mat-select
+              formControlName="topic"
+              [(ngModel)]="selectedTopic"
+              name="topic"
+            >
+              <mat-option *ngFor="let topic of topicOptions" [value]="topic.value">{{
+                topic.value
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+    </div>
+    <mat-dialog-actions
+      ><button
+        type="submit"
+        [disabled]="!createQuizFrom.get('title').valid"
+        mat-raised-button
+        color="primary"
+      >
+        Create
+      </button></mat-dialog-actions
+    >
+    <div></div>
+  </div>
+</form>

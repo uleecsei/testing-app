@@ -1,0 +1,22 @@
+<p>my-quiz-card works!</p>
+<mat-card>
+    
+  <div class="card-info">
+    <img mat-card-avatar />
+    <div class="card-info__content">
+        <mat-card-title>{{quiz.title}}</mat-card-title>
+    <mat-card-subtitle>{{quiz.topic}}</mat-card-subtitle>
+    <mat-card-content>Some details</mat-card-content>
+    <button mat-raised-button color="primary" (click)="practice()">Practice</button>
+    </div>
+    
+  </div>
+  <mat-card-actions>
+    <button mat-mini-fab color="primary" aria-label="delete icon">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-mini-fab color="primary" aria-label="edit icon">
+      <mat-icon>edit</mat-icon>
+    </button></mat-card-actions
+  >
+</mat-card>

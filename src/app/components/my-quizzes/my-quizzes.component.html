@@ -1,0 +1,7 @@
+<div class="my-quizzes">
+    <h1>My created quizzes</h1>
+    <div class="my-quizzes__container">
+       <app-my-quiz-card *ngFor="let quiz of quizzes" [quiz]="quiz"></app-my-quiz-card>
+    </div>
+</div>
+

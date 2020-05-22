@@ -1,0 +1,24 @@
+mat-card{
+    margin: 0 10%;
+    padding: 2%;
+    justify-content: space-between;
+    
+
+    mat-card-actions{
+        
+        flex-direction: column;
+        button{
+            margin: 0 5px 15px 0;
+        }
+    }
+}
+
+.card-info,mat-card,mat-card-actions{
+    display: flex;
+    &__content {
+        margin: 0 0 0 20px;
+    }
+    
+
+}
+
