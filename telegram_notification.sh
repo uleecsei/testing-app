@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # Get the token from Travis environment vars and build the bot URL:
 BOT_URL="https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage"
 
@@ -32,7 +31,7 @@ Travis build *${build_status}!*
 ${TRAVIS_COMMIT_MESSAGE}
 [Job Log here](${TRAVIS_JOB_WEB_URL})
 --------------------------------------
-" TELEGRAM_CHAT_ID1
+" ${TELEGRAM_CHAT_ID1}
 
 send_msg "
 -------------------------------------
@@ -43,7 +42,7 @@ Travis build *${build_status}!*
 ${TRAVIS_COMMIT_MESSAGE}
 [Job Log here](${TRAVIS_JOB_WEB_URL})
 --------------------------------------
-" TELEGRAM_CHAT_ID2
+" ${TELEGRAM_CHAT_ID2}
 
 send_msg "
 -------------------------------------
@@ -54,7 +53,7 @@ Travis build *${build_status}!*
 ${TRAVIS_COMMIT_MESSAGE}
 [Job Log here](${TRAVIS_JOB_WEB_URL})
 --------------------------------------
-" TELEGRAM_CHAT_ID3
+" ${TELEGRAM_CHAT_ID3}
 
 send_msg "
 -------------------------------------
@@ -65,7 +64,7 @@ Travis build *${build_status}!*
 ${TRAVIS_COMMIT_MESSAGE}
 [Job Log here](${TRAVIS_JOB_WEB_URL})
 --------------------------------------
-" TELEGRAM_CHAT_ID4
+" ${TELEGRAM_CHAT_ID4}
 
 send_msg "
 -------------------------------------
@@ -76,4 +75,4 @@ Travis build *${build_status}!*
 ${TRAVIS_COMMIT_MESSAGE}
 [Job Log here](${TRAVIS_JOB_WEB_URL})
 --------------------------------------
-" TELEGRAM_CHAT_ID5
+" ${TELEGRAM_CHAT_ID5}
