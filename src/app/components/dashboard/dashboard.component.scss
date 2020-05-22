@@ -1,0 +1,18 @@
+.dashboard {
+  padding: 5%;
+
+  &__search,
+  &__cards {
+    display: flex;
+  }
+  &__search {
+    justify-content: center;
+    mat-form-field {
+      width: 80%;
+    }
+  }
+
+  &__cards {
+    flex-wrap: wrap;
+  }
+}

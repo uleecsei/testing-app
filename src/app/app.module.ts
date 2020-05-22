@@ -15,12 +15,31 @@ import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { HomeComponent } from './components/home/home.component';
 
+
+//Lena added
+import { CreateQuizComponent } from './components/create-quiz/create-quiz.component';
+import { MyQuizzesComponent } from './components/my-quizzes/my-quizzes.component';
+import { MyResultsComponent } from './components/my-results/my-results.component';
+import { QuizCardComponent } from './components/quiz-card/quiz-card.component';
+import { MyQuizCardComponent } from './components/my-quiz-card/my-quiz-card.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { EditQuizComponent } from './components/edit-quiz/edit-quiz.component';
+import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegistrationComponent,
     HomeComponent,
+    CreateQuizComponent,
+    MyQuizzesComponent,
+    MyResultsComponent,
+    QuizCardComponent,
+    MyQuizCardComponent,
+    DashboardComponent,
+    EditQuizComponent,
+    TakeQuizComponent,
   ],
   imports: [
     BrowserModule,
