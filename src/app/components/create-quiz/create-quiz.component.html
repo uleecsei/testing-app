@@ -30,7 +30,7 @@
         <button mat-button matStepperNext>Next</button>
       </div>
     </mat-step>
-    <mat-step [stepControl]="questions">
+    <mat-step [completed]="questions.length>0">
       <ng-template matStepLabel>Add questions</ng-template>
       <div *ngFor="let q of questions; let i = index">
         <div class="question">
@@ -52,7 +52,7 @@
     <mat-step>
       <ng-template matStepLabel>Done</ng-template>
       <button
-        [disabled]="createQuizForm1.invalid && createQuizForm2.invalid"
+        [disabled]="createQuizForm1.invalid || createQuizForm2.invalid"
         mat-raised-button
         color="primary"
         (click)="formsSubmit()"

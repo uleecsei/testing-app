@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { pipe, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { topics } from './topics';
 import { QuestionsComponent } from '../questions/questions.component';
@@ -23,7 +23,7 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   topicOptions = topics;
   questions: Question[];
 
-  componetDestroyed = new Subject();
+  componentDestroyed = new Subject();
 
   constructor(
     public dialog: MatDialog,
@@ -33,7 +33,7 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   ) {
     this.questionsService.getQuestions()
       .pipe(
-        takeUntil(this.componetDestroyed)
+        takeUntil(this.componentDestroyed)
       )
       .subscribe(data => {
         this.questions = data;
@@ -68,7 +68,7 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   }
 
   formsSubmit(){
-    
+
     const form = {
       ...this.createQuizForm1.value,
       ...this.createQuizForm2.value,

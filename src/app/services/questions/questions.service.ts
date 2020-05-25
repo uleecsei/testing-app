@@ -9,9 +9,11 @@ export class QuestionsService {
 
   constructor() { }
 
-  createQuestion(form) {
+  createQuestion(form, num) {
+    const type = (num > 1) ? 'checkbox' : 'radio';
     return {
       question: form.question,
+      type,
         answers: [
       {
         text: form.answer1,
@@ -37,8 +39,8 @@ export class QuestionsService {
     return this.questions.asObservable();
   }
 
-  addQuestion(form) {
-    this.questions.next([...this.questions.getValue(), this.createQuestion(form)]);
+  addQuestion(form, num) {
+    this.questions.next([...this.questions.getValue(), this.createQuestion(form, num)]);
   }
 
   deleteQuestion(index) {
@@ -47,9 +49,9 @@ export class QuestionsService {
     this.questions.next(newArray);
   }
 
-  editQuestion(index, form) {
+  editQuestion(index, form, num) {
     const newArray = this.questions.getValue();
-    newArray[index] = this.createQuestion(form);
+    newArray[index] = this.createQuestion(form, num);
     this.questions.next(newArray);
   }
 
