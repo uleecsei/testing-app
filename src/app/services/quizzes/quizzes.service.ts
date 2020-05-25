@@ -6,15 +6,69 @@ import { environment } from '../../../environments/environment';
 import { UserService } from '../user/user.service';
 import { MessagesService } from '../messages/messages.service';
 
+import { BehaviorSubject } from 'rxjs';
+import {QuestionType} from '../../interfaces/quiz'
 const myQuizzes = [
   {
     id: 1,
-    title: 'Noun',
+    title: "Noun",
     topic: Topics.Languages,
-    questions: []
-  }
-];
+    questions: [
+      { 
+        qId:1,
+        type:QuestionType.radio,
+        question: "Are u ok?",
+        answers: [
+          {
+            answer: "True",
+            isCorrect: true
+          },
+          {
+            answer: "False",
+            isCorrect: false
+          },
+          {
+            answer: "I dont know",
+            isCorrect: false
+          },
 
+        ]
+
+      },
+      { qId:2,
+        type:QuestionType.checkbox,
+        question: "Favourite food?",
+        answers: [
+          {
+            answer: "pizza",
+            isCorrect: true
+          },
+          {
+            answer: "sushi",
+            isCorrect: true
+          },
+          {
+            answer: "chocolate",
+            isCorrect: false
+          },
+
+        ]
+
+      }
+    ]
+  }, {
+    id: 2,
+    title: "Music",
+    topic: Topics.Art,
+    questions: []
+  }, {
+    id: 3,
+    title: "Algebra",
+    topic: Topics.Math,
+    questions: []
+  },
+
+]
 @Injectable({
   providedIn: 'root'
 })
@@ -48,4 +102,7 @@ export class QuizzesService {
           // this.flash.showError(error.error.message);
         });
   }
+
+  quizzes$: BehaviorSubject<any[]> = new BehaviorSubject(myQuizzes);
+
 }

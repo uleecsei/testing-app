@@ -7,17 +7,22 @@ import { MyQuizzesComponent } from './components/my-quizzes/my-quizzes.component
 import { MyResultsComponent } from './components/my-results/my-results.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { EditQuizComponent } from './components/edit-quiz/edit-quiz.component';
+<<<<<<< HEAD
 import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { CreateQuizComponent } from './components/create-quiz/create-quiz.component';
+||||||| merged common ancestors
+=======
+import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
+>>>>>>> take-test
 
 
 const routes: Routes = [
   {
-    path:  'login',
+    path: 'login',
     component: LoginComponent,
   },
   {
-    path:  'registration',
+    path: 'registration',
     component: RegistrationComponent,
   },
   {
@@ -47,7 +52,7 @@ const routes: Routes = [
       }, ]
   },
   {
-    path:  '',
+    path: '',
     pathMatch: 'full',
     redirectTo: 'login'
   },
