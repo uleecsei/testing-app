@@ -10,9 +10,8 @@
               </mat-form-field>
         </div>
         <div class="dashboard__cards">
-          <app-quiz-card></app-quiz-card>
-          <app-quiz-card></app-quiz-card>
-          <app-quiz-card></app-quiz-card>
+          <app-quiz-card *ngFor="let quiz of quizzes" [quiz]="quiz"></app-quiz-card>
+          
 
         </div>
     </div>

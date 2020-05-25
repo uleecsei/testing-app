@@ -25,6 +25,7 @@ import { EditQuizComponent } from './components/edit-quiz/edit-quiz.component';
 import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { QuestionsComponent } from './components/questions/questions.component';
 import { QuestionsEditComponent } from './components/questions-edit/questions-edit.component';
+import { AnswerComponent } from './components/answer/answer.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { QuestionsEditComponent } from './components/questions-edit/questions-ed
     TakeQuizComponent,
     QuestionsComponent,
     QuestionsEditComponent,
+    AnswerComponent,
   ],
   imports: [
     BrowserModule,

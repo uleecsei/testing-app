@@ -40,6 +40,11 @@ mat-toolbar {
       border-right: 1px solid violet;
       color: violet;
     }
+
+    &:focus {
+      background-color: #62278d;
+      outline: none;
+    }
   }
 }
 

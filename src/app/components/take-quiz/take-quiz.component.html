@@ -1,1 +1,16 @@
-<p>take-quiz works!</p>
+
+<div class="answers-container">
+  <h2>{{this.currentQ.question}}</h2>
+  <app-answer *ngFor="let a of currentQ.answers;let i=index" 
+  [qId]="currentQ.qId"
+  [answer]="a" 
+  [index]="i" 
+  [type]="currentQ.type"
+  ></app-answer>
+  <div class="action">
+    <button mat-flat-button color="accent">Previous</button>
+    <button (click)="next()"mat-flat-button color="accent">Next</button>
+  </div>
+</div>
+
+<!-- (change)="choose($event)" -->

@@ -12,7 +12,9 @@ export class MyQuizzesComponent implements OnInit {
   constructor(private quizzesService:QuizzesService) { }
 
   ngOnInit(): void {
-    this.quizzes=this.quizzesService.quizzes;
+    this.quizzesService.quizzes$.subscribe(res=>{
+      this.quizzes=res;
+    })
   }
 
 }
