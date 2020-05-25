@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -9,12 +10,10 @@ import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  quizzes:any[]=[];
+  quizzes$: Observable<any[]>;
 
-  constructor(private quizzesService:QuizzesService) { 
-    this.quizzesService.quizzes$.subscribe(res=>{
-      this.quizzes=res;
-    })
+  constructor(private quizzesService: QuizzesService) {
+    this.quizzes$ = this.quizzesService.getAllQuizzesArray();
   }
 
   ngOnInit(): void {

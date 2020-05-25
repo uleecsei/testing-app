@@ -5,90 +5,63 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { UserService } from '../user/user.service';
 import { MessagesService } from '../messages/messages.service';
-
 import { BehaviorSubject, interval } from 'rxjs';
-import {QuestionType} from '../../interfaces/quiz'
+import {QuestionType} from '../../interfaces/quiz';
 const myQuizzes = [
   {
     id: 1,
-    title: "Noun",
+    title: 'Noun',
     topic: Topics.Languages,
     questions: [
-      { 
-        qId:1,
-        type:QuestionType.radio,
-        question: "Are u ok?",
+      {
+        qId: 1,
+        type: QuestionType.radio,
+        question: 'Are u ok?',
         answers: [
           {
-            answer: "True",
+            answer: 'True',
             isCorrect: true
           },
           {
-            answer: "False",
+            answer: 'False',
             isCorrect: false
           },
           {
-            answer: "I dont know",
+            answer: 'I dont know',
             isCorrect: false
           },
-
         ]
-
-      },
-      { qId:2,
-        type:QuestionType.checkbox,
-        question: "Favourite food?",
-        answers: [
-          {
-            answer: "pizza",
-            isCorrect: true
-          },
-          {
-            answer: "sushi",
-            isCorrect: true
-          },
-          {
-            answer: "chocolate",
-            isCorrect: false
-          },
-
-        ]
-
       }
     ]
-  }, {
-    id: 2,
-    title: "Music",
-    topic: Topics.Art,
-    questions: []
-  }, {
-    id: 3,
-    title: "Algebra",
-    topic: Topics.Math,
-    questions: []
-  },
+  }
+  ];
 
-]
 @Injectable({
   providedIn: 'root'
 })
 
 export class QuizzesService {
-  url = environment.baseUrl;
-  token;
-  quizzes = myQuizzes;
 
   constructor(
     private http: HttpClient,
     private flash: MessagesService,
     private userService: UserService
   ) {
+    this.getUserQuizzes();
+    this.getAllQuizzes();
+    console.log(this.allQuizzes.value);
+    console.log(this.myQuizzes.value);
     this.token = userService.getToken();
   }
+  url = environment.baseUrl;
+  token;
+  allQuizzes = new BehaviorSubject([]);
+  myQuizzes = new BehaviorSubject([]);
+
+  quizzes$: BehaviorSubject<any[]> = new BehaviorSubject(myQuizzes);
 
   createQuiz(form) {
-    const myHeaders = new HttpHeaders().set('Authorization', this.token);
-    console.log('Send form');
+    const myHeaders = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     this.http.post<any>(
       `${this.url}/api/tests`, form, {headers: myHeaders})
       .subscribe(
@@ -97,9 +70,8 @@ export class QuizzesService {
           this.flash.showSuccess(data.status);
         },
         error => {
-          console.log('Error maybe');
           console.log(error);
-          // this.flash.showError(error.error.message);
+          this.flash.showError(error.status);
         });
   }
 
@@ -107,6 +79,42 @@ export class QuizzesService {
     return interval(speed);
   }
 
-  quizzes$: BehaviorSubject<any[]> = new BehaviorSubject(myQuizzes);
+  getUserQuizzes() {
+    const myHeaders = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    this.http.get<any>(
+      `${this.url}/api/tests`, {headers: myHeaders})
+      .subscribe(
+        data => {
+          console.log(data);
+          this.myQuizzes.next(data.tests);
+        },
+        error => {
+          console.log(error);
+          this.flash.showError(error.status);
+        });
+  }
+
+  getAllQuizzes() {
+    const myHeaders = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    this.http.get<any>(
+      `${this.url}/api/tests/all`, {headers: myHeaders})
+      .subscribe(
+        data => {
+          console.log(data);
+          this.allQuizzes.next(data.tests);
+        },
+        error => {
+          console.log(error);
+          this.flash.showError(error.status);
+        });
+  }
+
+  getMyQuizzesArray(): Observable<any> {
+    return this.myQuizzes.asObservable();
+  }
+
+  getAllQuizzesArray(): Observable<any> {
+    return this.allQuizzes.asObservable();
+  }
 
 }
