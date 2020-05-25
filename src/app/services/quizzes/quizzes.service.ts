@@ -3,7 +3,6 @@ import { Topics } from 'src/app/components/create-quiz/topics';
 import { Observable } from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { UserService } from '../user/user.service';
 import { MessagesService } from '../messages/messages.service';
 import { BehaviorSubject, interval } from 'rxjs';
 import {QuestionType} from '../../interfaces/quiz';
@@ -40,30 +39,26 @@ const myQuizzes = [
   providedIn: 'root'
 })
 
-export class QuizzesService {
+export class QuizzesService  {
 
   constructor(
     private http: HttpClient,
-    private flash: MessagesService,
-    private userService: UserService
+    private flash: MessagesService
   ) {
     this.getUserQuizzes();
     this.getAllQuizzes();
     console.log(this.allQuizzes.value);
     console.log(this.myQuizzes.value);
-    this.token = userService.getToken();
   }
   url = environment.baseUrl;
-  token;
   allQuizzes = new BehaviorSubject([]);
   myQuizzes = new BehaviorSubject([]);
 
   quizzes$: BehaviorSubject<any[]> = new BehaviorSubject(myQuizzes);
 
   createQuiz(form) {
-    const myHeaders = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     this.http.post<any>(
-      `${this.url}/api/tests`, form, {headers: myHeaders})
+      `${this.url}/api/tests`, form)
       .subscribe(
         data => {
           console.log(data);
@@ -80,9 +75,8 @@ export class QuizzesService {
   }
 
   getUserQuizzes() {
-    const myHeaders = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     this.http.get<any>(
-      `${this.url}/api/tests`, {headers: myHeaders})
+      `${this.url}/api/tests`)
       .subscribe(
         data => {
           console.log(data);
@@ -95,9 +89,8 @@ export class QuizzesService {
   }
 
   getAllQuizzes() {
-    const myHeaders = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     this.http.get<any>(
-      `${this.url}/api/tests/all`, {headers: myHeaders})
+      `${this.url}/api/tests/all`)
       .subscribe(
         data => {
           console.log(data);

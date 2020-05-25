@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MaterialModule } from './material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,6 +26,7 @@ import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { QuestionsComponent } from './components/questions/questions.component';
 import { QuestionsEditComponent } from './components/questions-edit/questions-edit.component';
 import { AnswerComponent } from './components/answer/answer.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -59,13 +60,17 @@ import { AnswerComponent } from './components/answer/answer.component';
     JwtModule.forRoot({
       config: {
         tokenGetter: function  tokenGetter() {
-          return     localStorage.getItem('userAuthData'); },
+          return localStorage.getItem('userAuthData'); },
         whitelistedDomains: [],
         blacklistedRoutes: [],
       }
     })
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
