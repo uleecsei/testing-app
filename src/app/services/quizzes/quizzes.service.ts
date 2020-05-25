@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 import { UserService } from '../user/user.service';
 import { MessagesService } from '../messages/messages.service';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, interval } from 'rxjs';
 import {QuestionType} from '../../interfaces/quiz'
 const myQuizzes = [
   {
@@ -101,6 +101,10 @@ export class QuizzesService {
           console.log(error);
           // this.flash.showError(error.error.message);
         });
+  }
+
+  setInterval(speed: number){
+    return interval(speed);
   }
 
   quizzes$: BehaviorSubject<any[]> = new BehaviorSubject(myQuizzes);
