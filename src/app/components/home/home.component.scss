@@ -1,0 +1,48 @@
+.home-container {
+  height: 100vh;
+}
+mat-toolbar {
+  button {
+    &[mat-stroked-button] {
+      width: 150px !important;
+    }
+    margin: 0 10px 0 10px;
+  }
+}
+.space {
+  width: 70%;
+}
+
+.profile-container {
+  margin: 10%;
+  &__photo {
+    width: 100px;
+    height: 100px;
+    background-color: violet;
+  }
+  &__photo img {
+    width: 100px;
+    height: 100px;
+  }
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  background-color: violet;
+}
+.side-menu {
+  width: 200px;
+}
+.side-menu-list {
+  mat-list-item {
+    padding: 0 0 0 5%;
+    &:hover {
+      border-right: 1px solid violet;
+      color: violet;
+    }
+  }
+}
+
+
+
+

@@ -15,7 +15,11 @@ module.exports.getAll = async (req, res) => {
 };
 
 module.exports.create = async (req, res) => {
+  console.log("Server");
+  console.log(req);
   try {
+    console.log(req.body);
+    console.log(req.headers.authorization);
     const userId = req.user.id;
     const {title, topic, questions} = req.body;
 

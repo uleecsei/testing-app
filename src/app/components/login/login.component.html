@@ -1,9 +1,9 @@
 <div class="reg">
   <mat-toolbar class="reg_toolbar" align="center">
-    <button mat-button routerLink="/registration" class="header_button">
+    <button mat-button color="primary" routerLink="/registration" class="header_button">
       Registration
     </button>
-    <button mat-button routerLink="/home" class="header_button">
+    <button mat-button color="primary" routerLink="/home" class="header_button">
       Home
     </button>
     <h1 class="reg_title">Login</h1>
@@ -14,12 +14,13 @@
         <mat-form-field  floatLabel="auto" appearance="outline" class="form_element">
           <mat-label class="form_label">Email</mat-label>
           <input   type="email" matInput required formControlName="email">
-          <mat-hint class="form_hint">Field are required!</mat-hint>
         </mat-form-field>
-        <mat-form-field  floatLabel="auto" appearance="outline" class="form_element">
-          <mat-label class="form_label">Password (at least 6 characters)</mat-label>
-          <input min="6" type="password" matInput required formControlName="password" autocomplete >
-          <mat-hint class="form_hint">Field are required!</mat-hint>
+        <mat-form-field appearance="outline" class="form_element">
+          <mat-label>Enter your password</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" required formControlName="password">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
         </mat-form-field>
       </form>
     </mat-card-content>

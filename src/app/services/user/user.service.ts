@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject , Observable, of } from 'rxjs';
-import { FlashMessagesService } from 'angular2-flash-messages';
-import { Router } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { environment } from '../../../environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {Router} from '@angular/router';
+import {JwtHelperService} from '@auth0/angular-jwt';
+import {environment} from '../../../environments/environment';
+import {MessagesService} from '../messages/messages.service';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-type': 'application/json'})
@@ -19,12 +19,11 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private flash: FlashMessagesService,
     private router: Router,
-    private jwtHelper: JwtHelperService)
-  {
+    private jwtHelper: JwtHelperService,
+    private flash: MessagesService) {
     const userData = JSON.parse(localStorage.getItem('userAuthData'));
-    if (userData && userData.token){
+    if (userData && userData.token) {
       this.token.next(userData.token);
     }
   }
@@ -45,18 +44,11 @@ export class UserService {
     this.regHttp(form)
       .subscribe(
         data => {
-          this.flash.show(data.message, {
-            cssClass: 'alert-success',
-            timeout: 4000
-          });
+          this.flash.showSuccess(data.status);
           this.router.navigate(['/login']);
         },
         error => {
-          console.log(error);
-          this.flash.show(error.error.message, {
-            cssClass: 'alert-danger',
-            timeout: 4000
-          });
+          this.flash.showError(error.error.message);
           this.router.navigate(['/registration']);
         });
   }
@@ -67,18 +59,12 @@ export class UserService {
         data => {
           localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token: data.token}));
           this.token.next(data.token);
-          this.flash.show(data.message, {
-            cssClass: 'alert-success',
-            timeout: 4000
-          });
+          this.flash.showSuccess(data.status);
           this.router.navigate(['/home']);
         },
         error => {
           console.log(error);
-          this.flash.show(error.error.message, {
-            cssClass: 'alert-danger',
-            timeout: 4000
-          });
+          this.flash.showError(error.error.message);
           this.router.navigate(['/login']);
         }
       );
@@ -87,15 +73,12 @@ export class UserService {
   logoutUser() {
     localStorage.removeItem('userAuthData');
     this.token.next(null);
-    this.flash.show('Logout', {
-      cssClass: 'alert-success',
-      timeout: 4000
-    });
+    this.flash.showSuccess('Logout');
     this.router.navigate(['/login']);
   }
 
   getToken() {
-     return this.token;
+    return this.token;
   }
 
 }
