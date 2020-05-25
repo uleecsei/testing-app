@@ -5,15 +5,16 @@
 .answers-container{
     max-width: 50%;
     margin: 0 auto;
-    &__progress-bar{
-        margin: 20px 0;
-        width: 100%;
-    }
 }
 .action{
     display: flex;
     justify-content: space-evenly;
     margin: 10px;
+}
+
+mat-progress-bar.mat-progress-bar.answers-container__progress-bar.mat-warn {
+    max-width: 98%;
+    margin: 20px auto;
 }
 
 
