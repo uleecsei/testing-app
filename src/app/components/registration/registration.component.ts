@@ -8,6 +8,7 @@ import { UserService } from '../../services/user/user.service';
   styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent implements OnInit {
+  hide = true;
   disabled = true;
   minLength = 6;
   public registrationForm: FormGroup;

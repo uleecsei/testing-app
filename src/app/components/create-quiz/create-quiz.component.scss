@@ -1,0 +1,30 @@
+.mat-dialog-title {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.mat-stepper-vertical {
+  margin-top: 8px;
+}
+
+.mat-form-field {
+  margin-top: 16px;
+}
+
+.question {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  border: 1px solid grey;
+
+  span {
+    width: 80%;
+  }
+  button {
+    width: 10%;
+  }
+}
+
+
+

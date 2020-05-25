@@ -8,6 +8,7 @@ import { UserService } from '../../services/user/user.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  hide = true;
   disabled = true;
   public loginForm: FormGroup;
   constructor(private userService: UserService) {
