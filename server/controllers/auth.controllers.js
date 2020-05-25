@@ -38,6 +38,27 @@ module.exports.login = async (req, res) => {
   }
 };
 
+// module.exports.googleLogin = async(req, res) => {
+//   try {
+//     const token = jwt.sign({
+//       userId: req.user._id
+//     }, process.env.JWT_SECRET, {
+//       expiresIn: '1h',
+//     });
+
+//     res.status(200).json({
+//       status: 'User authenticated successfully',
+//       token: `Bearer ${token}`,
+//     });
+//   } catch (e) {
+//     errorHandler(res, 500, e);
+//   }
+// };
+
+module.exports.googleLogin = (req, res) => {
+  res.redirect('http://localhost:4200/home');
+};
+
 module.exports.register = async (req, res) => {
   try {
     const {email, password, firstName, lastName} = req.body;

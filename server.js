@@ -11,21 +11,17 @@ const app = express();
 
 app.use(passport.initialize());
 passportMiddleware.jwt(passport);
-// passportMiddleware.google(passport);
-// passport.serializeUser((user, done) => {
-//   done(null, user.id);
-// });
-
-// passport.deserializeUser(async (id, done) => {
-//   try {
-//     const user = await User.findById(id);
-//     done(null, user);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// });
+passportMiddleware.google(passport);
 
 app.use(bodyParser.json());
+
+
+// var corsOptions = {
+//   origin: '*',
+//   optionsSuccessStatus: 200
+// }
+// app.use(cors(corsOptions));
+
 app.use(cors());
 
 mongoose.connect(process.env.DATABASE_URI, {
