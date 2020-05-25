@@ -68,6 +68,7 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   }
 
   formsSubmit(){
+    
     const form = {
       ...this.createQuizForm1.value,
       ...this.createQuizForm2.value,
@@ -80,6 +81,7 @@ export class CreateQuizComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.questionsService.clearQuestions();
   }
 
 }

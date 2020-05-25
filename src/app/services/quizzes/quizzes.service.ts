@@ -87,8 +87,8 @@ export class QuizzesService {
   }
 
   createQuiz(form) {
-    const myHeaders = new HttpHeaders().set('Authorization', this.token);
-    console.log('Send form');
+    console.log(this.token);
+    const myHeaders = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     this.http.post<any>(
       `${this.url}/api/tests`, form, {headers: myHeaders})
       .subscribe(
@@ -97,9 +97,8 @@ export class QuizzesService {
           this.flash.showSuccess(data.status);
         },
         error => {
-          console.log('Error maybe');
           console.log(error);
-          // this.flash.showError(error.error.message);
+          this.flash.showError(error.status);
         });
   }
 
