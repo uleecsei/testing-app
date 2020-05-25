@@ -1,6 +1,8 @@
 .reg {
   max-width: 1400px;
   padding: 20px 10px;
+  min-height: 100vh;
+  background-color: #212121;
 
   &_title {
     text-align: center;
