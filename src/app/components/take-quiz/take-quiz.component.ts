@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {Subscription, Observable} from 'rxjs';
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
 import {UserAnswer } from '../../interfaces/quiz'
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,6 +18,9 @@ export class TakeQuizComponent implements OnInit {
   currentIndex:number=0;
   userAnswers:any=[];
   chosen;
+  progressValue:number=0;
+  PROGRESS_BAR_SPEED:number = 150; //less = faster
+  currentProgress:Subscription
   
   private routeSubscription: Subscription;
   constructor(private route: ActivatedRoute,
@@ -38,6 +41,7 @@ export class TakeQuizComponent implements OnInit {
       this.questions=this.quiz.questions
       console.log(this.quiz.questions)
       this.currentQ=this.quiz.questions[0];
+      // this.currentProgress = this.reloadProgressBar();
     })
   }
   // choose(event:any){
@@ -47,8 +51,11 @@ export class TakeQuizComponent implements OnInit {
   next(){
     this.openSnack()
     this.currentQ=this.questions[++this.currentIndex]
-    console.log(this.chosen)
-    
+    console.log(this.chosen);
+    if(!this.currentProgress.closed) {
+      this.currentProgress.unsubscribe();
+      this.currentProgress = this.reloadProgressBar();
+    }
   }
   openSnack(){
     let snackBarRef = this.snackBar.open("message",null,{
@@ -56,7 +63,17 @@ export class TakeQuizComponent implements OnInit {
     })
     
   }
-
+  reloadProgressBar(){
+    this.progressValue = 0;
+    return this.quizzesService.setInterval(this.PROGRESS_BAR_SPEED).subscribe(() => {
+      this.progressValue++;
+      if(this.progressValue >= 101) {
+        this.currentProgress.unsubscribe();
+        this.next();
+        this.currentProgress = this.reloadProgressBar();
+      }
+    });
+  }
   
 
 }

@@ -1,5 +1,6 @@
 
 <div class="answers-container">
+  <mat-progress-bar class="answers-container__progress-bar" mode="determinate" [value]="progressValue"></mat-progress-bar>
   <h2>{{this.currentQ.question}}</h2>
   <app-answer *ngFor="let a of currentQ.answers;let i=index" 
   [qId]="currentQ.qId"
