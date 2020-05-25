@@ -11,13 +11,14 @@ import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { CreateQuizComponent } from './components/create-quiz/create-quiz.component';
 
 
+
 const routes: Routes = [
   {
-    path:  'login',
+    path: 'login',
     component: LoginComponent,
   },
   {
-    path:  'registration',
+    path: 'registration',
     component: RegistrationComponent,
   },
   {
@@ -47,7 +48,7 @@ const routes: Routes = [
       }, ]
   },
   {
-    path:  '',
+    path: '',
     pathMatch: 'full',
     redirectTo: 'login'
   },

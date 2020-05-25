@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Topics} from '../create-quiz/topics'
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-my-quizzes',
@@ -8,11 +8,11 @@ import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
   styleUrls: ['./my-quizzes.component.scss']
 })
 export class MyQuizzesComponent implements OnInit {
-  quizzes;
-  constructor(private quizzesService:QuizzesService) { }
+  quizzes$: Observable<any[]>;
+  constructor(private quizzesService: QuizzesService) { }
 
   ngOnInit(): void {
-    this.quizzes=this.quizzesService.quizzes;
+    this.quizzes$ = this.quizzesService.getMyQuizzesArray();
   }
 
 }

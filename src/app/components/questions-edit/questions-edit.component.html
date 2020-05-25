@@ -23,7 +23,13 @@
             <input matInput placeholder="add answer1" formControlName="answer1">
           </mat-form-field>
           <br>
-          <mat-checkbox formControlName="answer1Status">True answer</mat-checkbox>
+          <mat-checkbox
+            [(ngModel)]="checkboxes[0]"
+            formControlName="answer1Status"
+            (change)="checkCounter()"
+          >
+            True answer
+          </mat-checkbox>
         </div>
         <div
           class=" answers_element"
@@ -35,7 +41,13 @@
             <input matInput placeholder="add answer2" formControlName="answer2">
           </mat-form-field>
           <br>
-          <mat-checkbox formControlName="answer2Status">True answer</mat-checkbox>
+          <mat-checkbox
+            [(ngModel)]="checkboxes[1]"
+            (change)="checkCounter()"
+            formControlName="answer2Status"
+          >
+            True answer
+          </mat-checkbox>
         </div>
         <div
           class=" answers_element"
@@ -47,7 +59,13 @@
             <input matInput placeholder="add answer3" formControlName="answer3">
           </mat-form-field>
           <br>
-          <mat-checkbox formControlName="answer3Status">True answer</mat-checkbox>
+          <mat-checkbox
+            [(ngModel)]="checkboxes[2]"
+            (change)="checkCounter()"
+            formControlName="answer3Status"
+          >
+            True answer
+          </mat-checkbox>
         </div>
         <div
           class=" answers_element"
@@ -59,18 +77,29 @@
             <input matInput placeholder="add answer4" formControlName="answer4">
           </mat-form-field>
           <br>
-          <mat-checkbox formControlName="answer4Status">True answer</mat-checkbox>
+          <mat-checkbox
+            [(ngModel)]="checkboxes[3]"
+            (change)="checkCounter()"
+            formControlName="answer4Status"
+          >
+            True answer
+          </mat-checkbox>
         </div>
       </div>
     </div>
+    <mat-dialog-actions>
     <button
-      [disabled]="changeQuestion.invalid"
-      mat-dialog-close
+      [disabled]="counter===0 || changeQuestion.invalid"
       mat-raised-button
+      mat-dialog-close
       color="primary"
       type="submit"
     >
       Save changes
     </button>
+    <button mat-dialog-close mat-mini-fab color="accent">
+      <mat-icon>close</mat-icon>
+    </button>
+    </mat-dialog-actions>
   </form>
 </div>

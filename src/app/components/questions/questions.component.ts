@@ -9,6 +9,8 @@ import { QuestionsService } from '../../services/questions/questions.service';
 })
 export class QuestionsComponent implements OnInit {
   addQuestion: FormGroup;
+  checkboxes = [];
+  counter = 0;
 
   constructor(private questionsService: QuestionsService) { }
 
@@ -26,9 +28,13 @@ export class QuestionsComponent implements OnInit {
     });
   }
 
+  checkCounter() {
+    this.counter = this.checkboxes.filter(i => i).length;
+  }
 
   add() {
-    this.questionsService.addQuestion(this.addQuestion.value);
+      this.questionsService.addQuestion(this.addQuestion.value, this.counter);
+      this.addQuestion.reset();
   }
 
 }

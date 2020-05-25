@@ -10,6 +10,13 @@ import { QuestionsService } from '../../services/questions/questions.service';
 })
 export class QuestionsEditComponent implements OnInit {
   changeQuestion: FormGroup;
+  checkboxes = [
+    this.data.question.answers[0].isTrue,
+    this.data.question.answers[1].isTrue,
+    this.data.question.answers[2].isTrue,
+    this.data.question.answers[3].isTrue
+  ];
+  counter = this.checkboxes.filter(i => i).length;
 
   constructor(
     private questionsService: QuestionsService,
@@ -30,8 +37,13 @@ export class QuestionsEditComponent implements OnInit {
     });
   }
 
-  editQuestion() {
-    this.questionsService.editQuestion(this.data.index, this.changeQuestion.value);
+  checkCounter() {
+    this.counter = this.checkboxes.filter(i => i).length;
+    console.log(this.counter);
   }
 
+  editQuestion() {
+    this.questionsService.editQuestion(this.data.index, this.changeQuestion.value, this.counter);
+    this.changeQuestion.reset();
+  }
 }

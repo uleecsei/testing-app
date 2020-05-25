@@ -6,13 +6,12 @@
                 <mat-label>Search for quizzes on any topic</mat-label>
                 <input matInput >
                 <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
-                
+
               </mat-form-field>
         </div>
         <div class="dashboard__cards">
-          <app-quiz-card></app-quiz-card>
-          <app-quiz-card></app-quiz-card>
-          <app-quiz-card></app-quiz-card>
+          <app-quiz-card *ngFor="let quiz of quizzes$ | async" [quiz]="quiz"></app-quiz-card>
+
 
         </div>
     </div>

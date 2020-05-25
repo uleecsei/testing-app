@@ -57,14 +57,15 @@ export class UserService {
     this.loginHttp(form)
       .subscribe(
         data => {
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token: data.token}));
-          this.token.next(data.token);
+          const token = data.token.split(' ')[1];
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token}));
+          this.token.next(token);
           this.flash.showSuccess(data.status);
           this.router.navigate(['/home']);
         },
         error => {
-          console.log(error);
-          this.flash.showError(error.error.message);
+          console.log(error.status);
+          this.flash.showError(error.status);
           this.router.navigate(['/login']);
         }
       );
@@ -78,7 +79,7 @@ export class UserService {
   }
 
   getToken() {
-    return this.token;
+    return this.token.value;
   }
 
 }
