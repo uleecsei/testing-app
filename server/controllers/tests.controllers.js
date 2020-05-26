@@ -37,7 +37,6 @@ module.exports.create = async (req, res) => {
 };
 
 module.exports.getUserTests = async (req, res) => {
-  console.log(req);
   try {
     const userId = req.user.id;
     const tests = await Test.find({created_by: userId});
