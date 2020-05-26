@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class DashboardComponent implements OnInit {
   quizzes$: Observable<any[]>;
+  search: string;
 
   constructor(private quizzesService: QuizzesService) {
     this.quizzes$ = this.quizzesService.getAllQuizzesArray();

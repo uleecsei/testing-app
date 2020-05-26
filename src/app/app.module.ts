@@ -27,6 +27,7 @@ import { QuestionsComponent } from './components/questions/questions.component';
 import { QuestionsEditComponent } from './components/questions-edit/questions-edit.component';
 import { AnswerComponent } from './components/answer/answer.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { QuizSearchPipe } from './pipes/search.pipe';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     QuestionsComponent,
     QuestionsEditComponent,
     AnswerComponent,
+    QuizSearchPipe
   ],
   imports: [
     BrowserModule,
