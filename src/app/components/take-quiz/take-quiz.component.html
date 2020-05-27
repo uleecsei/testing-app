@@ -1,17 +1,33 @@
+<button
+  *ngIf="!gameStarted && !gameFinished"
+  (click)="startGame()"
+  mat-flat-button
+  color="accent"
+>
+  Start
+</button>
 
-<div class="answers-container">
-  <mat-progress-bar class="answers-container__progress-bar" color="warn" mode="determinate" [value]="progressValue"></mat-progress-bar>
-  <h2>{{currentQ.question}}</h2>
-  <app-answer *ngFor="let a of currentQ.answers;let i=index"
-  [qId]="currentQ.qId"
-  [answer]="a"
-  [index]="i"
-  [type]="currentQ.type"
-  ></app-answer>
+<div *ngIf="gameStarted" class="answers-container">
+  <mat-progress-bar
+    class="answers-container__progress-bar"
+    color="warn"
+    mode="determinate"
+    [value]="progressValue"
+  ></mat-progress-bar>
+
+  <app-question-card
+    [currentQ]="currentQ"
+    [time]="currentQ.time"
+  ></app-question-card>
+
   <div class="action">
-    <button mat-flat-button color="accent">Previous</button>
-    <button (click)="next()" mat-flat-button color="accent">Next</button>
+    <button
+      [disabled]="submitted"
+      (click)="next()"
+      mat-flat-button
+      color="accent"
+    >
+      Submit
+    </button>
   </div>
 </div>
-
-<!-- (change)="choose($event)" -->

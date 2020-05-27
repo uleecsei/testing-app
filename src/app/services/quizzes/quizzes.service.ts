@@ -12,10 +12,11 @@ const myQuizzes = [
     title: 'Noun',
     topic: Topics.Languages,
     questions: [
-      {
-        qId: 1,
-        type: QuestionType.radio,
-        question: 'Are u ok?',
+      { 
+        qId:1,
+        type:QuestionType.radio,
+        time:6000,
+        question: "Are u ok?",
         answers: [
           {
             answer: 'True',
@@ -30,6 +31,48 @@ const myQuizzes = [
             isCorrect: false
           },
         ]
+
+      },
+      { qId:2,
+        type:QuestionType.checkbox,
+        question: "Favourite food?",
+        time:5000,
+        answers: [
+          {
+            answer: "pizza",
+            isCorrect: true
+          },
+          {
+            answer: "sushi",
+            isCorrect: true
+          },
+          {
+            answer: "chocolate",
+            isCorrect: false
+          },
+
+        ]
+
+      }, { qId:3,
+        type:QuestionType.checkbox,
+        question: "Favourite drink?",
+        time:5000,
+        answers: [
+          {
+            answer: "water",
+            isCorrect: true
+          },
+          {
+            answer: "coke",
+            isCorrect: true
+          },
+          {
+            answer: "beer",
+            isCorrect: false
+          },
+
+        ]
+
       }
     ]
   }

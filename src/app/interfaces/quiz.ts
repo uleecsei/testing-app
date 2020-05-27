@@ -5,7 +5,7 @@ enum QuestionType{
 
 interface UserAnswer{
     questionIndex:number;
-    answerIndex:number;
-    isCorrect:boolean
+    answer:any;
+    
 }
 export {QuestionType,UserAnswer}
