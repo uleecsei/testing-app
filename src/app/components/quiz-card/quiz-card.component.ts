@@ -7,15 +7,15 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
   styleUrls: ['./quiz-card.component.scss']
 })
 export class QuizCardComponent implements OnInit {
-  @Input() quiz
+  @Input() quiz;
 
   constructor(private router: Router,
-    private route: ActivatedRoute) { }
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
   }
   practice() {
-    this.router.navigate(['home/takeQuiz', this.quiz.id]);
+    this.router.navigate(['home/takeQuiz', this.quiz._id], {state: {quiz: this.quiz}});
   }
 
 }

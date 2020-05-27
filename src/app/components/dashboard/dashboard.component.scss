@@ -4,6 +4,7 @@
   &__search,
   &__cards {
     display: flex;
+    justify-content: space-around;
   }
   &__search {
     justify-content: center;

@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute} from '@angular/router';
+import { Router, ActivatedRoute} from '@angular/router';
 import {Subscription, Observable} from 'rxjs';
+import {map, filter} from 'rxjs/operators';
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
 import {UserAnswer } from '../../interfaces/quiz';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {logger} from 'codelyzer/util/logger';
 @Component({
   selector: 'app-take-quiz',
   templateUrl: './take-quiz.component.html',
   styleUrls: ['./take-quiz.component.scss']
 })
 export class TakeQuizComponent implements OnInit {
-
   id: number;
   quiz;
   questions;
@@ -23,38 +24,28 @@ export class TakeQuizComponent implements OnInit {
   currentProgress: Subscription;
 
   private routeSubscription: Subscription;
-  constructor(private route: ActivatedRoute,
-              private quizzesService: QuizzesService,
-              private snackBar: MatSnackBar
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private quizzesService: QuizzesService,
+    private snackBar: MatSnackBar
     ) {
    }
 
   ngOnInit(): void {
+    // Лена, это обьект теста переданный при переходе, по идее теперь не надо искать его по айди
+    console.log(window.history.state.quiz);
+
+    this.quiz  = window.history.state.quiz;
+    this.questions = this.quiz.questions;
+    this.currentQ = this.quiz.questions[0];
+
 
     this.routeSubscription = this.route.params.subscribe(params => {
       this.id = params.id;
-      console.log(this.id);
-    });
-    this.quizzesService.getAllQuizzesArray().subscribe(res => {
-      console.log(res, this.id);
-      this.quiz = res.filter(e => e.id === +this.id)[0];
-      this.questions = this.quiz.questions;
-      console.log(this.quiz.questions);
-      this.currentQ = this.quiz.questions[0];
-    });
-    this.quizzesService.quizzes$.subscribe(res => {
-      console.log(res, this.id);
-      this.quiz = res.filter(e => e.id === +this.id)[0];
-      this.questions = this.quiz.questions;
-      console.log(this.quiz.questions);
-      this.currentQ = this.quiz.questions[0];
-      // this.currentProgress = this.reloadProgressBar();
     });
   }
-  // choose(event:any){
-  //   this.chosen=event.target.to
-  //   console.log(this.chosen)
-  // }
+
   next(){
     this.openSnack();
     this.currentQ = this.questions[++this.currentIndex];

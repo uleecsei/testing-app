@@ -1,4 +1,4 @@
-<mat-drawer-container class="home-container" autosize>
+<header class="header">
   <mat-toolbar class="reg_toolbar" align="center">
     <button
       mat-mini-fab
@@ -8,18 +8,19 @@
     >
       <mat-icon>menu</mat-icon>
     </button>
-    <div class="logo">
+    <div class="logo" routerLink="/home">
       <span>Quizizz</span>
     </div>
     <span class="space"></span>
     <button mat-stroked-button routerLink="createQuiz">Create my quiz</button>
     <button mat-button color="primary" (click)="logout()">Log Out</button>
   </mat-toolbar>
-
+</header>
+<mat-drawer-container class="home-container" autosize>
   <mat-drawer #drawer mode="side" class="side-menu">
     <div class="profile-container">
       <div class="profile-container__photo">
-        <img src="" alt="" />
+        <img src="" alt=""/>
       </div>
 
       <h1>Name</h1>
@@ -29,16 +30,11 @@
     <mat-list class="side-menu-list">
       <mat-list-item routerLink="./dashboard">Dashboard</mat-list-item>
       <mat-list-item routerLink="./myquizzes">My quizzes</mat-list-item>
-
       <mat-list-item routerLink="./myresults">My results</mat-list-item>
-
-
     </mat-list>
-
-    <mat-divider></mat-divider>
+    <mat-divider>Some text</mat-divider>
   </mat-drawer>
-  <router-outlet></router-outlet>
+  <router-outlet>
 
-
-
+  </router-outlet>
 </mat-drawer-container>
