@@ -1,10 +1,22 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  .logo {
+    cursor: pointer;
+  }
+}
 .home-container {
   height: 100vh;
+  padding-top: 75px;
 }
 mat-toolbar {
   button {
     &[mat-stroked-button] {
-      width: 150px !important;
+      width: 200px !important;
     }
     margin: 0 10px 0 10px;
   }
@@ -32,10 +44,12 @@ mat-toolbar {
 }
 .side-menu {
   width: 200px;
+  padding-top: 75px;
 }
 .side-menu-list {
   mat-list-item {
     padding: 0 0 0 5%;
+    cursor: pointer;
     &:hover {
       border-right: 1px solid violet;
       color: violet;

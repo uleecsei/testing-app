@@ -1,16 +1,16 @@
 
 <div class="answers-container">
   <mat-progress-bar class="answers-container__progress-bar" color="warn" mode="determinate" [value]="progressValue"></mat-progress-bar>
-  <h2>{{this.currentQ.question}}</h2>
-  <app-answer *ngFor="let a of currentQ.answers;let i=index" 
+  <h2>{{currentQ.question}}</h2>
+  <app-answer *ngFor="let a of currentQ.answers;let i=index"
   [qId]="currentQ.qId"
-  [answer]="a" 
-  [index]="i" 
+  [answer]="a"
+  [index]="i"
   [type]="currentQ.type"
   ></app-answer>
   <div class="action">
     <button mat-flat-button color="accent">Previous</button>
-    <button (click)="next()"mat-flat-button color="accent">Next</button>
+    <button (click)="next()" mat-flat-button color="accent">Next</button>
   </div>
 </div>
 

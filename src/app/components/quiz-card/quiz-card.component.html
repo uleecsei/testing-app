@@ -4,8 +4,8 @@
     <mat-card-subtitle>{{quiz.topic}}</mat-card-subtitle>
     <button (click)="practice()" mat-flat-button  color="primary">Start</button>
     <mat-chip-list aria-label="Fish selection">
-        
-        <mat-chip color="primary" >15 Qs</mat-chip>
-        <mat-chip color="accent" selected>Math</mat-chip>
+
+        <mat-chip color="primary" >{{quiz.questions.length}} Qs</mat-chip>
+        <mat-chip color="accent" selected>{{quiz.topic}}</mat-chip>
       </mat-chip-list>
 </mat-card>
