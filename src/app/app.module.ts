@@ -26,6 +26,7 @@ import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { QuestionsComponent } from './components/questions/questions.component';
 import { QuestionsEditComponent } from './components/questions-edit/questions-edit.component';
 import { AnswerComponent } from './components/answer/answer.component';
+import { QuestionCardComponent } from './components/question-card/question-card.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { AnswerComponent } from './components/answer/answer.component';
     QuestionsComponent,
     QuestionsEditComponent,
     AnswerComponent,
+    QuestionCardComponent,
   ],
   imports: [
     BrowserModule,
