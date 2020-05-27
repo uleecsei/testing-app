@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription} from 'rxjs';
+import { Subscription, Subject} from 'rxjs';
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
 import { UserAnswer } from '../../interfaces/quiz'
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,6 +18,7 @@ export class TakeQuizComponent implements OnInit {
   questions;
   currentQ;
   currentIndex: number = 0;
+  questionChanged$=new Subject();
  
   submitted;
   gameStarted;
@@ -45,6 +46,7 @@ export class TakeQuizComponent implements OnInit {
     this.answerService.timeOut$.subscribe(()=>{
       this.next()
     })
+    
   }
 
   next() {
@@ -54,6 +56,7 @@ export class TakeQuizComponent implements OnInit {
     setTimeout(() => {
       this.answerService.next(this.currentQ.qId)
       this.submitted = false
+      
       if (!(this.currentIndex == this.questions.length - 1)) {
         this.changeQuestion()
       } else {
@@ -64,17 +67,18 @@ export class TakeQuizComponent implements OnInit {
 
   changeQuestion() {
     this.currentQ = this.questions[++this.currentIndex]
+    this.answerService.questionChanged$.next()
   }
-  openSnack() {
-    let snackBarRef = this.snackBar.open("message", null, {
-      duration: 2000,
-    })
-    return snackBarRef
+  // openSnack() {
+  //   let snackBarRef = this.snackBar.open("message", null, {
+  //     duration: 2000,
+  //   })
+  //   return snackBarRef
 
-  }
+  // }
   startGame = () => {
   this.gameStarted = true
-  
+  this.answerService.questionChanged$.next()
   }
   finishGame() {
     

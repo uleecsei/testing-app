@@ -8,22 +8,38 @@ import { AnswersService } from 'src/app/services/answers/answers.service';
 })
 export class QuestionCardComponent implements OnInit {
   @Input() currentQ;
-  @Input() time;
   timer$ 
+  
   subscription
   constructor(private answerService: AnswersService) { }
 
   ngOnInit(): void {
-    this.timer$ = interval(this.time)
-    this.subscription = this.timer$.subscribe((val) => {
-      console.log('6 secs passed',val)
+    console.log('started')
+    this.timer$=interval(this.currentQ.time);
+    this.startTime()
+    this.answerService.goToNext$.subscribe(()=>{
+      this.timer$.unsubscribe()
+    })
+    this.answerService.questionChanged$.subscribe(()=>{
       
-      this.answerService.timeOut$.next()
-  })
+       console.log('started')
+       this.timer$=interval(this.currentQ.time);
+       this.startTime()
+    })
+    
+  }
+  startTime(){
+  this.subscription = this.timer$.subscribe((val) => {
+      console.log(`${this.currentQ.time/1000} seconds has passed`)
+      this.subscription.unsubscribe()
+    })
   }
 
   ngOnDestroy(){
+    this.timer$.unsubscribe()
     console.log("destroy")
   }
+
+ 
 
 }

@@ -10,6 +10,7 @@ export class AnswersService {
   currentAnswer$:BehaviorSubject<any[]>=new BehaviorSubject([])
   goToNext$=new Subject();
   timeOut$=new Subject();
+  questionChanged$=new Subject();
   constructor() { }
 
   answer(answer){

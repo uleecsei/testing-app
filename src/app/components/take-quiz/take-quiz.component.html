@@ -3,7 +3,7 @@
 
 
 <div *ngIf='gameStarted' class="answers-container">
-  <app-question-card [currentQ]="currentQ" [time]='currentQ.time'></app-question-card>
+  <app-question-card [currentQ]="currentQ" ></app-question-card>
   <!-- <h2>{{this.currentQ.question}}</h2>
   <h4 *ngIf="currentQ.type==='checkbox'">Choose 1 or more answers</h4>
   <app-answer *ngFor="let a of currentQ.answers;let i=index" 
