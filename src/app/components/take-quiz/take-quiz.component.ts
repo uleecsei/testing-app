@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, Subject } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-
 
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
 
@@ -28,7 +27,8 @@ export class TakeQuizComponent implements OnInit {
   PROGRESS_BAR_SPEED = 150; // less = faster
   currentProgress: Subscription;
 
-
+  questionChanged$=new Subject();
+ 
   submitted;
   gameStarted;
   gameFinished
@@ -65,6 +65,7 @@ export class TakeQuizComponent implements OnInit {
     this.answerService.timeOut$.subscribe(() => {
       this.next()
     })
+    
   }
 
 
@@ -82,6 +83,7 @@ export class TakeQuizComponent implements OnInit {
     setTimeout(() => {
       this.answerService.next(this.currentQ.qId)
       this.submitted = false
+      
       if (!(this.currentIndex == this.questions.length - 1)) {
         this.changeQuestion()
       } else {
@@ -91,6 +93,7 @@ export class TakeQuizComponent implements OnInit {
   }
   changeQuestion() {
     this.currentQ = this.questions[++this.currentIndex]
+    this.answerService.questionChanged$.next()
   }
   openSnack() {
     let snackBarRef = this.snackBar.open("message", null, {
@@ -98,9 +101,10 @@ export class TakeQuizComponent implements OnInit {
     });
     return snackBarRef
   }
+
   startGame = () => {
     this.gameStarted = true
-
+  this.answerService.questionChanged$.next()
   }
   finishGame() {
 
