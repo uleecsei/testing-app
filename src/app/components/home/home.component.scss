@@ -1,17 +1,10 @@
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-
   .logo {
     cursor: pointer;
   }
 }
 .home-container {
   height: 100vh;
-  padding-top: 75px;
 }
 mat-toolbar {
   button {
@@ -44,7 +37,6 @@ mat-toolbar {
 }
 .side-menu {
   width: 200px;
-  padding-top: 75px;
 }
 .side-menu-list {
   mat-list-item {
