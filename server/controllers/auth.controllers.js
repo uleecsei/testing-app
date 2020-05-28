@@ -2,14 +2,28 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const errorHandler = require('../utils/errorHandler');
+const googleVerify = require('../utils/googleVerify');
 
 require("dotenv").config();
 
+getToken = (user) => {
+  const token = jwt.sign({
+    userId: user.id
+  }, process.env.JWT_SECRET, {
+    expiresIn: '1h',
+  });
+
+  return token;
+};
+
 module.exports.login = async (req, res) => {
   try {
-    const {email, password} = req.body;
+    const password = req.body.password;
+    const email = req.body.email.toLowerCase();
 
-    const user = await User.findOne({email});
+    const user = await User.findOne({
+      email
+    });
     if (!user) {
       return res.status(400).json({
         status: 'User has not been found',
@@ -23,11 +37,7 @@ module.exports.login = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({
-      userId: user.id
-    }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = getToken(user);
 
     res.status(200).json({
       status: 'User authenticated successfully',
@@ -38,32 +48,71 @@ module.exports.login = async (req, res) => {
   }
 };
 
-// module.exports.googleLogin = async(req, res) => {
-//   try {
-//     const token = jwt.sign({
-//       userId: req.user._id
-//     }, process.env.JWT_SECRET, {
-//       expiresIn: '1h',
-//     });
+module.exports.googleLogin = async (req, res) => {
+  try {
+    const payload = await googleVerify(req.body.id_token);
 
-//     res.status(200).json({
-//       status: 'User authenticated successfully',
-//       token: `Bearer ${token}`,
-//     });
-//   } catch (e) {
-//     errorHandler(res, 500, e);
-//   }
-// };
+    const user = await User.findOne({googleId: payload.sub});
 
-module.exports.googleLogin = (req, res) => {
-  res.redirect('http://localhost:4200/home');
+    if (user) {
+      const token = getToken(user);
+      return res.status(200).json({
+        status: 'User authenticated successfully',
+        token: `Bearer ${token}`,
+      });
+    }
+
+    const candidate = await User.findOne({email: payload.email});
+
+    if (candidate) {
+      const profilePicture = candidate.profilePicture ? 
+            candidate.profilePicture : 
+            payload.picture;
+
+      await candidate.update({googleId: payload.sub, profilePicture});
+      await candidate.save();
+
+      const token = getToken(candidate);
+      return res.status(200).json({
+        status: 'User authenticated successfully',
+        token: `Bearer ${token}`,
+      });
+    }
+
+    const newUser = new User({
+      googleId: payload.sub,
+      email: payload.email,
+      firstName: payload.given_name,
+      lastName: payload.family_name,
+      profilePicture: payload.picture
+    });
+
+    const savedUser = await newUser.save();
+
+    const token = getToken(savedUser);
+    res.status(200).json({
+      status: 'User authenticated successfully',
+      token: `Bearer ${token}`,
+    });
+  } catch (e) {
+    errorHandler(res, 500, e);
+  }
 };
 
 module.exports.register = async (req, res) => {
   try {
-    const {email, password, firstName, lastName} = req.body;
+    const {
+      password,
+      firstName,
+      lastName
+    } = req.body;
+    const {
+      email
+    } = req.body.email.toLowerCase();
 
-    const candidate = await User.findOne({email});
+    const candidate = await User.findOne({
+      email
+    });
     if (candidate) {
       return res.status(400).json({
         status: 'The email is already registered',

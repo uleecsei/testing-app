@@ -2,7 +2,7 @@ const Joi = require('@hapi/joi');
 
 module.exports = {
   registerForm: Joi.object({
-    email: Joi.string().email({minDomainSegments: 2}).required(),
+    email: Joi.string().email({minDomainSegments: 2}).insensitive().required(),
     password: Joi.string()
         .regex(/^[a-zA-Z0-9]+$/)
         .min(6)

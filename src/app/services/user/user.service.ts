@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Router} from '@angular/router';
@@ -21,7 +21,8 @@ export class UserService {
     private http: HttpClient,
     private router: Router,
     private jwtHelper: JwtHelperService,
-    private flash: MessagesService) {
+    private flash: MessagesService,
+    private ngZone: NgZone) {
     const userData = JSON.parse(localStorage.getItem('userAuthData'));
     if (userData && userData.token) {
       this.token.next(userData.token);
@@ -39,6 +40,10 @@ export class UserService {
       `${this.url}/api/auth/login`, form, httpOptions);
   }
 
+  googleLoginHttp(id_token): Observable<any> {
+    return this.http.post<any>(
+      `${this.url}/api/auth/google`, {id_token}, httpOptions);
+  }
 
   regUser(form) {
     this.regHttp(form)
@@ -68,6 +73,24 @@ export class UserService {
           this.flash.showError(error.status);
           this.router.navigate(['/login']);
         }
+      );
+  }
+
+  googleLoginUser(id_token) {
+    this.googleLoginHttp(id_token)
+      .subscribe(
+        data => this.ngZone.run(() => {
+          const token = data.token.split(' ')[1];
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token}));
+          this.token.next(token);
+          this.flash.showSuccess(data.status);
+          this.router.navigate(['/home']);
+        }),
+        error => this.ngZone.run(() => {
+          console.log(error.status);
+          this.flash.showError(error.status);
+          this.router.navigate(['/login']);
+        })
       );
   }
 

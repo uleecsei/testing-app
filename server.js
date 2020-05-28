@@ -10,17 +10,9 @@ require("dotenv").config();
 const app = express();
 
 app.use(passport.initialize());
-passportMiddleware.jwt(passport);
-passportMiddleware.google(passport);
+passportMiddleware(passport);
 
 app.use(bodyParser.json());
-
-
-// var corsOptions = {
-//   origin: '*',
-//   optionsSuccessStatus: 200
-// }
-// app.use(cors(corsOptions));
 
 app.use(cors());
 

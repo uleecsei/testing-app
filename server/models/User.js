@@ -12,7 +12,8 @@ const UserSchema = new Schema({
   googleId: {type: String},
   password: {type: String},
   firstName: {type: String, required: true},
-  lastName: {type: String, required: true},  
+  lastName: {type: String, required: true},
+  profilePicture: {type: String},
   tests: [{type: Types.ObjectId, ref: 'Tests'}],
 });
 

@@ -18,18 +18,6 @@ router.post(
   controller.register,
 );
 
-router.get('/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email']
-  }));
-
-
-router.get('/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: 'https://localhost:4200/login'
-  }),
-  (req, res) => {
-    res.redirect('https://localhost:4200/home');
-  });
+router.post('/google', controller.googleLogin);
 
 module.exports = router;
