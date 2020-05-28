@@ -32,7 +32,6 @@ export class TakeQuizComponent implements OnInit {
   PROGRESS_BAR_SPEED = 150 // less = faster
   currentProgress: Subscription;
 
-
   private routeSubscription: Subscription;
   constructor(
     private router: Router,
@@ -99,6 +98,10 @@ export class TakeQuizComponent implements OnInit {
     this.currentQuestion=this.quiz.questions[++this.questionIndex]
     this.answerService.currentQuestion$.next(this.currentQuestion)
     
+    this.gameStarted = false
+    this.gameFinished = true
+    this.answerService.userAnswers$.next([])
+    this.answerService.currentAnswer$.next([])
   }
   // openSnack() {
   //   let snackBarRef = this.snackBar.open("message", null, {

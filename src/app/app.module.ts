@@ -26,9 +26,14 @@ import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { QuestionsComponent } from './components/questions/questions.component';
 import { QuestionsEditComponent } from './components/questions-edit/questions-edit.component';
 import { AnswerComponent } from './components/answer/answer.component';
+<<<<<<< HEAD
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { QuizSearchPipe } from './pipes/search.pipe';
 import {QuestionCardComponent} from './components/question-card/question-card.component'
+||||||| merged common ancestors
+=======
+import { QuestionCardComponent } from './components/question-card/question-card.component';
+>>>>>>> d8f62c81979f7bda54184be0542190ee182afee0
 
 @NgModule({
   declarations: [

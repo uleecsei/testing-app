@@ -23,8 +23,22 @@ export class AnswerComponent implements OnInit {
 
   constructor(private answerService: AnswersService) { }
   ngOnInit(): void {
+<<<<<<< HEAD
     this.answerService.isAnswered$.subscribe(val => {
       this.submitted = val
+||||||| merged common ancestors
+  }
+  log(event){
+    console.log(event.target)
+    console.log(this)
+    console.log({
+      answer:this.index,
+      isCorrect:this.answer.isCorrect,
+      qId:this.qId
+=======
+    this.answerService.goToNext$.subscribe(val => {
+      this.submitted = val
+>>>>>>> d8f62c81979f7bda54184be0542190ee182afee0
     })
   }
   log(event) { this.answerService.answer(this) }
