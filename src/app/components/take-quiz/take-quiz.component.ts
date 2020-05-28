@@ -65,11 +65,6 @@ export class TakeQuizComponent implements OnInit {
     // })
 
   }
-
-
-
-
-
   nextQuestion() {
     this.updateTimer()
     this.disableBtn() 
@@ -99,9 +94,6 @@ export class TakeQuizComponent implements OnInit {
     this.questionTimer.unsubscribe()
     this.countdownTimer.unsubscribe()
   }
-
-  
-
   goToNextQuestion(){
     return (this.isLastQuestion())?this.finishGame():this.getNewQuestion()
   }
