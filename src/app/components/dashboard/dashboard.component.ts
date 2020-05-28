@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(private quizzesService: QuizzesService) {
     this.quizzes$ = this.quizzesService.getAllQuizzesArray();
+   // this.quizzes$=this.quizzesService.quizzes$;
   }
 
   ngOnInit(): void {

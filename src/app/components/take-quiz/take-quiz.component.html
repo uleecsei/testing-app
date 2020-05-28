@@ -7,7 +7,8 @@
   Start
 </button>
 
-<div *ngIf="gameStarted" class="answers-container">
+<div *ngIf="gameStarted && !gameFinished" class="answers-container">
+  <h3>Time left: 00:{{timeLeft/1000}}</h3>
   <mat-progress-bar
     class="answers-container__progress-bar"
     color="warn"
@@ -16,14 +17,13 @@
   ></mat-progress-bar>
 
   <app-question-card
-    [currentQ]="currentQ"
-    [time]="currentQ.time"
+    [currentQ]="currentQuestion"
   ></app-question-card>
 
   <div class="action">
     <button
-      [disabled]="submitted"
-      (click)="next()"
+      [disabled]="isAnswered"
+      (click)="nextQuestion()"
       mat-flat-button
       color="accent"
     >

@@ -23,7 +23,7 @@ export class AnswerComponent implements OnInit {
 
   constructor(private answerService: AnswersService) { }
   ngOnInit(): void {
-    this.answerService.goToNext$.subscribe(val => {
+    this.answerService.isAnswered$.subscribe(val => {
       this.submitted = val
     })
   }

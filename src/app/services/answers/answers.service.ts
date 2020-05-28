@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import {  BehaviorSubject,Subject} from 'rxjs';
 import { interval, timer } from 'rxjs';
-
+import { takeUntil } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class AnswersService {
+  currentQuiz$=new BehaviorSubject(null)
+  currentQuestion$=new BehaviorSubject(null)
   userAnswers$:BehaviorSubject<any[]>=new BehaviorSubject([])
   currentAnswer$:BehaviorSubject<any[]>=new BehaviorSubject([])
-  goToNext$=new Subject();
-  timeOut$=new Subject();
-  questionChanged$=new Subject();
+
+  isAnswered$=new Subject();
+ 
   constructor() { }
 
   answer(answer){
@@ -31,13 +33,24 @@ export class AnswersService {
     }
   }
 
-  next(qId){
+  saveAnswer(qId){
     this.userAnswers$.value.push({
       questionId:qId,
       answers:this.currentAnswer$.value
     })
     console.log(this.userAnswers$.value)
     this.currentAnswer$.next([])
+  }
+
+  setQuestionTimer(time){
+    console.log(time)
+    return interval(time)
+  }
+  setCountdownTimer(time){
+    const timer$=timer(time+1000)
+    return interval(1000).pipe(
+      takeUntil(timer$)
+    )
   }
   
 

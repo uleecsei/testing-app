@@ -16,22 +16,21 @@ import { AnswersService } from 'src/app/services/answers/answers.service';
   styleUrls: ['./take-quiz.component.scss']
 })
 export class TakeQuizComponent implements OnInit {
-  id: number;
-  quiz;
-  questions;
-  currentQ;
-  currentIndex = 0;
-  userAnswers: any = [];
-  chosen;
-  progressValue = 0;
-  PROGRESS_BAR_SPEED = 150; // less = faster
-  currentProgress: Subscription;
-
-  questionChanged$=new Subject();
- 
-  submitted;
-  gameStarted;
+  quiz
+  questionIndex
+  currentQuestion
+  isAnswered;
+  timeOut=false
+  questionTimer:Subscription
+  countdownTimer:Subscription
+  gameStarted
   gameFinished
+  questiontime
+  timeLeft
+
+  progressValue = 0;
+  PROGRESS_BAR_SPEED = 150 // less = faster
+  currentProgress: Subscription;
 
 
   private routeSubscription: Subscription;
@@ -47,24 +46,25 @@ export class TakeQuizComponent implements OnInit {
 
   ngOnInit(): void {
     // Лена, это обьект теста переданный при переходе, по идее теперь не надо искать его по айди
-    console.log(window.history.state.quiz);
-
-    this.quiz = window.history.state.quiz;
-    this.questions = this.quiz.questions;
-    this.currentQ = this.quiz.questions[0];
-
-    this.routeSubscription = this.route.params.subscribe(params => {
-      this.id = params['id']
-      console.log(this.id)
-    });
-    this.quizzesService.quizzes$.subscribe(res => {
-      this.quiz = res.filter(e => e.id === +this.id)[0]
-      this.questions = this.quiz.questions
-      this.currentQ = this.quiz.questions[0];
-    })
-    this.answerService.timeOut$.subscribe(() => {
-      this.next()
-    })
+    
+    this.quiz=window.history.state.quiz
+    this.questionIndex=0
+    this.currentQuestion=this.quiz.questions[this.questionIndex]
+    this.answerService.currentQuiz$.next(this.quiz)
+    this.answerService.currentQuestion$.next(this.currentQuestion)
+    
+    // this.routeSubscription = this.route.params.subscribe(params => {
+    //   this.id = params['id']
+    //   console.log(this.id)
+    // });
+    // this.quizzesService.quizzes$.subscribe(res => {
+    //   this.quiz = res.filter(e => e.id === +this.id)[0]
+    //   this.questions = this.quiz.questions
+    //   this.currentQ = this.quiz.questions[0];
+    // })
+    // this.answerService.timeOut$.subscribe(() => {
+    //   this.next()
+    // })
     
   }
 
@@ -72,58 +72,88 @@ export class TakeQuizComponent implements OnInit {
 
 
 
-  next() {
-    if (!this.currentProgress.closed) {
-      this.currentProgress.unsubscribe();
-      this.currentProgress = this.reloadProgressBar();
+  nextQuestion() {
+    
+    if(!this.timeOut){
+      this.questionTimer.unsubscribe()
+      this.countdownTimer.unsubscribe()
     }
-    this.submitted = true
-    this.answerService.goToNext$.next(true)
-    //this.openSnack()
+    this.isAnswered = true
+    this.answerService.isAnswered$.next(this.isAnswered)
     setTimeout(() => {
-      this.answerService.next(this.currentQ.qId)
-      this.submitted = false
-      
-      if (!(this.currentIndex == this.questions.length - 1)) {
+      this.answerService.saveAnswer(this.currentQuestion.qId)
+      this.isAnswered = false
+      if (!this.currentProgress.closed) {
+        this.currentProgress.unsubscribe();
+        this.currentProgress = this.reloadProgressBar();
+      }
+      if (!(this.questionIndex == this.quiz.questions.length - 1)) {
         this.changeQuestion()
+        this.startTimer()
       } else {
         this.finishGame()
       }
     }, 1500)
   }
   changeQuestion() {
-    this.currentQ = this.questions[++this.currentIndex]
-    this.answerService.questionChanged$.next()
+    this.currentQuestion=this.quiz.questions[++this.questionIndex]
+    this.answerService.currentQuestion$.next(this.currentQuestion)
+    
   }
-  openSnack() {
-    let snackBarRef = this.snackBar.open("message", null, {
-      duration: 2000,
-    });
-    return snackBarRef
-  }
+  // openSnack() {
+  //   let snackBarRef = this.snackBar.open("message", null, {
+  //     duration: 2000,
+  //   });
+  //   return snackBarRef
+  // }
 
   startGame = () => {
-    this.gameStarted = true
-  this.answerService.questionChanged$.next()
+    this.gameStarted=true
+    this.startTimer()
   }
   finishGame() {
-
     this.gameStarted = false
-    this.gameFinished = true
+    this.gameFinished=true
     this.answerService.userAnswers$.next([])
     this.answerService.currentAnswer$.next([])
   }
+  startTimer(){
+    this.timeOut=false;
+    this.currentProgress = this.reloadProgressBar()
+    this.startCountdownTimer()
+    this.questionTimer=this.answerService.setQuestionTimer(this.currentQuestion.time
+      ).subscribe(()=>
+    {
+      console.log('time stopped')
+      this.timeOut=true;
+      this.questionTimer.unsubscribe()
+      this.nextQuestion()
+    })
+  }
+
+  
+  startCountdownTimer(){
+    this.timeLeft=this.currentQuestion.time
+    this.countdownTimer=this.answerService.setCountdownTimer(this.currentQuestion.time
+      ).subscribe(()=>{
+      this.timeLeft=this.timeLeft-1000
+    })}
 
   reloadProgressBar() {
     this.progressValue = 0;
-    return this.quizzesService.setInterval(this.PROGRESS_BAR_SPEED).subscribe(() => {
+    return this.quizzesService.setInterval(100).subscribe(() => {
       this.progressValue++;
       if (this.progressValue >= 101) {
         this.currentProgress.unsubscribe();
-        this.next();
+        
         this.currentProgress = this.reloadProgressBar();
       }
     });
+  }
+
+  ngOnDestroy(){
+    this.questionTimer.unsubscribe()
+    this.currentProgress.unsubscribe()
   }
 
 

@@ -8,7 +8,7 @@ import { BehaviorSubject, interval } from 'rxjs';
 import {QuestionType} from '../../interfaces/quiz';
 const myQuizzes = [
   {
-    id: 1,
+    _id: 1,
     title: 'Noun',
     topic: Topics.Languages,
     questions: [
@@ -88,16 +88,17 @@ export class QuizzesService  {
     private http: HttpClient,
     private flash: MessagesService
   ) {
-    this.getUserQuizzes();
-    this.getAllQuizzes();
-    console.log(this.allQuizzes.value);
-    console.log(this.myQuizzes.value);
+    // this.getUserQuizzes();
+    // this.getAllQuizzes();
+    // console.log(this.allQuizzes.value);
+    // console.log(this.myQuizzes.value);
   }
   url = environment.baseUrl;
   allQuizzes = new BehaviorSubject([]);
   myQuizzes = new BehaviorSubject([]);
-
   quizzes$: BehaviorSubject<any[]> = new BehaviorSubject(myQuizzes);
+  
+
 
   createQuiz(form) {
     this.http.post<any>(
