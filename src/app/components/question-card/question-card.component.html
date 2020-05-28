@@ -1,4 +1,4 @@
-<p>question-card works!</p>
+
 <h2>{{this.currentQ.question}}</h2>
   <h4 *ngIf="currentQ.type==='checkbox'">Choose 1 or more answers</h4>
   <app-answer *ngFor="let a of currentQ.answers;let i=index" 

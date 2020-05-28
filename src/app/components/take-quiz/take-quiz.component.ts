@@ -20,12 +20,11 @@ export class TakeQuizComponent implements OnInit {
   questionIndex
   currentQuestion
   isAnswered;
-  timeOut=false
-  questionTimer:Subscription
-  countdownTimer:Subscription
+  timeOut = false
+  questionTimer: Subscription
+  countdownTimer: Subscription
   gameStarted
   gameFinished
-  questiontime
   timeLeft
 
   progressValue = 0;
@@ -45,13 +44,13 @@ export class TakeQuizComponent implements OnInit {
 
   ngOnInit(): void {
     // Лена, это обьект теста переданный при переходе, по идее теперь не надо искать его по айди
-    
-    this.quiz=window.history.state.quiz
-    this.questionIndex=0
-    this.currentQuestion=this.quiz.questions[this.questionIndex]
+
+    this.quiz = window.history.state.quiz
+    this.questionIndex = 0
+    this.currentQuestion = this.quiz.questions[this.questionIndex]
     this.answerService.currentQuiz$.next(this.quiz)
     this.answerService.currentQuestion$.next(this.currentQuestion)
-    
+
     // this.routeSubscription = this.route.params.subscribe(params => {
     //   this.id = params['id']
     //   console.log(this.id)
@@ -64,7 +63,7 @@ export class TakeQuizComponent implements OnInit {
     // this.answerService.timeOut$.subscribe(() => {
     //   this.next()
     // })
-    
+
   }
 
 
@@ -72,36 +71,110 @@ export class TakeQuizComponent implements OnInit {
 
 
   nextQuestion() {
-    
-    if(!this.timeOut){
-      this.questionTimer.unsubscribe()
-      this.countdownTimer.unsubscribe()
-    }
-    this.isAnswered = true
-    this.answerService.isAnswered$.next(this.isAnswered)
+    this.updateTimer()
+    this.disableBtn() 
     setTimeout(() => {
-      this.answerService.saveAnswer(this.currentQuestion.qId)
-      this.isAnswered = false
-      if (!this.currentProgress.closed) {
-        this.currentProgress.unsubscribe();
-        this.currentProgress = this.reloadProgressBar();
-      }
-      if (!(this.questionIndex == this.quiz.questions.length - 1)) {
-        this.changeQuestion()
-        this.startTimer()
-      } else {
-        this.finishGame()
-      }
+      this.saveUserAnswer()
+      this.enableBtn()
+      this.shouldUpdateProgressBar(this.currentProgress.closed)
+      this.goToNextQuestion()
     }, 1500)
   }
+
+  saveUserAnswer(){
+    return this.answerService.saveAnswer(this.currentQuestion.qId)
+  }
+
+  disableBtn(){
+    this.setIsAnswered()
+    this.answerService.isAnswered$.next(this.isAnswered)
+  }
+  enableBtn=()=>this.setIsAnswered()
+  setIsAnswered=()=>this.isAnswered=!this.isAnswered
+
+  updateTimer(){
+    return (this.timeOut)?true:this.unsubscribeTimer()
+  } 
+  unsubscribeTimer(){
+    this.questionTimer.unsubscribe()
+    this.countdownTimer.unsubscribe()
+  }
+
+  
+
+  goToNextQuestion(){
+    return (this.isLastQuestion())?this.finishGame():this.getNewQuestion()
+  }
+
+  getNewQuestion(){
+    this.changeQuestion()
+    this.startTimer()
+  }
+  
   changeQuestion() {
-    this.currentQuestion=this.quiz.questions[++this.questionIndex]
+    this.currentQuestion = this.quiz.questions[++this.questionIndex]
     this.answerService.currentQuestion$.next(this.currentQuestion)
-    
-    this.gameStarted = false
-    this.gameFinished = true
+  }
+
+  isLastQuestion=()=>this.questionIndex == this.quiz.questions.length - 1
+
+  updateUserAnswer() {
     this.answerService.userAnswers$.next([])
     this.answerService.currentAnswer$.next([])
+
+  }
+  startGame() {
+    this.gameStarted = true
+    this.startTimer()
+  }
+  finishGame() {
+    this.gameStarted = false
+    this.gameFinished = true
+    this.updateUserAnswer()
+  }
+
+
+  startTimer() {
+    this.timeOut = false;
+    this.currentProgress = this.reloadProgressBar()
+    this.startCountdownTimer()
+    this.questionTimer = this.answerService.setQuestionTimer(this.currentQuestion.time
+    ).subscribe(() => {
+      console.log('time stopped')
+      this.timeOut = true;
+      this.questionTimer.unsubscribe()
+      this.nextQuestion()
+    })
+  }
+
+
+  startCountdownTimer() {
+    this.timeLeft = this.currentQuestion.time
+    this.countdownTimer = this.answerService.setCountdownTimer(this.currentQuestion.time
+    ).subscribe(() => {
+      this.timeLeft = this.timeLeft - 1000
+    })
+  }
+  shouldUpdateProgressBar(condition){
+    return (condition)?true:this.updateProgressBar()
+  }
+
+  updateProgressBar(){
+    this.currentProgress.unsubscribe();
+    this.currentProgress = this.reloadProgressBar();
+  }
+
+  reloadProgressBar() {
+    this.progressValue = 0;
+    return this.quizzesService.setInterval(100).subscribe(() => {
+      this.progressValue++;
+      this.shouldUpdateProgressBar(!(this.progressValue >= 101))
+    });
+  }
+
+  ngOnDestroy() {
+    this.questionTimer.unsubscribe()
+    this.currentProgress.unsubscribe()
   }
   // openSnack() {
   //   let snackBarRef = this.snackBar.open("message", null, {
@@ -109,55 +182,5 @@ export class TakeQuizComponent implements OnInit {
   //   });
   //   return snackBarRef
   // }
-
-  startGame = () => {
-    this.gameStarted=true
-    this.startTimer()
-  }
-  finishGame() {
-    this.gameStarted = false
-    this.gameFinished=true
-    this.answerService.userAnswers$.next([])
-    this.answerService.currentAnswer$.next([])
-  }
-  startTimer(){
-    this.timeOut=false;
-    this.currentProgress = this.reloadProgressBar()
-    this.startCountdownTimer()
-    this.questionTimer=this.answerService.setQuestionTimer(this.currentQuestion.time
-      ).subscribe(()=>
-    {
-      console.log('time stopped')
-      this.timeOut=true;
-      this.questionTimer.unsubscribe()
-      this.nextQuestion()
-    })
-  }
-
-  
-  startCountdownTimer(){
-    this.timeLeft=this.currentQuestion.time
-    this.countdownTimer=this.answerService.setCountdownTimer(this.currentQuestion.time
-      ).subscribe(()=>{
-      this.timeLeft=this.timeLeft-1000
-    })}
-
-  reloadProgressBar() {
-    this.progressValue = 0;
-    return this.quizzesService.setInterval(100).subscribe(() => {
-      this.progressValue++;
-      if (this.progressValue >= 101) {
-        this.currentProgress.unsubscribe();
-        
-        this.currentProgress = this.reloadProgressBar();
-      }
-    });
-  }
-
-  ngOnDestroy(){
-    this.questionTimer.unsubscribe()
-    this.currentProgress.unsubscribe()
-  }
-
 
 }

@@ -14,8 +14,8 @@ export class DashboardComponent implements OnInit {
   search: string;
 
   constructor(private quizzesService: QuizzesService) {
-    this.quizzes$ = this.quizzesService.getAllQuizzesArray();
-   // this.quizzes$=this.quizzesService.quizzes$;
+    //this.quizzes$ = this.quizzesService.getAllQuizzesArray();
+   this.quizzes$=this.quizzesService.quizzes$;
   }
 
   ngOnInit(): void {
