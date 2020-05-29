@@ -29,6 +29,7 @@ import { AnswerComponent } from './components/answer/answer.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { QuizSearchPipe } from './pipes/search.pipe';
 import { QuestionCardComponent } from './components/question-card/question-card.component';
+import { RoomComponent } from './components/room/room.component'
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { QuestionCardComponent } from './components/question-card/question-card.
     QuestionsEditComponent,
     AnswerComponent,
     QuizSearchPipe,
-    QuestionCardComponent
+    QuestionCardComponent,
+    RoomComponent
   ],
   imports: [
     BrowserModule,
