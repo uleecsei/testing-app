@@ -21,9 +21,8 @@ module.exports.login = async (req, res) => {
     const password = req.body.password;
     const email = req.body.email.toLowerCase();
 
-    const user = await User.findOne({
-      email
-    });
+    const user = await User.findOne({email});
+    console.log(user);
     if (!user) {
       return res.status(400).json({
         status: 'User has not been found',
@@ -39,9 +38,17 @@ module.exports.login = async (req, res) => {
 
     const token = getToken(user);
 
+    const userInfo = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      pictureProfile: user.pictureProfile
+    }
+
     res.status(200).json({
       status: 'User authenticated successfully',
       token: `Bearer ${token}`,
+      user: userInfo
     });
   } catch (e) {
     errorHandler(res, 500, e);
@@ -56,9 +63,16 @@ module.exports.googleLogin = async (req, res) => {
 
     if (user) {
       const token = getToken(user);
+      const userInfo = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        pictureProfile: user.pictureProfile
+      }
       return res.status(200).json({
         status: 'User authenticated successfully',
         token: `Bearer ${token}`,
+        user: userInfo,
       });
     }
 
@@ -70,21 +84,32 @@ module.exports.googleLogin = async (req, res) => {
             payload.picture;
 
       await candidate.update({googleId: payload.sub, profilePicture});
-      await candidate.save();
+      const newUser = await candidate.save();
 
+      const userInfo = {
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        pictureProfile: newUser.pictureProfile
+      }
       const token = getToken(candidate);
       return res.status(200).json({
         status: 'User authenticated successfully',
         token: `Bearer ${token}`,
+        user: userInfo,
       });
     }
 
-    const newUser = new User({
-      googleId: payload.sub,
+    const userInfo = {
       email: payload.email,
       firstName: payload.given_name,
       lastName: payload.family_name,
       profilePicture: payload.picture
+    }
+
+    const newUser = new User({
+      googleId: payload.sub,
+      ...userInfo
     });
 
     const savedUser = await newUser.save();
@@ -93,6 +118,7 @@ module.exports.googleLogin = async (req, res) => {
     res.status(200).json({
       status: 'User authenticated successfully',
       token: `Bearer ${token}`,
+      user: userInfo,
     });
   } catch (e) {
     errorHandler(res, 500, e);
@@ -101,18 +127,10 @@ module.exports.googleLogin = async (req, res) => {
 
 module.exports.register = async (req, res) => {
   try {
-    const {
-      password,
-      firstName,
-      lastName
-    } = req.body;
-    const {
-      email
-    } = req.body.email.toLowerCase();
+    const {password, firstName, lastName} = req.body;
+    const email = req.body.email.toLowerCase();
 
-    const candidate = await User.findOne({
-      email
-    });
+    const candidate = await User.findOne({email});
     if (candidate) {
       return res.status(400).json({
         status: 'The email is already registered',

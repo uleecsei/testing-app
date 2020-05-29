@@ -13,7 +13,7 @@ module.exports = {
   }),
 
   loginForm: Joi.object({
-    email: Joi.string().email({minDomainSegments: 2}).required(),
+    email: Joi.string().email({minDomainSegments: 2}).insensitive().required(),
     password: Joi.string().min(6).max(128).required(),
   }),
 };

@@ -3,14 +3,9 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const passport = require('passport');
-const passportMiddleware = require('./server/middleware/passport.middleware');
 require("dotenv").config();
 
 const app = express();
-
-app.use(passport.initialize());
-passportMiddleware(passport);
 
 app.use(bodyParser.json());
 
@@ -20,6 +15,7 @@ mongoose.connect(process.env.DATABASE_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
+  useFindAndModify: false
 }).then(() => {
     console.log("Database connected");
 }).catch((err) => {
@@ -28,6 +24,7 @@ mongoose.connect(process.env.DATABASE_URI, {
 
 app.use("/api/auth", require("./server/routes/auth.routes"));
 app.use("/api/tests", require("./server/routes/tests.routes"));
+app.use("/api/photo", require("./server/routes/photo.routes"));
 
 app.use(express.static(__dirname + "/dist/testing-app"));
 

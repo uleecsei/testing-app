@@ -13,7 +13,8 @@ const UserSchema = new Schema({
   password: {type: String},
   firstName: {type: String, required: true},
   lastName: {type: String, required: true},
-  profilePicture: {type: String},
+  profilePicture: {type: String, default: null},
+  s3Key: {type: String, default: null},
   tests: [{type: Types.ObjectId, ref: 'Tests'}],
 });
 
