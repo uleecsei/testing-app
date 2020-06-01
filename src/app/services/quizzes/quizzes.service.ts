@@ -12,7 +12,7 @@ const myQuizzes = [
     title: 'Noun',
     topic: Topics.Languages,
     questions: [
-      { 
+      {
         qId:1,
         type:QuestionType.radio,
         time:6000,
@@ -88,16 +88,14 @@ export class QuizzesService  {
     private http: HttpClient,
     private flash: MessagesService
   ) {
-    // this.getUserQuizzes();
-    // this.getAllQuizzes();
-    // console.log(this.allQuizzes.value);
-    // console.log(this.myQuizzes.value);
+    this.getUserQuizzes();
+    this.getAllQuizzes();
+
   }
   url = environment.baseUrl;
   allQuizzes = new BehaviorSubject([]);
   myQuizzes = new BehaviorSubject([]);
   quizzes$: BehaviorSubject<any[]> = new BehaviorSubject(myQuizzes);
-  
 
 
   createQuiz(form) {
@@ -123,11 +121,9 @@ export class QuizzesService  {
       `${this.url}/api/tests`)
       .subscribe(
         data => {
-          console.log(data);
           this.myQuizzes.next(data.tests);
         },
         error => {
-          console.log(error);
           this.flash.showError(error.status);
         });
   }
@@ -137,11 +133,9 @@ export class QuizzesService  {
       `${this.url}/api/tests/all`)
       .subscribe(
         data => {
-          console.log(data);
           this.allQuizzes.next(data.tests);
         },
         error => {
-          console.log(error);
           this.flash.showError(error.status);
         });
   }

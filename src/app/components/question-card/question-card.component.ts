@@ -7,7 +7,7 @@ import { AnswersService } from 'src/app/services/answers/answers.service';
   styleUrls: ['./question-card.component.scss']
 })
 export class QuestionCardComponent implements OnInit {
-  @Input() currentQ; 
+  @Input() currentQ;
   constructor(private answerService: AnswersService) { }
   ngOnInit(): void {
   }
