@@ -10,27 +10,23 @@ export class TakeQuizService {
 
   constructor() { }
   public ngOnInit() {
-
   }
 
   public ngAfterViewInit() {
     this.socket.on("roomId", roomId =>
       console.log(roomId))
   }
-
-
-
-  createGame() {
-    this.socket.emit("createGame", () => {
-
-    })
+  createGame(quiz) {
+    this.socket.emit("createGame", quiz)
   }
 
-  joinRoom(room, quizId) {
-    this.socket.emit("joinGameRoom", room, quizId)
+  joinRoom(room) {
+    this.socket.emit("joinGameRoom", room)
   }
 
-
+  startGame() {
+    this.socket.emit("gameStarted")
+  }
 
 
 }

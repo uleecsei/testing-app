@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { TakeQuizService } from 'src/app/take-quiz.service';
+import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
 
 @Component({
   selector: 'app-quiz-card',
@@ -16,12 +16,12 @@ export class QuizCardComponent implements OnInit {
   ngOnInit(): void {
   }
   practice() {
-    this.router.navigate(['home/takeQuiz', this.quiz._id], {state: {quiz: this.quiz}});
+    this.router.navigate(['home/takeQuiz', this.quiz._id], {state: {quiz: this.quiz,isSinglePlayer:true}});
   }
 
   playWithFriends(){
     // Join the room via service
-    this.router.navigate(['home/joinRoom'], {state: {quizId: this.quiz._id}})
+    this.router.navigate(['home/joinRoom'],{state: {quiz: this.quiz}})
     return;
   }
 

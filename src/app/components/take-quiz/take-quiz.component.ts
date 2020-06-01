@@ -9,6 +9,7 @@ import { UserAnswer } from '../../interfaces/quiz'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from 'codelyzer/util/logger';
 import { AnswersService } from 'src/app/services/answers/answers.service';
+import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
 
 @Component({
   selector: 'app-take-quiz',
@@ -26,6 +27,8 @@ export class TakeQuizComponent implements OnInit {
   gameStarted
   gameFinished
   timeLeft
+  isSinglePlayer
+  isCreator
 
   progressValue = 0;
   PROGRESS_BAR_SPEED = 150 // less = faster
@@ -37,7 +40,8 @@ export class TakeQuizComponent implements OnInit {
     private route: ActivatedRoute,
     private quizzesService: QuizzesService,
     private answerService: AnswersService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private takequizService:TakeQuizService,
   ) {
   }
 
@@ -46,24 +50,16 @@ export class TakeQuizComponent implements OnInit {
     // Лена, это обьект теста переданный при переходе, по идее теперь не надо искать его по айди
 
     this.quiz = window.history.state.quiz
+    this.isSinglePlayer=window.history.state.isSinglePlayer||null
+    this.isCreator=window.history.state.isCreator||null
     this.questionIndex = 0
     this.currentQuestion = this.quiz.questions[this.questionIndex]
     this.answerService.currentQuiz$.next(this.quiz)
     this.answerService.currentQuestion$.next(this.currentQuestion)
-
-    // this.routeSubscription = this.route.params.subscribe(params => {
-    //   this.id = params['id']
-    //   console.log(this.id)
-    // });
-    // this.quizzesService.quizzes$.subscribe(res => {
-    //   this.quiz = res.filter(e => e.id === +this.id)[0]
-    //   this.questions = this.quiz.questions
-    //   this.currentQ = this.quiz.questions[0];
-    // })
-    // this.answerService.timeOut$.subscribe(() => {
-    //   this.next()
-    // })
-
+    this.takequizService.socket.on("startGame",()=>{
+      this.startGame()
+    })
+   
   }
   nextQuestion() {
     this.updateTimer()
@@ -119,6 +115,12 @@ export class TakeQuizComponent implements OnInit {
     this.gameStarted = true
     this.startTimer()
   }
+
+  startByCreator(){
+    this.takequizService.startGame()
+  }
+  
+
   finishGame() {
     this.gameStarted = false
     this.gameFinished = true
@@ -166,6 +168,7 @@ export class TakeQuizComponent implements OnInit {
 
   ngOnDestroy() {
     this.questionTimer.unsubscribe()
+    //this.unsubscribeTimer()
     this.currentProgress.unsubscribe()
   }
   // openSnack() {

@@ -19,16 +19,16 @@ const myQuizzes = [
         question: "Are u ok?",
         answers: [
           {
-            answer: 'True',
-            isCorrect: true
+            text: 'True',
+            isTrue: true
           },
           {
-            answer: 'False',
-            isCorrect: false
+            text: 'False',
+            isTrue: false
           },
           {
-            answer: 'I dont know',
-            isCorrect: false
+            text: 'I dont know',
+            isTrue: false
           },
         ]
 
@@ -39,16 +39,16 @@ const myQuizzes = [
         time:5000,
         answers: [
           {
-            answer: "pizza",
-            isCorrect: true
+            text: "pizza",
+            isTrue: true
           },
           {
-            answer: "sushi",
-            isCorrect: true
+            text: "sushi",
+            isTrue: true
           },
           {
-            answer: "chocolate",
-            isCorrect: false
+            text: "chocolate",
+            isTrue: false
           },
 
         ]
@@ -59,16 +59,16 @@ const myQuizzes = [
         time:5000,
         answers: [
           {
-            answer: "water",
-            isCorrect: true
+            text: "water",
+            isTrue: true
           },
           {
-            answer: "coke",
-            isCorrect: true
+            text: "coke",
+            isTrue: true
           },
           {
-            answer: "beer",
-            isCorrect: false
+            text: "beer",
+            isTrue: false
           },
 
         ]

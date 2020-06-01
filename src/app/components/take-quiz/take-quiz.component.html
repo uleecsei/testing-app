@@ -1,6 +1,6 @@
 <button
-  *ngIf="!gameStarted && !gameFinished"
-  (click)="startGame()"
+  *ngIf="!gameStarted && !gameFinished && (isCreator || isSinglePlayer)"
+  (click)="(isCreator)?startByCreator():startGame()"
   mat-flat-button
   color="accent"
 >
