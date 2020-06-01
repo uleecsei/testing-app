@@ -9,9 +9,12 @@
 mat-toolbar {
   button {
     &[mat-stroked-button] {
-      width: 200px !important;
+      width: 250px !important;
     }
-    margin: 0 10px 0 10px;
+    &[mat-raised-button] {
+      width: 250px !important;
+    }
+    margin: 0 10px;
   }
 }
 .space {
