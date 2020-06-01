@@ -19,7 +19,9 @@ export class AnswerComponent implements OnInit {
   @Input() qId;
   submitted;
 
-  isCorrect = () => (this.answer.isCorrect) ? answerStyle.correct : answerStyle.incorrect
+
+
+  isCorrect = () => (this.answer.isTrue) ? answerStyle.correct : answerStyle.incorrect
 
   constructor(private answerService: AnswersService) { }
   ngOnInit(): void {
@@ -28,4 +30,8 @@ export class AnswerComponent implements OnInit {
     })
   }
   log(event) { this.answerService.answer(this) }
+
+  // ngOnDestroy(){
+  //   this.answerService.isAnswered$.unsubscribe()
+  // }
 }

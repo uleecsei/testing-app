@@ -30,6 +30,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { QuizSearchPipe } from './pipes/search.pipe';
 import { QuestionCardComponent } from './components/question-card/question-card.component';
 import { MyResultsCardComponent } from './components/my-results-card/my-results-card.component';
+import { RoomComponent } from './components/room/room.component'
 
 @NgModule({
   declarations: [
@@ -50,7 +51,9 @@ import { MyResultsCardComponent } from './components/my-results-card/my-results-
     AnswerComponent,
     QuizSearchPipe,
     QuestionCardComponent,
-    MyResultsCardComponent
+    MyResultsCardComponent,
+    QuestionCardComponent,
+    RoomComponent
   ],
   imports: [
     BrowserModule,
