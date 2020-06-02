@@ -9,11 +9,8 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {EditQuizComponent} from './components/edit-quiz/edit-quiz.component';
 import {TakeQuizComponent} from './components/take-quiz/take-quiz.component';
 import {CreateQuizComponent} from './components/create-quiz/create-quiz.component';
-<<<<<<< HEAD
 import { AuthGuard } from "./services/auth.guard";
-=======
 import { RoomComponent } from './components/room/room.component';
->>>>>>> 780641f6254f91d31a18008dedce37a4fc3d48dc
 
 
 const routes: Routes = [
