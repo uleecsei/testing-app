@@ -13,8 +13,8 @@ export class TakeQuizService {
       console.log(roomId));
   }
 
-  createGame(quiz) {
-    this.socket.emit('createGame', quiz);
+  createGame(quiz, userId) {
+    this.socket.emit('createGame', quiz, userId);
   }
 
   joinRoom(room) {

@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import io from 'socket.io-client';
 import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
+import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -13,9 +14,11 @@ export class RoomComponent implements OnInit, AfterViewInit {
   isCreator;
   quizId;
   room;
+  user;
 
   private socket;
   constructor(
+    private userService: UserService,
     private takequizService: TakeQuizService,
     private router: Router,
     private route: ActivatedRoute) { }
@@ -26,6 +29,8 @@ export class RoomComponent implements OnInit, AfterViewInit {
     this.quizId = (this.quiz) ? this.quiz._id : null;
     this.socket = this.takequizService.socket;
     console.log(this.quizId);
+    //this.user = this.userService.getUserData();
+    console.log(this.user);
   }
 
   public ngAfterViewInit(){
@@ -49,7 +54,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
  }
 
  createGame(){
-    return this.takequizService.createGame(this.quiz);
+    return this.takequizService.createGame(this.quiz, this.user.id);
  }
 
  joinRoom(){

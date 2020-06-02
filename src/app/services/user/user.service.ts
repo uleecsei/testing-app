@@ -69,7 +69,7 @@ export class UserService {
       .subscribe(
         data => {
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.userData, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);
