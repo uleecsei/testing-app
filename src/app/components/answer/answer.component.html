@@ -1,7 +1,7 @@
 
-<input  [type]="type" [name]="qId" [id]="index" (change)="log($event)"/>
-<label  [for]="index">
-
+<input [disabled]='submitted' [type]="type" [name]="qId" [id]="index" (change)="log($event)"/>
+<label [ngStyle]="(submitted)?isCorrect():null" [for]="index">
+  
   {{answer.text}}
 </label>
 
