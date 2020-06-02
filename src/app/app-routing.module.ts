@@ -9,6 +9,7 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {EditQuizComponent} from './components/edit-quiz/edit-quiz.component';
 import {TakeQuizComponent} from './components/take-quiz/take-quiz.component';
 import {CreateQuizComponent} from './components/create-quiz/create-quiz.component';
+import { AuthGuard } from "./services/auth.guard";
 
 
 const routes: Routes = [
@@ -27,26 +28,32 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'myquizzes',
         component: MyQuizzesComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'myresults',
         component: MyResultsComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'createQuiz',
         component: CreateQuizComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'editQuiz/:id',
         component: EditQuizComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'takeQuiz/:id',
         component: TakeQuizComponent,
+        canActivate: [AuthGuard]
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full'}
     ]

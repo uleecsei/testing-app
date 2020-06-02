@@ -65,8 +65,8 @@ export class QuizzesService  {
           this.flash.showSuccess(data.status);
         },
         error => {
-          console.log(error);
-          this.flash.showError(error.status);
+          console.log(error.message ? error.message : error);
+          this.flash.showError(error.message ? error.message : error);
         });
   }
 
@@ -83,8 +83,8 @@ export class QuizzesService  {
           this.myQuizzes.next(data.tests);
         },
         error => {
-          console.log(error);
-          this.flash.showError(error.status);
+          console.log(error.message ? error.message : error);
+          this.flash.showError(error.message ? error.message : error);
         });
   }
 
@@ -97,8 +97,8 @@ export class QuizzesService  {
           this.allQuizzes.next(data.tests);
         },
         error => {
-          console.log(error);
-          this.flash.showError(error.status);
+          console.log(error.message ? error.message : error);
+          this.flash.showError(error.message ? error.message : error);
         });
   }
 

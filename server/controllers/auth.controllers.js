@@ -42,7 +42,7 @@ module.exports.login = async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      pictureProfile: user.pictureProfile
+      profilePicture: user.profilePicture,
     }
 
     res.status(200).json({
@@ -67,7 +67,7 @@ module.exports.googleLogin = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        pictureProfile: user.pictureProfile
+        profilePicture: user.profilePicture
       }
       return res.status(200).json({
         status: 'User authenticated successfully',
@@ -90,7 +90,7 @@ module.exports.googleLogin = async (req, res) => {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         email: newUser.email,
-        pictureProfile: newUser.pictureProfile
+        profilePicture: newUser.profilePicture
       }
       const token = getToken(candidate);
       return res.status(200).json({
@@ -153,3 +153,28 @@ module.exports.register = async (req, res) => {
     errorHandler(res, 500, e);
   }
 };
+
+module.exports.userInfo = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      errorHandler(res, 401, new Error('Token is invalid'));
+    }
+
+    const userInfo = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePicture: user.profilePicture
+    }
+
+    res.status(201).json({
+      status: "User authorized successfully",
+      user: userInfo,
+    })
+
+  } catch (e) {
+    errorHandler(res, 500, e);
+  }
+}
