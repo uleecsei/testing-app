@@ -22,7 +22,7 @@ module.exports.login = async (req, res) => {
     const email = req.body.email.toLowerCase();
 
     const user = await User.findOne({email});
-    console.log(user);
+    
     if (!user) {
       return res.status(400).json({
         status: 'User has not been found',
