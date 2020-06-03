@@ -29,7 +29,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
     this.quizId = (this.quiz) ? this.quiz._id : null;
     this.socket = this.takequizService.socket;
     console.log(this.quizId);
-    //this.user = this.userService.getUserData();
+    this.user = this.userService.getUser();
     console.log(this.user);
   }
 

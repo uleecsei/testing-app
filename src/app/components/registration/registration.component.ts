@@ -14,7 +14,10 @@ export class RegistrationComponent implements OnInit {
   public registrationForm: FormGroup;
   constructor(private userService: UserService) {
     this.registrationForm = new FormGroup({
-      name: new FormControl('', [
+      firstName: new FormControl('', [
+        Validators.required
+      ]),
+      lastName: new FormControl('', [
         Validators.required
       ]),
       email: new FormControl('', [

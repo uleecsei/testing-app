@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 import { UserService } from '../../services/user/user.service';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'app-home',
@@ -9,8 +8,11 @@ import { UserService } from '../../services/user/user.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  user: User;
 
   constructor(private userService: UserService) {
+    this.user = this.userService.getUser();
+    console.log(this.user);
   }
 
   ngOnInit(): void {
