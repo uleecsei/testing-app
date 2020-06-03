@@ -43,11 +43,13 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private takequizService: TakeQuizService,
   ) {
+    this.quiz = window.history.state.quiz;
+    console.log(this.quiz);
   }
 
 
   ngOnInit(): void {
-    this.quiz = window.history.state.quiz;
+
     this.isSinglePlayer = window.history.state.isSinglePlayer || null;
     this.isCreator = window.history.state.isCreator || null;
     this.questionIndex = 0;

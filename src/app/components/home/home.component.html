@@ -21,10 +21,9 @@
   <mat-drawer #drawer mode="side" class="side-menu">
     <div class="profile-container">
       <div class="profile-container__photo">
-        <img src="" alt=""/>
+        <img [src]="user.profilePicture" alt=""/>
       </div>
-
-      <h1>Name</h1>
+      <h1>{{user.firstName}} {{user.lastName}}</h1>
       <button mat-flat-button color="primary" routerLink="createQuiz">Create my quiz</button>
 
     </div>

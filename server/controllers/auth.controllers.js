@@ -22,7 +22,7 @@ module.exports.login = async (req, res) => {
     const email = req.body.email.toLowerCase();
 
     const user = await User.findOne({email});
-    
+
     if (!user) {
       return res.status(400).json({
         status: 'User has not been found',
@@ -71,6 +71,7 @@ module.exports.googleLogin = async (req, res) => {
         email: user.email,
         profilePicture: user.profilePicture
       }
+
       return res.status(200).json({
         status: 'User authenticated successfully',
         token: `Bearer ${token}`,
@@ -81,8 +82,8 @@ module.exports.googleLogin = async (req, res) => {
     const candidate = await User.findOne({email: payload.email});
 
     if (candidate) {
-      const profilePicture = candidate.profilePicture ? 
-            candidate.profilePicture : 
+      const profilePicture = candidate.profilePicture ?
+            candidate.profilePicture :
             payload.picture;
 
       await candidate.update({googleId: payload.sub, profilePicture});

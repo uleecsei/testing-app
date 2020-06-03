@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {environment} from '../../../environments/environment';
 import {MessagesService} from '../messages/messages.service';
-import {User} from "../../interfaces/user";
+import {User} from '../../interfaces/user';
 // import { error } from '@angular/compiler/src/util';
 
 const httpOptions = {
@@ -69,7 +69,7 @@ export class UserService {
       .subscribe(
         data => {
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.userData, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);
@@ -109,10 +109,10 @@ export class UserService {
         this.user.next(data.user);
         this.flash.showSuccess(data.status);
       },
-      error => {        
+      error => {
         console.log(error.message ? error.message : error);
       }
-    )
+    );
   }
 
   public logoutUser() {
@@ -128,7 +128,7 @@ export class UserService {
   }
 
   public getUser() {
-    if(!this.user.value) {
+    if (!this.user.value) {
       this.getUserInfo();
     }
     return this.user.value;

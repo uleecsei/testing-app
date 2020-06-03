@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+const Game = require('./server/models/Game');
 
 const app = express();
 
@@ -36,29 +37,32 @@ app.listen(process.env.PORT || 8084, () => {
   console.log(`Server is running on port ${process.env.PORT || 8084}`);
 });
 
-//socket
+//socket------------------------------------------------------------
+
 const http = require("http").Server(express);
 const Socketio = require("socket.io")(http);
-
-const games = [];
 
 
 Socketio.of("/game").on("connection", (socket) => {
   socket.emit("Join the game", "You have joined the game");
 
-  socket.on("createGame", (quiz) => {
+  socket.on("createGame", (data) => {
+    const {quiz, userId} = data;
     let roomId = getRandom();
-    createRoom(roomId,quiz);
+    createGame(roomId, quiz, userId);
     socket.emit("quiz created", quiz);
     socket.emit("roomId", roomId);
   });
 
-  socket.on("joinGameRoom", (room) => {
-    if (roomExists) {
+  socket.on("joinGameRoom", async (room) => {
+    if (roomExists(room)) {
       socket.join(room);
       socket.emit("joinedRoom", "You have joined the room");
-      socket.emit("games",games)
-      let quiz=getQuiz(room).quiz
+      let quiz;
+       await getQuiz(room)
+         .then( res => {
+           quiz = res.quiz
+         });
       Socketio.of("/game").in(room).emit("quiz",quiz);
       socket.on("gameStarted",()=>{
         Socketio.of("/game").in(room).emit("startGame",quiz);
@@ -70,33 +74,48 @@ Socketio.of("/game").on("connection", (socket) => {
   });
 });
 
-function createRoom(room,quiz) {
-  games.push({
+async function createGame(room, quiz, userId) {
+  const newGame  = await new Game ({
+    created_by: userId,
+    testId: quiz._id,
     roomId: room,
-    quiz:quiz,
-    users: [],
+    status: 'Created',
+    quiz: quiz,
+    users: [
+      {
+        userId: userId,
+        result:  0,
+      }
+    ],
   });
+
+  await newGame.save();
 }
 
-function getQuiz(roomId){
-  let game=games.filter(game=>
-    game.roomId === roomId
-  )[0]
-  return game
+
+function getQuiz(roomId) {
+   return Game.findOne({roomId: roomId})
 }
 
-function roomExists(room) {
-  let game = games.filter((game) => {
-    game.roomId === room;
-  });
+async function roomExists(room) {
+  const game = await Game.findOne({roomId: room});
   return !!game;
 }
 
-function addNewUser(room, user) {
-  let game = games.filter((g) => {
-    g.roomId = room;
-  });
-  game.users.push(user);
+async function addNewUser(room, user) {
+  await Game.findOneAndUpdate({roomId: room},
+  { "$push": { "users": {
+      userId: user, result: 0,
+  }
+    } },
+    {new: true, useFindAndModify: false},
+    function (err, result) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+      }
+    });
 }
 
 function getRandom() {

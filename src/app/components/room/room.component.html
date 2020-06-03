@@ -1,4 +1,4 @@
-<div class="enter-room__container">
+<div class="enter-room">
   <h1>Join the game</h1>
 
   <mat-form-field floatLabel="auto" appearance="outline">
@@ -7,7 +7,7 @@
     <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
   </mat-form-field>
 
-  <div>
+  <div class="enter-room_buttons">
     <button *ngIf='quizId' (click)="createGame()" mat-raised-button color="accent">Create a game</button>
     <button (click)="joinRoom()" mat-raised-button color="accent">Join</button>
   </div>

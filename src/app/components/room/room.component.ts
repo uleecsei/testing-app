@@ -1,7 +1,9 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import io from 'socket.io-client';
 import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
+import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { User } from '../../interfaces/user';
+import {logger} from "codelyzer/util/logger";
 
 @Component({
   selector: 'app-room',
@@ -13,9 +15,12 @@ export class RoomComponent implements OnInit, AfterViewInit {
   isCreator;
   quizId;
   room;
+  roomId;
+  user: User;
 
   private socket;
   constructor(
+    private userService: UserService,
     private takequizService: TakeQuizService,
     private router: Router,
     private route: ActivatedRoute) { }
@@ -25,22 +30,20 @@ export class RoomComponent implements OnInit, AfterViewInit {
     this.isCreator = !!(this.quiz);
     this.quizId = (this.quiz) ? this.quiz._id : null;
     this.socket = this.takequizService.socket;
-    console.log(this.quizId);
+    this.user = this.userService.getUser();
   }
 
   public ngAfterViewInit(){
     this.socket.on('roomId', roomId =>
     this.room = roomId);
 
-    this.socket.on('games', roomId =>
-    console.log(roomId));
     this.socket.on('Join the game', (message) => {
       console.log(message);
     });
     this.socket.on('joinedRoom', (message) => {
       console.log(message);
     });
-    this.socket.on('quiz created', quiz => console.log(quiz));
+    this.socket.on('quiz created', quiz => console.log('QUIZ from server', quiz));
 
     this.socket.on('quiz', (quiz) => {
       console.log('gotten quiz', quiz);
@@ -49,7 +52,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
  }
 
  createGame(){
-    return this.takequizService.createGame(this.quiz);
+    return this.takequizService.createGame(this.quiz, this.user.userId);
  }
 
  joinRoom(){
