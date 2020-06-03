@@ -39,6 +39,7 @@ module.exports.login = async (req, res) => {
     const token = getToken(user);
 
     const userInfo = {
+      userId: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
@@ -64,6 +65,7 @@ module.exports.googleLogin = async (req, res) => {
     if (user) {
       const token = getToken(user);
       const userInfo = {
+        userId: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
@@ -87,6 +89,7 @@ module.exports.googleLogin = async (req, res) => {
       const newUser = await candidate.save();
 
       const userInfo = {
+        userId: newUser._id,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         email: newUser.email,
@@ -101,6 +104,7 @@ module.exports.googleLogin = async (req, res) => {
     }
 
     const userInfo = {
+      userId: payload._id,
       email: payload.email,
       firstName: payload.given_name,
       lastName: payload.family_name,
@@ -163,6 +167,7 @@ module.exports.userInfo = async (req, res) => {
     }
 
     const userInfo = {
+      userId: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
