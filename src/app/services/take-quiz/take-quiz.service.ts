@@ -14,7 +14,7 @@ export class TakeQuizService {
   }
 
   createGame(quiz, userId) {
-    this.socket.emit('createGame', quiz, userId);
+    this.socket.emit('createGame', {quiz, userId});
   }
 
   joinRoom(room) {

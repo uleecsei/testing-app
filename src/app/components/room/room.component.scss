@@ -1,6 +1,11 @@
-.enter-room__container{
+.enter-room{
 margin: 100px auto;
 width: 100%;
 text-align: center;
+
+  &_buttons {
+    display: flex;
+    justify-content: space-around;
+  }
 }
 
