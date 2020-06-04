@@ -1,0 +1,85 @@
+.header {
+  .logo {
+    cursor: pointer;
+  }
+}
+.home-container {
+  height: 100vh;
+}
+mat-toolbar {
+  button {
+    &[mat-stroked-button] {
+      width: 250px !important;
+    }
+    &[mat-raised-button] {
+      width: 250px !important;
+    }
+    margin: 0 10px;
+  }
+}
+.space {
+  width: 60%;
+}
+
+.profile-container {
+  margin: 10%;
+
+  &__photo {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background-color: violet;
+
+    &:hover .profile-container__add {
+      display: block;
+    }
+  }
+
+  &__photo img {
+    width: 100px;
+    height: 100px;
+  }
+
+  &__add {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 20px;
+    border-radius: 5px 5px 0 0;
+    background-color: rgba(200,200,200,0.4);
+    color: white;
+    border-color: white;
+    outline: none;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    display: none;
+  }
+}
+.avatar {
+  width: 100px;
+  height: 100px;
+  background-color: violet;
+}
+.side-menu {
+  width: 200px;
+}
+.side-menu-list {
+  mat-list-item {
+    padding: 0 0 0 5%;
+    cursor: pointer;
+    &:hover {
+      border-right: 1px solid violet;
+      color: violet;
+    }
+
+    &:focus {
+      background-color: #62278d;
+      outline: none;
+    }
+  }
+}
+
+
+
+

@@ -1,0 +1,11 @@
+<mat-card >
+    <img src="" alt="">
+    <mat-card-title>{{quiz.title}}</mat-card-title>
+    <mat-card-subtitle>{{quiz.topic}}</mat-card-subtitle>
+    <button (click)="practice()" mat-flat-button  color="primary">Start</button>
+    <button (click)="playWithFriends()" mat-raised-button color="accent">Play with friends</button>
+    <mat-chip-list aria-label="Fish selection">
+        <mat-chip color="primary" >{{quiz.questions.length}} Qs</mat-chip>
+        <mat-chip color="accent" selected>{{quiz.topic}}</mat-chip>
+      </mat-chip-list>
+</mat-card>

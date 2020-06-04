@@ -1,0 +1,72 @@
+.reg {
+  padding: 20px 10px;
+  min-height: 100vh;
+  background-color: #212121;
+
+  &_title {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+  }
+
+  &_card {
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .form{
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+
+    &_element {
+      width: 100%;
+    }
+  }
+
+  &_actions {
+    text-align: center;
+  }
+
+  &_test {
+    text-align: center;
+  }
+
+  &_submit {
+    width: 185px;
+    height: 40px;
+  }
+
+}
+
+.google {
+  margin: 10px auto;
+  width: 185px;
+  height: 40px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 3px 4px 0 rgba(0,0,0,.25);
+  box-sizing: border-box;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &__icon {
+      // position: absolute;
+      margin-top: 5px;
+      margin-left: 5px;
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;    
+  }
+  
+  &__text {
+    float: right;
+    margin: 11px 11px 0 0;
+    color: #000;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+  }
+}

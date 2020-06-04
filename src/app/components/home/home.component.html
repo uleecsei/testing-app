@@ -1,0 +1,49 @@
+<header class="header">
+  <mat-toolbar class="reg_toolbar" align="center">
+    <button
+      mat-mini-fab
+      color="primary"
+      (click)="drawer.toggle()"
+      aria-label="Example icon button with a menu icon"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="logo" routerLink="/home">
+      <span>Quizizz</span>
+    </div>
+    <span class="space"></span>
+    <button mat-raised-button color="accent" routerLink="joinRoom">Join the game</button>
+    <button mat-stroked-button routerLink="createQuiz">Create my quiz</button>
+    <button mat-button color="primary" (click)="logout()">Log Out</button>
+  </mat-toolbar>
+</header>
+<mat-drawer-container class="home-container" autosize>
+  <mat-drawer #drawer mode="side" class="side-menu">
+    <div class="profile-container">
+      <div class="profile-container__photo">
+        <img  mat-card-avatar [src]="user.profilePicture" alt=""/>
+        <input 
+          type="file" 
+          style="display: none;" 
+          (change)="onFileSelected($event)" 
+          #fileInput 
+          accept="image/png,image/jpeg"
+          >
+        <button class="profile-container__add" (click)="fileInput.click()">+</button>        
+      </div>
+      <h1>{{user.firstName}} {{user.lastName}}</h1>
+      <button mat-flat-button color="primary" routerLink="createQuiz">Create my quiz</button>
+
+    </div>
+
+    <mat-list class="side-menu-list">
+      <mat-list-item routerLink="./dashboard">Dashboard</mat-list-item>
+      <mat-list-item routerLink="./myquizzes">My quizzes</mat-list-item>
+      <mat-list-item routerLink="./myresults">My results</mat-list-item>
+    </mat-list>
+    <mat-divider>Some text</mat-divider>
+  </mat-drawer>
+  <router-outlet>
+
+  </router-outlet>
+</mat-drawer-container>

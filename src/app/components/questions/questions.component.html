@@ -1,0 +1,104 @@
+<div class="question-block">
+  <form [formGroup]="addQuestion" (ngSubmit)="add()">
+    <div class="question">
+      <mat-form-field appearance="fill">
+        <mat-label>Question</mat-label>
+        <input matInput placeholder="add question" formControlName="question">
+      </mat-form-field>
+    </div>
+    <div class="answers">
+      <div
+        fxLayout="row wrap"
+        fxLayoutAlign="space-between"
+        fxLayout.lt-sm="column"
+        fxLayoutGap="5px"
+      >
+        <div
+          class=" answers_element"
+          fxFlex="0 1 calc(25% - 5px)"
+          fxFlex.lt-md="0 1 calc(50% - 5px)"
+          fxFlex.lt-sm="100%">
+          <mat-form-field appearance="fill">
+            <mat-label>Answer1</mat-label>
+            <input matInput placeholder="add answer1" formControlName="answer1">
+          </mat-form-field>
+          <br>
+          <mat-checkbox
+            [(ngModel)]="checkboxes[0]"
+            (change)="checkCounter()"
+            formControlName="answer1Status"
+          >
+            True answer
+          </mat-checkbox>
+        </div>
+        <div
+          class=" answers_element"
+          fxFlex="0 1 calc(25% - 5px)"
+          fxFlex.lt-md="0 1 calc(50% - 5px)"
+          fxFlex.lt-sm="100%">
+          <mat-form-field appearance="fill">
+            <mat-label>Answer2</mat-label>
+            <input matInput placeholder="add answer2" formControlName="answer2">
+          </mat-form-field>
+          <br>
+          <mat-checkbox
+            [(ngModel)]="checkboxes[1]"
+            (change)="checkCounter()"
+            formControlName="answer2Status"
+          >
+            True answer
+          </mat-checkbox>
+        </div>
+        <div
+          class=" answers_element"
+          fxFlex="0 1 calc(25% - 5px)"
+          fxFlex.lt-md="0 1 calc(50% - 5px)"
+          fxFlex.lt-sm="100%">
+          <mat-form-field appearance="fill">
+            <mat-label>Answer3</mat-label>
+            <input matInput placeholder="add answer3" formControlName="answer3">
+          </mat-form-field>
+          <br>
+          <mat-checkbox
+            [(ngModel)]="checkboxes[2]"
+            (change)="checkCounter()"
+            formControlName="answer3Status"
+          >
+            True answer
+          </mat-checkbox>
+        </div>
+        <div
+          class=" answers_element"
+          fxFlex="0 1 calc(25% - 5px)"
+          fxFlex.lt-md="0 1 calc(50% - 5px)"
+          fxFlex.lt-sm="100%">
+          <mat-form-field appearance="fill">
+            <mat-label>Answer4</mat-label>
+            <input matInput placeholder="add answer4" formControlName="answer4">
+          </mat-form-field>
+          <br>
+          <mat-checkbox
+            [(ngModel)]="checkboxes[3]"
+            formControlName="answer4Status"
+            (change)="checkCounter()"
+          >
+            True answer
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <mat-dialog-actions>
+    <button
+      [disabled]="counter===0 || addQuestion.invalid"
+      mat-raised-button
+      color="primary"
+      type="submit"
+    >
+      Add question
+    </button>
+    <button mat-dialog-close mat-mini-fab color="accent">
+      <mat-icon>close</mat-icon>
+    </button>
+    </mat-dialog-actions>
+  </form>
+</div>

@@ -1,0 +1,25 @@
+.answers-container{
+    max-width: 50%;
+    margin: 0 auto;
+}
+.action{
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px;
+}
+
+mat-progress-bar.mat-progress-bar.answers-container__progress-bar.mat-warn {
+    max-width: 98%;
+    margin: 20px auto;
+}
+
+
+[type="checkbox"]:checked,
+[type="checkbox"]:not(:checked),
+[type="radio"]:checked,
+[type="radio"]:not(:checked){
+    position: absolute;
+    visibility: hidden;
+}
+
+

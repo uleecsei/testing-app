@@ -1,0 +1,36 @@
+<div class="reg">
+  <mat-toolbar class="reg_toolbar" align="center">
+    <button mat-button color="primary" routerLink="/registration" class="header_button">
+      Registration
+    </button>
+    <button mat-button color="primary" routerLink="/home" class="header_button">
+      Home
+    </button>
+    <h1 class="reg_title">Login</h1>
+  </mat-toolbar>
+  <mat-card  class="reg_card">
+    <mat-card-content>
+      <form class="reg_form form" [formGroup]="loginForm">
+        <mat-form-field  floatLabel="auto" appearance="outline" class="form_element">
+          <mat-label class="form_label">Email</mat-label>
+          <input   type="email" matInput required formControlName="email">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form_element">
+          <mat-label>Enter your password</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" required formControlName="password">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+      </form>
+      <p class='reg_test'>Test account: test@account.com&nbsp;|&nbsp;123456</p>
+    </mat-card-content>
+    <mat-card-actions  class="reg_actions">
+      <button class='reg_submit' mat-raised-button (click)="login()" color="primary" [disabled]="disabled">LOGIN</button>
+      <div class="google" (click)="googleAuthenticate()">
+        <img class="google__icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
+        <p class="google__text"><b>Sign in with google</b></p>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>

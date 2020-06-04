@@ -1,0 +1,14 @@
+<div class="dashboard-section">
+    <div class="dashboard">
+        <div class="dashboard__search">
+            <mat-form-field appearance="outline">
+                <mat-label>Search for quizzes on any topic</mat-label>
+                <input matInput [(ngModel)]="search">
+                <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+              </mat-form-field>
+        </div>
+        <div class="dashboard__cards">
+          <app-quiz-card class="dashboard__card" *ngFor="let quiz of quizzes$ | async | quizzesSearch: search" [quiz]="quiz"></app-quiz-card>
+        </div>
+    </div>
+  </div>
