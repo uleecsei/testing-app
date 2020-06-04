@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
 
-import { UserAnswer } from '../../interfaces/quiz'
+import { UserAnswer } from '../../interfaces/quiz';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from 'codelyzer/util/logger';
 import { AnswersService } from 'src/app/services/answers/answers.service';
@@ -16,22 +16,22 @@ import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
   templateUrl: './take-quiz.component.html',
   styleUrls: ['./take-quiz.component.scss']
 })
-export class TakeQuizComponent implements OnInit {
-  quiz
-  questionIndex
-  currentQuestion
+export class TakeQuizComponent implements OnInit, OnDestroy {
+  quiz;
+  questionIndex;
+  currentQuestion;
   isAnswered;
-  timeOut = false
-  questionTimer: Subscription
-  countdownTimer: Subscription
-  gameStarted
-  gameFinished
-  timeLeft
-  isSinglePlayer
-  isCreator
+  timeOut = false;
+  questionTimer: Subscription;
+  countdownTimer: Subscription;
+  gameStarted;
+  gameFinished;
+  timeLeft;
+  isSinglePlayer;
+  isCreator;
 
   progressValue = 0;
-  PROGRESS_BAR_SPEED = 150 // less = faster
+  PROGRESS_BAR_SPEED = 100; // less = faster
   currentProgress: Subscription;
 
   private routeSubscription: Subscription;
@@ -43,6 +43,8 @@ export class TakeQuizComponent implements OnInit {
     private snackBar: MatSnackBar,
     private takequizService: TakeQuizService,
   ) {
+    this.quiz = window.history.state.quiz;
+    console.log(this.quiz);
   }
 
 
@@ -65,11 +67,11 @@ export class TakeQuizComponent implements OnInit {
     this.updateTimer()
     this.disableBtn()
     setTimeout(() => {
-      this.saveUserAnswer()
-      this.enableBtn()
-      this.shouldUpdateProgressBar(this.currentProgress.closed)
-      this.goToNextQuestion()
-    }, 1500)
+      this.saveUserAnswer();
+      this.enableBtn();
+      this.shouldUpdateProgressBar(this.currentProgress.closed);
+      this.goToNextQuestion();
+    }, 1000);
   }
 
   saveUserAnswer() {
@@ -100,20 +102,20 @@ export class TakeQuizComponent implements OnInit {
   }
 
   changeQuestion() {
-    this.currentQuestion = this.quiz.questions[++this.questionIndex]
-    this.answerService.currentQuestion$.next(this.currentQuestion)
+    this.currentQuestion = this.quiz.questions[++this.questionIndex];
+    this.answerService.currentQuestion$.next(this.currentQuestion);
   }
 
   isLastQuestion = () => this.questionIndex == this.quiz.questions.length - 1
 
   updateUserAnswer() {
-    this.answerService.userAnswers$.next([])
-    this.answerService.currentAnswer$.next([])
+    this.answerService.userAnswers$.next([]);
+    this.answerService.currentAnswer$.next([]);
 
   }
   startGame() {
-    this.gameStarted = true
-    this.startTimer()
+    this.gameStarted = true;
+    this.startTimer();
   }
 
   startByCreator() {
@@ -122,32 +124,32 @@ export class TakeQuizComponent implements OnInit {
 
 
   finishGame() {
-    this.gameStarted = false
-    this.gameFinished = true
-    this.updateUserAnswer()
+    this.gameStarted = false;
+    this.gameFinished = true;
+    this.updateUserAnswer();
   }
 
 
   startTimer() {
     this.timeOut = false;
-    this.currentProgress = this.reloadProgressBar()
-    this.startCountdownTimer()
-    this.questionTimer = this.answerService.setQuestionTimer(this.currentQuestion.time
+    this.currentProgress = this.reloadProgressBar();
+    this.startCountdownTimer();
+    this.questionTimer = this.answerService.setQuestionTimer(10000
     ).subscribe(() => {
-      console.log('time stopped')
+      console.log('time stopped');
       this.timeOut = true;
-      this.questionTimer.unsubscribe()
-      this.nextQuestion()
-    })
+      this.questionTimer.unsubscribe();
+      this.nextQuestion();
+    });
   }
 
 
   startCountdownTimer() {
-    this.timeLeft = this.currentQuestion.time
-    this.countdownTimer = this.answerService.setCountdownTimer(this.currentQuestion.time
+    this.timeLeft = 10000;
+    this.countdownTimer = this.answerService.setCountdownTimer(10000
     ).subscribe(() => {
-      this.timeLeft = this.timeLeft - 1000
-    })
+      this.timeLeft = this.timeLeft - 1000;
+    });
   }
   shouldUpdateProgressBar(condition) {
     return (condition) ? true : this.updateProgressBar()
@@ -162,14 +164,14 @@ export class TakeQuizComponent implements OnInit {
     this.progressValue = 0;
     return this.quizzesService.setInterval(100).subscribe(() => {
       this.progressValue++;
-      this.shouldUpdateProgressBar(!(this.progressValue >= 101))
+      this.shouldUpdateProgressBar(!(this.progressValue >= 101));
     });
   }
 
   ngOnDestroy() {
-    this.questionTimer.unsubscribe()
-    //this.unsubscribeTimer()
-    this.currentProgress.unsubscribe()
+    this.questionTimer.unsubscribe();
+    // this.unsubscribeTimer()
+    this.currentProgress.unsubscribe();
   }
   // openSnack() {
   //   let snackBarRef = this.snackBar.open("message", null, {

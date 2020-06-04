@@ -16,7 +16,7 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.create = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     const {title, topic, questions} = req.body;
 
     const newTest = new Test({
@@ -38,7 +38,7 @@ module.exports.create = async (req, res) => {
 
 module.exports.getUserTests = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     const tests = await Test.find({created_by: userId});
 
     res.status(200).json({
@@ -53,7 +53,7 @@ module.exports.getUserTests = async (req, res) => {
 module.exports.deleteById = async (req, res) => {
   try {
     const testId = req.params.id;
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const test = await Test.findById(testId);
 
@@ -81,7 +81,7 @@ module.exports.deleteById = async (req, res) => {
 module.exports.updateById = async (req, res) => {
   try {
     const testId = req.params.id;
-    const userId = req.user.id;
+    const userId = req.user.userId;
 
     const {title, topic, questions} = req.body;
 

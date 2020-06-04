@@ -1,49 +1,17 @@
 const express = require('express');
-const passport = require('passport');
+const auth = require('../middleware/auth.middleware');
 const controller = require('../controllers/tests.controllers');
 
 const router = express.Router();
 
-router.get(
-  '/all',
-  passport.authenticate('jwt', {
-    session: false
-  }),
-  controller.getAll
-);
+router.get('/all', auth, controller.getAll);
 
+router.post('/', auth, controller.create);
 
-router.post(
-  '/',
-  passport.authenticate('jwt', {
-    session: false
-  }),
-  controller.create
-);
+router.get('/', auth, controller.getUserTests);
 
+router.delete('/:id', auth, controller.deleteById);
 
-router.get(
-  '/',
-  passport.authenticate('jwt', {
-    session: false
-  }),
-  controller.getUserTests
-);
-
-router.delete(
-  '/:id',
-  passport.authenticate('jwt', {
-    session: false
-  }),
-  controller.deleteById
-);
-
-router.put(
-  '/:id',
-  passport.authenticate('jwt', {
-    session: false
-  }),
-  controller.updateById
-);
+router.put('/:id', auth, controller.updateById);
 
 module.exports = router;

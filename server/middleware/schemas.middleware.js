@@ -9,11 +9,7 @@ module.exports = (schema, property) => {
     try {
       const validation = await schema.validate(req[property]);
       if (validation.error) {
-        return errorHandler(
-            res,
-            400,
-            new Error(validation.error.details[0].message),
-        );
+        return errorHandler(res, 400, new Error(validation.error.details[0].message),);
       }
       next();
     } catch (error) {

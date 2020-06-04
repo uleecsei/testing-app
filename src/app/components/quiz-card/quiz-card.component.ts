@@ -16,12 +16,12 @@ export class QuizCardComponent implements OnInit {
   ngOnInit(): void {
   }
   practice() {
-    this.router.navigate(['home/takeQuiz', this.quiz._id], {state: {quiz: this.quiz,isSinglePlayer:true}});
+    this.router.navigate(['home/takeQuiz', this.quiz._id], {state: {quiz: this.quiz, isSinglePlayer: true}});
   }
 
   playWithFriends(){
     // Join the room via service
-    this.router.navigate(['home/joinRoom'],{state: {quiz: this.quiz}})
+    this.router.navigate(['home/joinRoom'], {state: {quiz: this.quiz}});
     return;
   }
 

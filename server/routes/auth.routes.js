@@ -1,8 +1,8 @@
 const express = require('express');
-const passport = require('passport');
 const controller = require('../controllers/auth.controllers');
 const schemas = require('../validation/auth.schemas');
 const validator = require('../middleware/schemas.middleware');
+const auth = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
@@ -19,5 +19,7 @@ router.post(
 );
 
 router.post('/google', controller.googleLogin);
+
+router.get('/user_info', auth, controller.userInfo);
 
 module.exports = router;

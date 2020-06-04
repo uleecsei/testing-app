@@ -26,7 +26,7 @@ Socketio.of("/game").on("connection", (socket) => {
       socket.on("gameStarted",()=>{
         Socketio.of("/game").in(room).emit("startGame",quiz);
       })
-      
+
     } else {
         return socket.emit("error","Not joined to the room")
       }
@@ -67,5 +67,5 @@ function getRandom() {
 }
 
 http.listen(3000, () => {
-  console.log("Listeniing at port 3000");
+  console.log("Listening at port 3000");
 });

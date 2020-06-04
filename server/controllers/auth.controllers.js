@@ -21,9 +21,8 @@ module.exports.login = async (req, res) => {
     const password = req.body.password;
     const email = req.body.email.toLowerCase();
 
-    const user = await User.findOne({
-      email
-    });
+    const user = await User.findOne({email});
+
     if (!user) {
       return res.status(400).json({
         status: 'User has not been found',
@@ -39,9 +38,18 @@ module.exports.login = async (req, res) => {
 
     const token = getToken(user);
 
+    const userInfo = {
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePicture: user.profilePicture,
+    }
+
     res.status(200).json({
       status: 'User authenticated successfully',
       token: `Bearer ${token}`,
+      user: userInfo
     });
   } catch (e) {
     errorHandler(res, 500, e);
@@ -56,35 +64,57 @@ module.exports.googleLogin = async (req, res) => {
 
     if (user) {
       const token = getToken(user);
+      const userInfo = {
+        userId: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        profilePicture: user.profilePicture
+      }
+
       return res.status(200).json({
         status: 'User authenticated successfully',
         token: `Bearer ${token}`,
+        user: userInfo,
       });
     }
 
     const candidate = await User.findOne({email: payload.email});
 
     if (candidate) {
-      const profilePicture = candidate.profilePicture ? 
-            candidate.profilePicture : 
+      const profilePicture = candidate.profilePicture ?
+            candidate.profilePicture :
             payload.picture;
 
       await candidate.update({googleId: payload.sub, profilePicture});
-      await candidate.save();
+      const newUser = await candidate.save();
 
+      const userInfo = {
+        userId: newUser._id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        profilePicture: newUser.profilePicture
+      }
       const token = getToken(candidate);
       return res.status(200).json({
         status: 'User authenticated successfully',
         token: `Bearer ${token}`,
+        user: userInfo,
       });
     }
 
-    const newUser = new User({
-      googleId: payload.sub,
+    const userInfo = {
+      userId: payload._id,
       email: payload.email,
       firstName: payload.given_name,
       lastName: payload.family_name,
       profilePicture: payload.picture
+    }
+
+    const newUser = new User({
+      googleId: payload.sub,
+      ...userInfo
     });
 
     const savedUser = await newUser.save();
@@ -93,6 +123,7 @@ module.exports.googleLogin = async (req, res) => {
     res.status(200).json({
       status: 'User authenticated successfully',
       token: `Bearer ${token}`,
+      user: userInfo,
     });
   } catch (e) {
     errorHandler(res, 500, e);
@@ -101,18 +132,10 @@ module.exports.googleLogin = async (req, res) => {
 
 module.exports.register = async (req, res) => {
   try {
-    const {
-      password,
-      firstName,
-      lastName
-    } = req.body;
-    const {
-      email
-    } = req.body.email.toLowerCase();
+    const {password, firstName, lastName} = req.body;
+    const email = req.body.email.toLowerCase();
 
-    const candidate = await User.findOne({
-      email
-    });
+    const candidate = await User.findOne({email});
     if (candidate) {
       return res.status(400).json({
         status: 'The email is already registered',
@@ -135,3 +158,29 @@ module.exports.register = async (req, res) => {
     errorHandler(res, 500, e);
   }
 };
+
+module.exports.userInfo = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId);
+
+    if (!user) {
+      errorHandler(res, 401, new Error('Token is invalid'));
+    }
+
+    const userInfo = {
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePicture: user.profilePicture
+    }
+
+    res.status(201).json({
+      status: "User authorized successfully",
+      user: userInfo,
+    })
+
+  } catch (e) {
+    errorHandler(res, 500, e);
+  }
+}
