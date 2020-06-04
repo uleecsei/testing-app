@@ -19,13 +19,17 @@ export class TakeQuizService {
     this.socket.emit('createGame', {quiz, userId});
   }
 
-  joinRoom(room) {
-    this.socket.emit('joinGameRoom', room);
+  joinRoom(room, userId, firstName) {
+    this.socket.emit('joinGameRoom', {room, userId, firstName});
   }
 
   startGame() {
     this.socket.emit('gameStarted');
   }
+  pushResults(result,userId,userName){
+    this.socket.emit("pushResults",result,userId,userName)
+ }
+
 
 
 }

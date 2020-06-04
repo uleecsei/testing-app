@@ -1,6 +1,6 @@
 import {Injectable, NgZone} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {BehaviorSubject, Observable, of, ReplaySubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {environment} from '../../../environments/environment';
@@ -29,6 +29,10 @@ export class UserService {
     const userData = JSON.parse(localStorage.getItem('userAuthData'));
     if (userData && userData.token) {
       this.token.next(userData.token);
+    }
+
+    if (userData && userData.user) {
+      this.user.next(userData.user);
     }
   }
 
@@ -68,16 +72,19 @@ export class UserService {
     this.loginHttp(form)
       .subscribe(
         data => {
+          console.log(data);
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.userData, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.user, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);
           this.router.navigate(['/home']);
         },
         error => {
-          console.log(error);
-          this.flash.showError(error.error.message ? error.error.message : error);
+          const message = error.error.message ? error.error.message
+                          : error.message ? error.message : error;
+          console.log(message);
+          this.flash.showError(message);
           this.router.navigate(['/login']);
         }
       );
@@ -88,7 +95,7 @@ export class UserService {
       .subscribe(
         data => this.ngZone.run(() => {
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.user, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);
@@ -103,9 +110,8 @@ export class UserService {
   }
 
   private getUserInfo() {
-    this.getUserHttp().subscribe(
+     return this.getUserHttp().subscribe(
       data => {
-        console.log(data.user);
         this.user.next(data.user);
         this.flash.showSuccess(data.status);
       },
@@ -127,9 +133,10 @@ export class UserService {
     return this.token.value;
   }
 
-  public getUser() {
+ public getUser() {
     if (!this.user.value) {
       this.getUserInfo();
+      return this.user.value;
     }
     return this.user.value;
   }

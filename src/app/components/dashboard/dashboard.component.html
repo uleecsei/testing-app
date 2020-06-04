@@ -8,7 +8,7 @@
               </mat-form-field>
         </div>
         <div class="dashboard__cards">
-          <app-quiz-card *ngFor="let quiz of quizzes$ | async | quizzesSearch: search" [quiz]="quiz"></app-quiz-card>
+          <app-quiz-card class="dashboard__card" *ngFor="let quiz of quizzes$ | async | quizzesSearch: search" [quiz]="quiz"></app-quiz-card>
         </div>
     </div>
   </div>

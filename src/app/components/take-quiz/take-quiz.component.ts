@@ -4,7 +4,7 @@ import { Subscription, Observable, Subject } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
-
+import { UserService } from '../../services/user/user.service';
 import { UserAnswer } from '../../interfaces/quiz';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from 'codelyzer/util/logger';
@@ -30,6 +30,12 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   isSinglePlayer;
   isCreator;
 
+  //new
+  user
+  displayedColumns: string[] = ['position', 'name'];
+  userTotalScore:number;
+  resultBoard=[]
+
   progressValue = 0;
   PROGRESS_BAR_SPEED = 100; // less = faster
   currentProgress: Subscription;
@@ -42,28 +48,39 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     private answerService: AnswersService,
     private snackBar: MatSnackBar,
     private takequizService: TakeQuizService,
+    private userService: UserService
   ) {
     this.quiz = window.history.state.quiz;
     console.log(this.quiz);
+    this.user = this.userService.getUser()
+    console.log(this.user)
   }
 
 
   ngOnInit(): void {
+    // Лена, это обьект теста переданный при переходе, по идее теперь не надо искать его по айди
 
-    this.isSinglePlayer = window.history.state.isSinglePlayer || null;
-    this.isCreator = window.history.state.isCreator || null;
-    this.questionIndex = 0;
-    this.currentQuestion = this.quiz.questions[this.questionIndex];
-    this.answerService.currentQuiz$.next(this.quiz);
-    this.answerService.currentQuestion$.next(this.currentQuestion);
-    this.takequizService.socket.on('startGame', () => {
-      this.startGame();
-    });
+    this.quiz = window.history.state.quiz
+    this.isSinglePlayer = window.history.state.isSinglePlayer || null
+    this.isCreator = window.history.state.isCreator || null
+    this.questionIndex = 0
+    this.currentQuestion = this.quiz.questions[this.questionIndex]
+    this.answerService.currentQuiz$.next(this.quiz)
+    this.answerService.currentQuestion$.next(this.currentQuestion)
+    this.takequizService.socket.on("startGame", () => {
+      this.startGame()
+    })
+
+    //this.users=users
+    this.takequizService.socket.on("showResults",(results)=>{
+      console.log("showing results")
+      console.log(results)
+    })
 
   }
   nextQuestion() {
-    this.updateTimer();
-    this.disableBtn();
+    this.updateTimer()
+    this.disableBtn()
     setTimeout(() => {
       this.saveUserAnswer();
       this.enableBtn();
@@ -72,31 +89,31 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  saveUserAnswer(){
-    return this.answerService.saveAnswer(this.currentQuestion.qId);
+  saveUserAnswer() {
+    return this.answerService.saveAnswer(this.currentQuestion.qId)
   }
 
-  disableBtn(){
-    this.setIsAnswered();
-    this.answerService.isAnswered$.next(this.isAnswered);
+  disableBtn() {
+    this.setIsAnswered()
+    this.answerService.isAnswered$.next(this.isAnswered)
   }
-  enableBtn = () => this.setIsAnswered();
-  setIsAnswered = () => this.isAnswered = !this.isAnswered;
+  enableBtn = () => this.setIsAnswered()
+  setIsAnswered = () => this.isAnswered = !this.isAnswered
 
-  updateTimer(){
-    return (this.timeOut) ? true : this.unsubscribeTimer();
+  updateTimer() {
+    return (this.timeOut) ? true : this.unsubscribeTimer()
   }
-  unsubscribeTimer(){
-    this.questionTimer.unsubscribe();
-    this.countdownTimer.unsubscribe();
+  unsubscribeTimer() {
+    this.questionTimer.unsubscribe()
+    this.countdownTimer.unsubscribe()
   }
-  goToNextQuestion(){
-    return (this.isLastQuestion()) ? this.finishGame() : this.getNewQuestion();
+  goToNextQuestion() {
+    return (this.isLastQuestion()) ? this.finishGame() : this.getNewQuestion()
   }
 
-  getNewQuestion(){
-    this.changeQuestion();
-    this.startTimer();
+  getNewQuestion() {
+    this.changeQuestion()
+    this.startTimer()
   }
 
   changeQuestion() {
@@ -104,7 +121,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     this.answerService.currentQuestion$.next(this.currentQuestion);
   }
 
-  isLastQuestion = () => this.questionIndex == this.quiz.questions.length - 1;
+  isLastQuestion = () => this.questionIndex == this.quiz.questions.length - 1
 
   updateUserAnswer() {
     this.answerService.userAnswers$.next([]);
@@ -116,15 +133,19 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     this.startTimer();
   }
 
-  startByCreator(){
-    this.takequizService.startGame();
+  startByCreator() {
+    this.takequizService.startGame()
   }
 
 
   finishGame() {
     this.gameStarted = false;
     this.gameFinished = true;
-    this.updateUserAnswer();
+    let result =this.answerService.getResult()
+    let userId=this.user.userId;
+    let userName=`${this.user.firstName} ${this.user.lastName}`
+    this.takequizService.pushResults(result,userId,userName)
+    this.updateUserAnswer()
   }
 
 
@@ -149,11 +170,11 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
       this.timeLeft = this.timeLeft - 1000;
     });
   }
-  shouldUpdateProgressBar(condition){
-    return (condition) ? true : this.updateProgressBar();
+  shouldUpdateProgressBar(condition) {
+    return (condition) ? true : this.updateProgressBar()
   }
 
-  updateProgressBar(){
+  updateProgressBar() {
     this.currentProgress.unsubscribe();
     this.currentProgress = this.reloadProgressBar();
   }
@@ -167,9 +188,15 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.questionTimer.unsubscribe();
-    // this.unsubscribeTimer()
-    this.currentProgress.unsubscribe();
+    if (this.questionTimer !== undefined
+      && this.currentProgress !== undefined
+      && this.countdownTimer !== undefined){
+
+      this.unsubscribeTimer();
+      this.currentProgress.unsubscribe();
+    } else {
+      return;
+    }
   }
   // openSnack() {
   //   let snackBarRef = this.snackBar.open("message", null, {

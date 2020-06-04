@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const Game = require('./server/models/Game');
-
+const User = require('./server/models/User');
 const app = express();
 
 app.use(bodyParser.json());
@@ -50,8 +50,10 @@ Socketio.of("/game").on("connection", (socket) => {
     socket.emit("roomId", roomId);
   });
 
-  socket.on("joinGameRoom", async (room) => {
+  socket.on("joinGameRoom", async (data) => {
+    const {room, userId, firstName} = data;
     if (roomExists(room)) {
+      addNewUser(room, userId, firstName);
       socket.join(room);
       socket.emit("joinedRoom", "You have joined the room");
       let quiz;
@@ -64,10 +66,20 @@ Socketio.of("/game").on("connection", (socket) => {
         Socketio.of("/game").in(room).emit("startGame",quiz);
       })
 
+      socket.on("pushResults",async (result,userId,userName)=>{
+        console.log(result,userId,userName)
+        const game= await saveUserResults(room, userId, result)
+
+        console.log('SAVED GAME',game)
+        Socketio.of("/game").in(room).emit("showResults",game)
+        //Socketio.of("/game").in(room).emit("showResults",games.filter(e=>e.roomId==room)[0].result)
+      })
+
     } else {
       return socket.emit("error","Not joined to the room")
     }
   });
+
 });
 
 async function createGame(room, quiz, userId) {
@@ -78,10 +90,6 @@ async function createGame(room, quiz, userId) {
     status: 'Created',
     quiz: quiz,
     users: [
-      {
-        userId: userId,
-        result:  0,
-      }
     ],
   });
 
@@ -98,10 +106,12 @@ async function roomExists(room) {
   return !!game;
 }
 
-async function addNewUser(room, user) {
-  await Game.findOneAndUpdate({roomId: room},
+  function addNewUser(room, userId, firstName) {
+  console.log('Add user', userId);
+  console.log('Room', room);
+   Game.findOneAndUpdate({roomId: room},
   { "$push": { "users": {
-      userId: user, result: 0,
+      userId: userId, userName: firstName, result: {},
   }
     } },
     {new: true, useFindAndModify: false},
@@ -112,6 +122,22 @@ async function addNewUser(room, user) {
         console.log(result);
       }
     });
+}
+
+async function saveUserResults(room, userId, result) {
+  const gameRoom = await Game.findOne({roomId: room});
+  const user = gameRoom.users.filter(i => i.userId == userId)[0];
+  const userFromUsers = await User.findById(userId);
+  console.log(userFromUsers)
+  userFromUsers.tests.push({
+    testId: gameRoom.testId,
+    result: result,
+  });
+
+  user.result = result;
+  await userFromUsers.save();
+  await gameRoom.save();
+  return gameRoom;
 }
 
 function getRandom() {

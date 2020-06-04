@@ -45,6 +45,57 @@ export class AnswersService {
     this.currentAnswer$.next([])
   }
 
+  getResult(){
+    const answers=this.getAnswers()
+    const {correct,incorrect}=this.getCorrectNumber(answers)
+    const score= this.calculateScore(answers)
+    return {
+      score,
+      correct,
+      incorrect
+    }
+  }
+
+  getAnswers(){
+    let questions= this.userAnswers$.value
+    let allAnswers = []
+    questions.forEach(q=>{
+      allAnswers=[...allAnswers,...q.answers]
+    })
+    return allAnswers
+  }
+
+  calculateScore(answers){
+    let score:number=0;
+    
+    answers.forEach(answer=>{
+      if(answer.answer.isTrue && answer.type=="radio"){
+        score+=100
+      } else if (!answer.answer.isTrue && answer.type=="checkbox"){
+        score-=50
+      } else if(answer.answer.isTrue && answer.type=="checkbox"){
+        score+=50
+      } else {
+        return
+      }
+    })
+    return score
+  }
+
+  getCorrectNumber(answers){
+    let correct=0;
+    let incorrect=0;
+    answers.forEach(a=>{
+      if(a.answer.isTrue){
+        correct++;
+      } else {incorrect++;}
+    })
+
+    return{correct,incorrect}
+  }
+
+
+
   setQuestionTimer(time) {
     console.log(time)
     return interval(time)

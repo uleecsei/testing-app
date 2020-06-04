@@ -1,82 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Topics } from 'src/app/components/create-quiz/topics';
 import { Observable } from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { MessagesService } from '../messages/messages.service';
 import { BehaviorSubject, interval } from 'rxjs';
-import {QuestionType} from '../../interfaces/quiz';
-const myQuizzes = [
-  {
-    _id: 1,
-    title: 'Noun',
-    topic: Topics.Languages,
-    questions: [
-      {
-        qId:1,
-        type:QuestionType.radio,
-        time:6000,
-        question: "Are u ok?",
-        answers: [
-          {
-            text: 'True',
-            isTrue: true
-          },
-          {
-            text: 'False',
-            isTrue: false
-          },
-          {
-            text: 'I dont know',
-            isTrue: false
-          },
-        ]
 
-      },
-      { qId:2,
-        type:QuestionType.checkbox,
-        question: "Favourite food?",
-        time:5000,
-        answers: [
-          {
-            text: "pizza",
-            isTrue: true
-          },
-          {
-            text: "sushi",
-            isTrue: true
-          },
-          {
-            text: "chocolate",
-            isTrue: false
-          },
-
-        ]
-
-      }, { qId:3,
-        type:QuestionType.checkbox,
-        question: "Favourite drink?",
-        time:5000,
-        answers: [
-          {
-            text: "water",
-            isTrue: true
-          },
-          {
-            text: "coke",
-            isTrue: true
-          },
-          {
-            text: "beer",
-            isTrue: false
-          },
-
-        ]
-
-      }
-    ]
-  }
-  ];
 
 @Injectable({
   providedIn: 'root'
@@ -95,8 +23,6 @@ export class QuizzesService  {
   url = environment.baseUrl;
   allQuizzes = new BehaviorSubject([]);
   myQuizzes = new BehaviorSubject([]);
-  quizzes$: BehaviorSubject<any[]> = new BehaviorSubject(myQuizzes);
-
 
   createQuiz(form) {
     this.http.post<any>(
@@ -141,10 +67,12 @@ export class QuizzesService  {
   }
 
   getMyQuizzesArray(): Observable<any> {
+    this.getUserQuizzes();
     return this.myQuizzes.asObservable();
   }
 
   getAllQuizzesArray(): Observable<any> {
+    this.getAllQuizzes();
     return this.allQuizzes.asObservable();
   }
 
