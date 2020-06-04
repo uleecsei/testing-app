@@ -13,12 +13,12 @@ export class TakeQuizService {
       console.log(roomId));
   }
 
-  createGame(quiz) {
-    this.socket.emit('createGame', quiz);
+  createGame(quiz, userId) {
+    this.socket.emit('createGame', {quiz, userId});
   }
 
-  joinRoom(room) {
-    this.socket.emit('joinGameRoom', room);
+  joinRoom(room, userId) {
+    this.socket.emit('joinGameRoom', {room, userId});
   }
 
   startGame() {

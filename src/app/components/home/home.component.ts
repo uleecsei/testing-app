@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Router} from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { ProfilePictureService } from 'src/app/services/profile-picture/profile-picture.service';
 import { MessagesService } from 'src/app/services/messages/messages.service';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +12,8 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  user: User;
   selectedFile: File = null;
-
 
   constructor(
     private userService: UserService,
@@ -20,7 +21,9 @@ export class HomeComponent implements OnInit {
     private flash: MessagesService,
     public dialog: MatDialog,
     private router: Router
-    ) {}
+    ) {
+      this.user = this.userService.getUser();
+    }
 
   ngOnInit(): void {
   }
@@ -76,16 +79,7 @@ export class DialogPhoto {
   constructor(
     public dialogRef: MatDialogRef<DialogPhoto>,
     @Inject(MAT_DIALOG_DATA) public data: File) {
-      this.showImage();
-      
-      // data.arrayBuffer().then(
-      //   result => {
-      //     const b64 = new Buffer(result).toString('base64');
-      //     this.imageSrc = "data:image/png;base64," + b64;
-      //   }
-      // )
-      // this.imageSrc = "data:image/png;base64," + data;
-      
+      this.showImage();      
     }
 
   showImage() {

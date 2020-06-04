@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {environment} from '../../../environments/environment';
 import {MessagesService} from '../messages/messages.service';
-import {User} from "../../interfaces/user";
+import {User} from '../../interfaces/user';
 // import { error } from '@angular/compiler/src/util';
 
 const httpOptions = {
@@ -29,6 +29,10 @@ export class UserService {
     const userData = JSON.parse(localStorage.getItem('userAuthData'));
     if (userData && userData.token) {
       this.token.next(userData.token);
+    }
+
+    if (userData && userData.user) {
+      this.user.next(userData.user);
     }
   }
 
@@ -69,7 +73,7 @@ export class UserService {
       .subscribe(
         data => {
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.userData, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);
@@ -90,7 +94,7 @@ export class UserService {
       .subscribe(
         data => this.ngZone.run(() => {
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.user, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);
@@ -107,14 +111,13 @@ export class UserService {
   private getUserInfo() {
     this.getUserHttp().subscribe(
       data => {
-        console.log(data.user);
         this.user.next(data.user);
         this.flash.showSuccess(data.status);
       },
-      error => {        
+      error => {
         console.log(error.message ? error.message : error);
       }
-    )
+    );
   }
 
   public logoutUser() {
@@ -129,9 +132,10 @@ export class UserService {
     return this.token.value;
   }
 
-  public getUser() {
-    if(!this.user.value) {
+ public getUser() {
+    if (!this.user.value) {
       this.getUserInfo();
+      return this.user.value;
     }
     return this.user.value;
   }

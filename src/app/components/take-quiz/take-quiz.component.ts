@@ -43,11 +43,13 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private takequizService: TakeQuizService,
   ) {
+    this.quiz = window.history.state.quiz;
+    console.log(this.quiz);
   }
 
 
   ngOnInit(): void {
-    this.quiz = window.history.state.quiz;
+
     this.isSinglePlayer = window.history.state.isSinglePlayer || null;
     this.isCreator = window.history.state.isCreator || null;
     this.questionIndex = 0;
@@ -165,9 +167,15 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.questionTimer.unsubscribe();
-    // this.unsubscribeTimer()
-    this.currentProgress.unsubscribe();
+    if (this.questionTimer !== undefined
+      && this.currentProgress !== undefined
+      && this.countdownTimer !== undefined){
+
+      this.unsubscribeTimer();
+      this.currentProgress.unsubscribe();
+    } else {
+      return;
+    }
   }
   // openSnack() {
   //   let snackBarRef = this.snackBar.open("message", null, {
