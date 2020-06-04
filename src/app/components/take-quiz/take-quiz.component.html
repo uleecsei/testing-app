@@ -1,4 +1,5 @@
-<button
+<div class="start__container">
+  <button
   *ngIf="!gameStarted && !gameFinished && (isCreator || isSinglePlayer)"
   (click)="(isCreator)?startByCreator():startGame()"
   mat-flat-button
@@ -6,6 +7,31 @@
 >
   Start
 </button>
+<!-- *ngIf="!gameStarted && !gameFinished && !isSinglePlayer -->
+<div class="joined-users">
+  <h1>Waiting for users</h1>
+  <table mat-table [dataSource]="users" class="mat-elevation-z8">
+works
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+  
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef> No. </th>
+      <td mat-cell *matCellDef="let element"> {{users.indexOf(element)}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+</div>
 
 <div *ngIf="gameStarted && !gameFinished" class="answers-container">
   <h3>Time left: 00:{{timeLeft/1000}}</h3>

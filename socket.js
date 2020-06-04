@@ -26,6 +26,14 @@ Socketio.of("/game").on("connection", (socket) => {
       socket.on("gameStarted",()=>{
         Socketio.of("/game").in(room).emit("startGame",quiz);
       })
+      socket.on("pushResults",(userResult)=>{
+        games.forEach(game=>{
+          if(game.roomId==room){
+            game.result.push(userResult)
+          }
+        })
+        Socketio.of("/game").in(room).emit("showResults",games.filter(e=>e.roomId==room)[0].result)
+      })
       
     } else {
         return socket.emit("error","Not joined to the room")
@@ -38,8 +46,11 @@ function createRoom(room,quiz) {
     roomId: room,
     quiz:quiz,
     users: [],
+    result:[]
   });
 }
+
+
 
 function getQuiz(roomId){
     let game=games.filter(game=>

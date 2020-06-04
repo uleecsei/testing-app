@@ -8,7 +8,9 @@ export class TakeQuizService {
   socket: any = io("http://localhost:3000/game")
 
 
-  constructor() { }
+  constructor() { 
+    
+  }
   public ngOnInit() {
   }
 
@@ -26,6 +28,10 @@ export class TakeQuizService {
 
   startGame() {
     this.socket.emit("gameStarted")
+  }
+
+  pushResults(userResult){
+     this.socket.emit("pushResults",userResult)
   }
 
 

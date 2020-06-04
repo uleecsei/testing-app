@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from 'codelyzer/util/logger';
 import { AnswersService } from 'src/app/services/answers/answers.service';
 import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
-
+const users=['lena','alla','anna']
 @Component({
   selector: 'app-take-quiz',
   templateUrl: './take-quiz.component.html',
@@ -29,11 +29,18 @@ export class TakeQuizComponent implements OnInit {
   timeLeft
   isSinglePlayer
   isCreator
+  
 
   progressValue = 0;
   PROGRESS_BAR_SPEED = 150 // less = faster
   currentProgress: Subscription;
+  //new
+  users
+  displayedColumns: string[] = ['position', 'name'];
+  userTotalScore:number;
+  resultBoard=[]
 
+  
   private routeSubscription: Subscription;
   constructor(
     private router: Router,
@@ -56,8 +63,17 @@ export class TakeQuizComponent implements OnInit {
     this.currentQuestion = this.quiz.questions[this.questionIndex]
     this.answerService.currentQuiz$.next(this.quiz)
     this.answerService.currentQuestion$.next(this.currentQuestion)
+    this.takequizService.socket.on("games",(games)=>{
+      console.log(games)
+    })
     this.takequizService.socket.on("startGame",()=>{
       this.startGame()
+    })
+
+    this.users=users
+    this.takequizService.socket.on("showResults",(results)=>{
+      console.log("showing results")
+      console.log(results)
     })
    
   }
@@ -124,6 +140,10 @@ export class TakeQuizComponent implements OnInit {
   finishGame() {
     this.gameStarted = false
     this.gameFinished = true
+    let result =this.answerService.getResult()
+    this.userTotalScore=result.score
+    console.log(result)
+    this.takequizService.pushResults(result)
     this.updateUserAnswer()
   }
 
