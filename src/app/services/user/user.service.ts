@@ -103,7 +103,7 @@ export class UserService {
   }
 
   private getUserInfo() {
-    this.getUserHttp().subscribe(
+     return this.getUserHttp().subscribe(
       data => {
         console.log(data.user);
         this.user.next(data.user);
@@ -128,6 +128,8 @@ export class UserService {
   }
 
   public getUser() {
+    console.log(this.user.value)
+    console.log(!this.user.value)
     if (!this.user.value) {
       this.getUserInfo();
     }

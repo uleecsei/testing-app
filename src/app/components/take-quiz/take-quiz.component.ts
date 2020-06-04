@@ -45,6 +45,8 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   ) {
     this.quiz = window.history.state.quiz;
     console.log(this.quiz);
+    console.log(this.questionTimer)
+    console.log(this.countdownTimer)
   }
 
 
@@ -169,9 +171,13 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.questionTimer.unsubscribe();
-    // this.unsubscribeTimer()
+    if(this.questionTimer!=undefined && this.currentProgress!=undefined && this.countdownTimer!=undefined){
+   
+    this.unsubscribeTimer()
     this.currentProgress.unsubscribe();
+    } else {
+      return;
+    }
   }
   // openSnack() {
   //   let snackBarRef = this.snackBar.open("message", null, {
