@@ -54,8 +54,10 @@ Socketio.of("/game").on("connection", (socket) => {
     socket.emit("roomId", roomId);
   });
 
-  socket.on("joinGameRoom", async (room) => {
+  socket.on("joinGameRoom", async (data) => {
+    const {room, userId} = data;
     if (roomExists(room)) {
+      addNewUser(room, userId);
       socket.join(room);
       socket.emit("joinedRoom", "You have joined the room");
       let quiz;
@@ -72,6 +74,7 @@ Socketio.of("/game").on("connection", (socket) => {
       return socket.emit("error","Not joined to the room")
     }
   });
+
 });
 
 async function createGame(room, quiz, userId) {
@@ -82,10 +85,6 @@ async function createGame(room, quiz, userId) {
     status: 'Created',
     quiz: quiz,
     users: [
-      {
-        userId: userId,
-        result:  0,
-      }
     ],
   });
 
@@ -102,10 +101,12 @@ async function roomExists(room) {
   return !!game;
 }
 
-async function addNewUser(room, user) {
-  await Game.findOneAndUpdate({roomId: room},
+  function addNewUser(room, userId) {
+  console.log('Add user', userId);
+  console.log('Room', room);
+   Game.findOneAndUpdate({roomId: room},
   { "$push": { "users": {
-      userId: user, result: 0,
+      userId: userId, result: 0,
   }
     } },
     {new: true, useFindAndModify: false},
@@ -116,6 +117,14 @@ async function addNewUser(room, user) {
         console.log(result);
       }
     });
+}
+
+function saveUserResults(room, userId, result) {
+  const gameRoom = Game.findOne({roomId: room};
+  const user = gameRoom.users.filter(i => i.userId === userId);
+  user.result = result;
+  console.log(gameRoom);
+  gameRoom.save();
 }
 
 function getRandom() {
