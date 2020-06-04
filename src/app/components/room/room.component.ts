@@ -16,45 +16,45 @@ export class RoomComponent implements OnInit {
 
   private socket
   constructor(
-    private takequizService:TakeQuizService,
+    private takequizService: TakeQuizService,
     private router: Router,
     private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.quiz=window.history.state.quiz||null
-    this.isCreator=(this.quiz)?true:false
-    this.quizId=(this.quiz)?this.quiz._id:null
-    this.socket=this.takequizService.socket
+    this.quiz = window.history.state.quiz || null
+    this.isCreator = (this.quiz) ? true : false
+    this.quizId = (this.quiz) ? this.quiz._id : null
+    this.socket = this.takequizService.socket
     console.log(this.quizId)
   }
 
-  public ngAfterViewInit(){
-    this.socket.on("roomId",roomId=>
-    console.log(roomId))
+  public ngAfterViewInit() {
+    this.socket.on("roomId", roomId =>
+      console.log(roomId))
 
-    this.socket.on("games",roomId=>
-    console.log(roomId))
-    this.socket.on('Join the game',(message)=>{
+    this.socket.on("games", roomId =>
+      console.log(roomId))
+    this.socket.on('Join the game', (message) => {
       console.log(message)
     })
-    this.socket.on('joinedRoom',(message)=>{
+    this.socket.on('joinedRoom', (message) => {
       console.log(message)
     })
-    this.socket.on('quiz created',quiz=>console.log(quiz))
+    this.socket.on('quiz created', quiz => console.log(quiz))
 
-    this.socket.on('quiz',(quiz)=>{
-      console.log("gotten quiz",quiz)
-      this.router.navigate(['home/takeQuiz',quiz._id], {state: {quiz: quiz,isCreator:this.isCreator}});
+    this.socket.on('quiz', (quiz) => {
+      console.log("gotten quiz", quiz)
+      this.router.navigate(['home/takeQuiz', quiz._id], { state: { quiz: quiz, isCreator: this.isCreator } });
     })
- }
+  }
 
- createGame(){
-   
+  createGame() {
+
     return this.takequizService.createGame(this.quiz)
- }
+  }
 
- joinRoom(){
-   this.takequizService.joinRoom(this.room)
+  joinRoom() {
+    this.takequizService.joinRoom(this.room)
   }
 
 

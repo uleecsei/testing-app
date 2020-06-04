@@ -41,7 +41,7 @@ export class TakeQuizComponent implements OnInit {
     private quizzesService: QuizzesService,
     private answerService: AnswersService,
     private snackBar: MatSnackBar,
-    private takequizService:TakeQuizService,
+    private takequizService: TakeQuizService,
   ) {
   }
 
@@ -50,20 +50,20 @@ export class TakeQuizComponent implements OnInit {
     // Лена, это обьект теста переданный при переходе, по идее теперь не надо искать его по айди
 
     this.quiz = window.history.state.quiz
-    this.isSinglePlayer=window.history.state.isSinglePlayer||null
-    this.isCreator=window.history.state.isCreator||null
+    this.isSinglePlayer = window.history.state.isSinglePlayer || null
+    this.isCreator = window.history.state.isCreator || null
     this.questionIndex = 0
     this.currentQuestion = this.quiz.questions[this.questionIndex]
     this.answerService.currentQuiz$.next(this.quiz)
     this.answerService.currentQuestion$.next(this.currentQuestion)
-    this.takequizService.socket.on("startGame",()=>{
+    this.takequizService.socket.on("startGame", () => {
       this.startGame()
     })
-   
+
   }
   nextQuestion() {
     this.updateTimer()
-    this.disableBtn() 
+    this.disableBtn()
     setTimeout(() => {
       this.saveUserAnswer()
       this.enableBtn()
@@ -72,39 +72,39 @@ export class TakeQuizComponent implements OnInit {
     }, 1500)
   }
 
-  saveUserAnswer(){
+  saveUserAnswer() {
     return this.answerService.saveAnswer(this.currentQuestion.qId)
   }
 
-  disableBtn(){
+  disableBtn() {
     this.setIsAnswered()
     this.answerService.isAnswered$.next(this.isAnswered)
   }
-  enableBtn=()=>this.setIsAnswered()
-  setIsAnswered=()=>this.isAnswered=!this.isAnswered
+  enableBtn = () => this.setIsAnswered()
+  setIsAnswered = () => this.isAnswered = !this.isAnswered
 
-  updateTimer(){
-    return (this.timeOut)?true:this.unsubscribeTimer()
-  } 
-  unsubscribeTimer(){
+  updateTimer() {
+    return (this.timeOut) ? true : this.unsubscribeTimer()
+  }
+  unsubscribeTimer() {
     this.questionTimer.unsubscribe()
     this.countdownTimer.unsubscribe()
   }
-  goToNextQuestion(){
-    return (this.isLastQuestion())?this.finishGame():this.getNewQuestion()
+  goToNextQuestion() {
+    return (this.isLastQuestion()) ? this.finishGame() : this.getNewQuestion()
   }
 
-  getNewQuestion(){
+  getNewQuestion() {
     this.changeQuestion()
     this.startTimer()
   }
-  
+
   changeQuestion() {
     this.currentQuestion = this.quiz.questions[++this.questionIndex]
     this.answerService.currentQuestion$.next(this.currentQuestion)
   }
 
-  isLastQuestion=()=>this.questionIndex == this.quiz.questions.length - 1
+  isLastQuestion = () => this.questionIndex == this.quiz.questions.length - 1
 
   updateUserAnswer() {
     this.answerService.userAnswers$.next([])
@@ -116,10 +116,10 @@ export class TakeQuizComponent implements OnInit {
     this.startTimer()
   }
 
-  startByCreator(){
+  startByCreator() {
     this.takequizService.startGame()
   }
-  
+
 
   finishGame() {
     this.gameStarted = false
@@ -149,11 +149,11 @@ export class TakeQuizComponent implements OnInit {
       this.timeLeft = this.timeLeft - 1000
     })
   }
-  shouldUpdateProgressBar(condition){
-    return (condition)?true:this.updateProgressBar()
+  shouldUpdateProgressBar(condition) {
+    return (condition) ? true : this.updateProgressBar()
   }
 
-  updateProgressBar(){
+  updateProgressBar() {
     this.currentProgress.unsubscribe();
     this.currentProgress = this.reloadProgressBar();
   }
