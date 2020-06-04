@@ -33,13 +33,9 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname + "/dist/testing-app/index.html"));
 });
 
-app.listen(process.env.PORT || 8084, () => {
-  console.log(`Server is running on port ${process.env.PORT || 8084}`);
-});
-
 //socket------------------------------------------------------------
 
-const http = require("http").Server(express);
+const http = require("http").Server(app);
 const Socketio = require("socket.io")(http);
 
 
@@ -122,7 +118,7 @@ function getRandom() {
   return Math.round(Math.random() * 1000000).toString();
 }
 
-http.listen(3000, () => {
-  console.log("Listening at port 3000");
+http.listen(process.env.PORT || 8084, () => {
+  console.log(`Listening at port ${process.env.PORT || 8084}`);
 });
 
