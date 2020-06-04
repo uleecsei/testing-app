@@ -15,7 +15,7 @@ const UserSchema = new Schema({
   lastName: {type: String, required: true},
   profilePicture: {type: String, default: null},
   s3Key: {type: String, default: null},
-  tests: [{type: Types.ObjectId, ref: 'Tests'}],
+  tests: [{type: Object, ref: 'Tests'}],
 });
 
 UserSchema.pre('save', function(next) {

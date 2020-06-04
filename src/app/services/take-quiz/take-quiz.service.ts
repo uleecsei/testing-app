@@ -24,6 +24,10 @@ export class TakeQuizService {
   startGame() {
     this.socket.emit('gameStarted');
   }
+  pushResults(result,userId,userName){
+    this.socket.emit("pushResults",result,userId,userName)
+ }
+
 
 
 }

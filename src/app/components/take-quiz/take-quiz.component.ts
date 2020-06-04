@@ -4,7 +4,7 @@ import { Subscription, Observable, Subject } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
-
+import { UserService } from '../../services/user/user.service';
 import { UserAnswer } from '../../interfaces/quiz';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { logger } from 'codelyzer/util/logger';
@@ -30,6 +30,12 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   isSinglePlayer;
   isCreator;
 
+  //new
+  user
+  displayedColumns: string[] = ['position', 'name'];
+  userTotalScore:number;
+  resultBoard=[]
+
   progressValue = 0;
   PROGRESS_BAR_SPEED = 100; // less = faster
   currentProgress: Subscription;
@@ -42,11 +48,12 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     private answerService: AnswersService,
     private snackBar: MatSnackBar,
     private takequizService: TakeQuizService,
+    private userService: UserService
   ) {
     this.quiz = window.history.state.quiz;
     console.log(this.quiz);
-    console.log(this.questionTimer)
-    console.log(this.countdownTimer)
+    this.user = this.userService.getUser()
+    console.log(this.user)
   }
 
 
@@ -62,6 +69,12 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     this.answerService.currentQuestion$.next(this.currentQuestion)
     this.takequizService.socket.on("startGame", () => {
       this.startGame()
+    })
+
+    //this.users=users
+    this.takequizService.socket.on("showResults",(results)=>{
+      console.log("showing results")
+      console.log(results)
     })
 
   }
@@ -128,7 +141,11 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   finishGame() {
     this.gameStarted = false;
     this.gameFinished = true;
-    this.updateUserAnswer();
+    let result =this.answerService.getResult()
+    let userId=this.user.userId;
+    let userName=`${this.user.firstName} ${this.user.lastName}`
+    this.takequizService.pushResults(result,userId,userName)
+    this.updateUserAnswer()
   }
 
 
