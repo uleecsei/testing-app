@@ -16,7 +16,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
   quizId;
   room;
   roomId;
-  user: User;
+  user;
 
   private socket;
   constructor(
