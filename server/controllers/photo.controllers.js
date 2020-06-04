@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const Jimp = require('jimp');
 const User = require('../models/User');
 const errorHandler = require('../utils/errorHandler');
 require("dotenv").config();
@@ -27,12 +28,28 @@ module.exports.postPicture = async (req, res) => {
       });
     }
 
+    const image = await Jimp.read(Buffer.from(req.file.buffer, 'base64'))
+    .then((image) => {
+        if (image.getWidth() > image.getHeight()) {
+          image.resize(Jimp.AUTO, 100);
+          image.crop(image.getWidth() / 2 - 50, 0, 100, 100);
+        } else {
+          image.resize(100, Jimp.AUTO);
+          image.crop(0, image.getHeight() / 2 - 50, 100, 100);
+        }
+        return image.getBufferAsync(Jimp.AUTO);
+      }
+    )
+    .catch(error => {
+      errorHandler(res, 500, error);
+    });
+
     const s3bucket = new AWS.S3(s3BucketParams);
 
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: userId + '_' + file.originalname,
-      Body: file.buffer,
+      Body: image,
       ContentType: file.mimetype,
       ACL: 'public-read',
     };

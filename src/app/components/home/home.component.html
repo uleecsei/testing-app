@@ -21,7 +21,15 @@
   <mat-drawer #drawer mode="side" class="side-menu">
     <div class="profile-container">
       <div class="profile-container__photo">
-        <img src="" alt=""/>
+        <img src="" alt="">
+        <input 
+          type="file" 
+          style="display: none;" 
+          (change)="onFileSelected($event)" 
+          #fileInput 
+          accept="image/png,image/jpeg"
+          >
+        <button class="profile-container__add" (click)="fileInput.click()">+</button>
       </div>
 
       <h1>Name</h1>

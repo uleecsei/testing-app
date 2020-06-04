@@ -14,7 +14,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
-import { HomeComponent } from './components/home/home.component';
+import { HomeComponent, DialogPhoto } from './components/home/home.component';
 import { CreateQuizComponent } from './components/create-quiz/create-quiz.component';
 import { MyQuizzesComponent } from './components/my-quizzes/my-quizzes.component';
 import { MyResultsComponent } from './components/my-results/my-results.component';
@@ -30,7 +30,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { QuizSearchPipe } from './pipes/search.pipe';
 import { QuestionCardComponent } from './components/question-card/question-card.component';
 import { MyResultsCardComponent } from './components/my-results-card/my-results-card.component';
-import { RoomComponent } from './components/room/room.component'
+import { RoomComponent } from './components/room/room.component';
+
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { RoomComponent } from './components/room/room.component'
     QuestionCardComponent,
     MyResultsCardComponent,
     QuestionCardComponent,
-    RoomComponent
+    RoomComponent,
+    DialogPhoto
   ],
   imports: [
     BrowserModule,
