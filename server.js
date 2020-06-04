@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 const Game = require('./server/models/Game');
+const User = require('./server/models/User');
 
 const app = express();
 
@@ -55,9 +56,9 @@ Socketio.of("/game").on("connection", (socket) => {
   });
 
   socket.on("joinGameRoom", async (data) => {
-    const {room, userId} = data;
+    const {room, userId, firstName} = data;
     if (roomExists(room)) {
-      addNewUser(room, userId);
+      addNewUser(room, userId, firstName);
       socket.join(room);
       socket.emit("joinedRoom", "You have joined the room");
       let quiz;
@@ -101,12 +102,12 @@ async function roomExists(room) {
   return !!game;
 }
 
-  function addNewUser(room, userId) {
+  function addNewUser(room, userId, firstName) {
   console.log('Add user', userId);
   console.log('Room', room);
    Game.findOneAndUpdate({roomId: room},
   { "$push": { "users": {
-      userId: userId, result: 0,
+      userId: userId, userName: firstName, result: {},
   }
     } },
     {new: true, useFindAndModify: false},
@@ -120,11 +121,20 @@ async function roomExists(room) {
 }
 
 function saveUserResults(room, userId, result) {
-  const gameRoom = Game.findOne({roomId: room};
+  const gameRoom = Game.findOne({roomId: room});
   const user = gameRoom.users.filter(i => i.userId === userId);
+  const userFromUsers = User.findById(userId);
+  userFromUsers.tests.push({
+    testId: gameRoom.testId,
+    result: result,
+  });
+
   user.result = result;
   console.log(gameRoom);
+  userFromUsers.save();
   gameRoom.save();
+
+  return gameRoom;
 }
 
 function getRandom() {
