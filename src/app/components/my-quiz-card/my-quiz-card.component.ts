@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { UserService } from '../../services/user/user.service';
 @Component({
   selector: 'app-my-quiz-card',
   templateUrl: './my-quiz-card.component.html',
@@ -7,8 +8,15 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class MyQuizCardComponent implements OnInit {
   @Input() quiz;
+  user;
 
-  constructor(private router: Router, private route: ActivatedRoute) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private userService: UserService
+  ) {
+    this.user = this.userService.getUser();
+  }
 
   ngOnInit(): void {
   }

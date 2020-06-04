@@ -8,7 +8,7 @@ import { User } from '../../interfaces/user';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  user: User;
+  user;
 
   constructor(private userService: UserService) {
     this.user = this.userService.getUser()

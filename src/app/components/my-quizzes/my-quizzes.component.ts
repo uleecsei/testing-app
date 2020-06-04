@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { QuizzesService } from 'src/app/services/quizzes/quizzes.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,10 +10,14 @@ import { Observable } from 'rxjs';
 })
 export class MyQuizzesComponent implements OnInit {
   quizzes$: Observable<any[]>;
-  constructor(private quizzesService: QuizzesService) { }
+
+  constructor(private quizzesService: QuizzesService) {
+    this.quizzes$ = this.quizzesService.getMyQuizzesArray();
+  }
 
   ngOnInit(): void {
     this.quizzes$ = this.quizzesService.getMyQuizzesArray();
+    console.log('From on init');
   }
 
 }

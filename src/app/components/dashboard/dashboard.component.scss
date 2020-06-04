@@ -15,5 +15,11 @@
 
   &__cards {
     flex-wrap: wrap;
+    margin: 0 auto;
   }
+
+  &__cards{
+    width: 90%;
+  }
+
 }

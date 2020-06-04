@@ -171,10 +171,12 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.questionTimer!=undefined && this.currentProgress!=undefined && this.countdownTimer!=undefined){
-   
-    this.unsubscribeTimer()
-    this.currentProgress.unsubscribe();
+    if (this.questionTimer !== undefined
+      && this.currentProgress !== undefined
+      && this.countdownTimer !== undefined){
+
+      this.unsubscribeTimer();
+      this.currentProgress.unsubscribe();
     } else {
       return;
     }

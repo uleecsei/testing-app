@@ -30,6 +30,10 @@ export class UserService {
     if (userData && userData.token) {
       this.token.next(userData.token);
     }
+
+    if (userData && userData.user) {
+      this.user.next(userData.user);
+    }
   }
 
   private regHttp(form): Observable<any> {
@@ -88,7 +92,7 @@ export class UserService {
       .subscribe(
         data => this.ngZone.run(() => {
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.responseUser, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.user, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);
@@ -105,7 +109,6 @@ export class UserService {
   private getUserInfo() {
      return this.getUserHttp().subscribe(
       data => {
-        console.log(data.user);
         this.user.next(data.user);
         this.flash.showSuccess(data.status);
       },
@@ -127,11 +130,10 @@ export class UserService {
     return this.token.value;
   }
 
-  public getUser() {
-    console.log(this.user.value)
-    console.log(!this.user.value)
+ public getUser() {
     if (!this.user.value) {
       this.getUserInfo();
+      return this.user.value;
     }
     return this.user.value;
   }
