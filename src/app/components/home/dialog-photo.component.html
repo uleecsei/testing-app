@@ -1,0 +1,9 @@
+<h1 mat-dialog-title class="dialog-photo">Profile Picture Preview</h1>
+<div mat-dialog-content class="dialog-photo__content">
+  <p>You are going to upload the next image as a profile photo.</p>
+  <img [src]="imageSrc" class="dialog-photo__image">
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Upload</button>
+</div>

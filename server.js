@@ -55,9 +55,9 @@ Socketio.of("/game").on("connection", (socket) => {
   });
 
   socket.on("joinGameRoom", async (data) => {
-    const {room, userId} = data;
+    const {room, userId, firstName} = data;
     if (roomExists(room)) {
-      addNewUser(room, userId);
+      addNewUser(room, userId, firstName);
       socket.join(room);
       socket.emit("joinedRoom", "You have joined the room");
       let quiz;
@@ -110,12 +110,12 @@ async function roomExists(room) {
   return !!game;
 }
 
-  function addNewUser(room, userId) {
+  function addNewUser(room, userId, firstName) {
   console.log('Add user', userId);
   console.log('Room', room);
    Game.findOneAndUpdate({roomId: room},
   { "$push": { "users": {
-      userId: userId, result: 0,
+      userId: userId, userName: firstName, result: {},
   }
     } },
     {new: true, useFindAndModify: false},

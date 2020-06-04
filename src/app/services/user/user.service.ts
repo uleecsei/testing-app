@@ -1,6 +1,6 @@
 import {Injectable, NgZone} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {BehaviorSubject, Observable, of, ReplaySubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {environment} from '../../../environments/environment';
@@ -72,16 +72,19 @@ export class UserService {
     this.loginHttp(form)
       .subscribe(
         data => {
+          console.log(data);
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.userData, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.user, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);
           this.router.navigate(['/home']);
         },
         error => {
-          console.log(error);
-          this.flash.showError(error.error.message ? error.error.message : error);
+          const message = error.error.message ? error.error.message
+                          : error.message ? error.message : error;
+          console.log(message);
+          this.flash.showError(message);
           this.router.navigate(['/login']);
         }
       );
