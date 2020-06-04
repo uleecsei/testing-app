@@ -120,7 +120,7 @@ async function roomExists(room) {
 }
 
 function saveUserResults(room, userId, result) {
-  const gameRoom = Game.findOne({roomId: room};
+  const gameRoom = Game.findOne({roomId: room});
   const user = gameRoom.users.filter(i => i.userId === userId);
   user.result = result;
   console.log(gameRoom);
