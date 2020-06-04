@@ -56,7 +56,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
  }
 
  joinRoom(){
-   this.takequizService.joinRoom(this.room);
+   this.takequizService.joinRoom(this.room, this.user.userId);
   }
 
 
