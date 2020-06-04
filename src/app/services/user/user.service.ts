@@ -72,8 +72,9 @@ export class UserService {
     this.loginHttp(form)
       .subscribe(
         data => {
+          console.log(data);
           const token = data.token.split(' ')[1];
-          localStorage.setItem('userAuthData', JSON.stringify({user: data.userData, token}));
+          localStorage.setItem('userAuthData', JSON.stringify({user: data.user, token}));
           this.token.next(token);
           this.user.next(data.user);
           this.flash.showSuccess(data.status);

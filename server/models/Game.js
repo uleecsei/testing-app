@@ -10,7 +10,8 @@ const GameSchema = new Schema({
   users: [
     {
       userId: {type: Types.ObjectId, ref: 'User', required: true},
-      result:  {type: Number}
+      userName: {type: String},
+      result:  {type: Object}
     }
   ],
 });
