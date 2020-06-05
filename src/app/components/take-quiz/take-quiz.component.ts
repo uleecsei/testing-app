@@ -159,6 +159,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
       this.timeOut = true;
       this.questionTimer.unsubscribe();
       this.nextQuestion();
+      
     });
   }
 
@@ -176,7 +177,6 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
 
   updateProgressBar() {
     this.currentProgress.unsubscribe();
-    this.currentProgress = this.reloadProgressBar();
   }
 
   reloadProgressBar() {
