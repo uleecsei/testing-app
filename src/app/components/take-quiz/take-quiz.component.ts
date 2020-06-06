@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, Subject } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
@@ -35,13 +35,14 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
 
   //new
   user
-  displayedColumns: string[] = ['position', 'name','Total score','Correct answers','Wrong answers'];
-  players=[]
-  allResults=[]
-  questionsNumber:number;
-  maxScore:number;
+  displayedColumns: string[] = ['position', 'name', 'Total score', 'Correct answers', 'Wrong answers'];
+  players = []
+  allResults = []
+  questionsNumber: number;
+  maxScore: number;
+  quizTitle: string;
 
-  
+
 
   private routeSubscription: Subscription;
   constructor(
@@ -54,9 +55,10 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     private userService: UserService
   ) {
     this.quiz = window.history.state.quiz;
-    this.questionsNumber=this.quiz.questions.length
-    
-    this.maxScore=getMaxScore(this.quiz)
+    this.questionsNumber = this.quiz.questions.length
+    this.quizTitle = this.quiz.title
+
+    this.maxScore = getMaxScore(this.quiz)
     this.answerService.currentQuestion$.next(this.currentQuestion)
     console.log(this.quiz);
     this.user = this.userService.getUser()
@@ -64,11 +66,11 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     this.takequizService.socket.on("startGame", () => {
       this.startGame()
     })
-    this.takequizService.players$.subscribe(players=>{
-      this.players=players
+    this.takequizService.players$.subscribe(players => {
+      this.players = players
     })
 
-    
+
   }
 
 
@@ -78,16 +80,16 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     this.isSinglePlayer = window.history.state.isSinglePlayer || null
     this.isCreator = window.history.state.isCreator || null
     this.questionIndex = 0
-    this.currentQuestion =(this.quiz)?this.quiz.questions[this.questionIndex]:null
-    this.takequizService.allResults$.subscribe(res=>{
-      this.allResults=res;
+    this.currentQuestion = (this.quiz) ? this.quiz.questions[this.questionIndex] : null
+    this.takequizService.allResults$.subscribe(res => {
+      this.allResults = res;
       console.log(this.allResults)
     })
-   
+
 
   }
 
-  
+
   nextQuestion() {
     this.updateTimer()
     this.disableBtn()
@@ -132,7 +134,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   isLastQuestion() {
-    console.log(this.questionsNumber )
+    console.log(this.questionsNumber)
     return this.questionIndex == this.questionsNumber - 1
   }
 
@@ -154,13 +156,22 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   finishGame() {
     this.gameStarted = false;
     this.gameFinished = true;
-    console.log("MAX SCORE",this.maxScore)
-    let result =this.answerService.getResult(this.maxScore)
-    let userId=this.user.userId;
-    let userName=`${this.user.firstName} ${this.user.lastName}`
-    this.takequizService.pushResults(result,userId,userName,this.isSinglePlayer)
+    console.log("MAX SCORE", this.maxScore)
+    let result = this.answerService.getResult(this.maxScore, this.quizTitle)
+    let userId = this.user.userId;
+    let userName = `${this.user.firstName} ${this.user.lastName}`
+    this.saveRusults(result, userId, userName);
     this.updateUserAnswer()
     this.unsubscribeTimer()
+  }
+
+  saveRusults(result, userId, userName) {
+    if (this.isSinglePlayer) {
+      this.takequizService.allResults$.next([{ ...result, userId, userName }])
+      return;
+    } else {
+      this.takequizService.pushResults(result, userId, userName)
+    }
   }
 
 
@@ -175,7 +186,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
       this.questionTimer.unsubscribe();
       this.countdownTimer.unsubscribe();
       this.nextQuestion();
-      
+
     });
   }
 
@@ -207,7 +218,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.questionTimer !== undefined
       && this.currentProgress !== undefined
-      && this.countdownTimer !== undefined){
+      && this.countdownTimer !== undefined) {
 
       this.unsubscribeTimer();
       this.currentProgress.unsubscribe();
@@ -223,26 +234,22 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   // }
 
 }
+
+
 function getMaxScore(quiz) {
-  let maxScore=0
-  
+  let maxScore = 0;
+
   quiz.questions.forEach(question => {
     question.answers.forEach(answer => {
-      console.log(" Q TYPE ", question.type)
       if (answer.isTrue) {
-        console.log(answer)
-        console.log(" Q aaaaTYPE ", question.type)
         if (question.type == "radio") {
-          maxScore+=100
-          console.log(" scoreeeee ", maxScore)
-
+          maxScore += 100
         } else {
-          maxScore+=50
-          console.log(" scoreeeee ", maxScore)
+          maxScore += 50
         }
       }
     })
   })
-  console.log(" scoreeeee ", maxScore)
+
   return maxScore;
 }

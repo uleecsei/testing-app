@@ -32,15 +32,9 @@ export class TakeQuizService {
   startGame() {
     this.socket.emit('gameStarted');
   }
-  pushResults(result,userId,userName,isSinglePlayer){
-    if(isSinglePlayer){
-      this.allResults$.next([{...result,userId,userName}])
-    }else{
-      this.socket.emit("pushResults",result,userId,userName)
-
-    }
-    
- }
+  pushResults(result,userId,userName){
+     this.socket.emit("pushResults",result,userId,userName)
+}
  addPlayer(allUsers){
     return this.players$.next([...allUsers])
  }

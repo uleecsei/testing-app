@@ -8,11 +8,14 @@
     Start
   </button>
 
-  <div *ngIf='!gameStarted && !gameFinished && !isSinglePlayer ' class="players__container">
+  <div
+    *ngIf="!gameStarted && !gameFinished && !isSinglePlayer "
+    class="players__container"
+  >
     <h1>Waiting for other players</h1>
-    <mat-card  *ngFor='let player of players'>{{player.userName}}</mat-card>  
+    <mat-card *ngFor="let player of players">{{player.userName}}</mat-card>
   </div>
-  
+
   <div class="joined-users" *ngIf="!gameStarted && gameFinished">
     <h1>Result</h1>
     <mat-card>
