@@ -22,6 +22,9 @@ export class MyResultsComponent implements OnInit {
 
   ngOnInit(): void {
     // this.resultsList = this.resultService.countPercentage(this.resultService.getResults());
+   this.resultService.getResults().subscribe(results => {
+     this.resultsList = results;
+   });
   }
 
 }
