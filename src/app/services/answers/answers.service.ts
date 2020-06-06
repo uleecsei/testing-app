@@ -11,12 +11,9 @@ export class AnswersService {
   userAnswers$: BehaviorSubject<any[]> = new BehaviorSubject([])
   currentAnswer$: BehaviorSubject<any[]> = new BehaviorSubject([])
   maxScore: number
-
   isAnswered$ = new Subject();
 
-  constructor() {
-    
-  }
+  constructor() {}
 
   answer(answer) {
     if (answer.type === "radio") {
@@ -35,9 +32,6 @@ export class AnswersService {
     this.currentAnswer$.next(answer)
     console.log("VALUE", this.currentAnswer$.value)
   }
-
-
-
   saveAnswer() {
     let userAnswer = {
       answers: this.currentAnswer$.value
@@ -47,20 +41,20 @@ export class AnswersService {
     this.currentAnswer$.next([])
   }
 
-  getResult(maxScore) {
+  getResult(maxScore, quizTitle) {
     const answers = this.getAnswers()
     const { correct, incorrect } = this.getCorrectNumber(answers)
     const score = this.calculateScore(answers)
-  
-    const percentage= score/maxScore
+
+    const percentage = Math.round(score / maxScore * 100)
     return {
+      quizTitle,
       score,
       correct,
       incorrect,
       percentage
     }
   }
-
   getAnswers() {
     let questions = this.userAnswers$.value
     let allAnswers = []
@@ -98,9 +92,6 @@ export class AnswersService {
 
     return { correct, incorrect }
   }
-
-
-
   setQuestionTimer(time) {
     console.log(time)
     return interval(time)
