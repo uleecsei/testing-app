@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
 import io from 'socket.io-client';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TakeQuizService {
-  socket: any = io('http://localhost:3000/game');
+
+  socket: any = io(`${environment.baseUrl}/game`);
 
 
   constructor() {
@@ -24,6 +26,10 @@ export class TakeQuizService {
   startGame() {
     this.socket.emit('gameStarted');
   }
+  pushResults(result,userId,userName){
+    this.socket.emit("pushResults",result,userId,userName)
+ }
+
 
 
 }

@@ -110,7 +110,7 @@ export class UserService {
   }
 
   private getUserInfo() {
-    this.getUserHttp().subscribe(
+     return this.getUserHttp().subscribe(
       data => {
         this.user.next(data.user);
         this.flash.showSuccess(data.status);
@@ -143,5 +143,10 @@ export class UserService {
 
   public isAuthenticated(): boolean {
     return !!this.token.value;
+  }
+
+  public setUserResults(test) {
+    return this.http.put<any>(
+      `${this.url}/api/tests/results`, test);
   }
 }
