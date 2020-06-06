@@ -114,7 +114,6 @@ module.exports.googleLogin = async (req, res) => {
     }
 
     const userInfo = {
-      userId: payload._id,
       email: payload.email,
       firstName: payload.given_name,
       lastName: payload.family_name,
@@ -133,7 +132,11 @@ module.exports.googleLogin = async (req, res) => {
     res.status(200).json({
       status: 'User authenticated successfully',
       token: `Bearer ${token}`,
-      user: userInfo,
+      user: 
+      {
+        userId: savedUser._id,
+        ...userInfo
+      },
     });
   } catch (e) {
     errorHandler(res, 500, e);
