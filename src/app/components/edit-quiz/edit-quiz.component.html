@@ -1,1 +1,68 @@
-<p>edit-quiz works!</p>
+<div>
+  <h1 mat-dialog-title>Edit a Quiz</h1>
+  <mat-vertical-stepper linear="true" #stepper>
+    <mat-step [stepControl]="createQuizForm1">
+      <ng-template matStepLabel>Fill out quiz name</ng-template>
+      <form [formGroup]="createQuizForm1">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="Quiz name" formControlName="title" required>
+        </mat-form-field>
+      </form>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step [stepControl]="createQuizForm2">
+      <ng-template matStepLabel>Choose a topic</ng-template>
+      <form [formGroup]="createQuizForm2">
+        <mat-form-field appearance="fill">
+          <mat-label>Topic</mat-label>
+          <mat-select formControlName="topic">
+            <mat-option *ngFor="let topic of topicOptions" [value]="topic.value">
+              {{topic.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step [completed]="questions.length>0">
+      <ng-template matStepLabel>Add questions</ng-template>
+      <div *ngFor="let q of questions; let i = index">
+        <div class="question">
+          <span>{{q.question}}</span>
+          <button mat-button (click)="delete(i)">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+          <button mat-button (click)="edit(q, i)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <button mat-raised-button color="primary" (click)="addQuestion()">Add question</button>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Done</ng-template>
+      <button
+        [disabled]="createQuizForm1.invalid || createQuizForm2.invalid"
+        mat-raised-button
+        color="primary"
+        (click)="formsSubmit()"
+      >
+        Edit
+      </button>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+  </mat-vertical-stepper>
+</div>

@@ -9,7 +9,7 @@
     </div>
   </div>
   <mat-card-actions>
-    <button mat-mini-fab color="primary" aria-label="delete icon">
+    <button mat-mini-fab (click)="deleteQuiz()" color="primary" aria-label="delete icon">
       <mat-icon>delete</mat-icon>
     </button>
     <button  (click)="edit()" mat-mini-fab color="primary" aria-label="edit icon">

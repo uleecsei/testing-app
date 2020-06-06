@@ -14,6 +14,7 @@ module.exports.getAll = async (req, res) => {
   }
 };
 
+
 module.exports.create = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -63,7 +64,9 @@ module.exports.deleteById = async (req, res) => {
       });
     }
 
-    if (test.created_by !== userId) {
+
+
+    if (String(test.created_by) !== userId) {
       return res.status(403).json({
         status: 'Access rejected'
       });
@@ -93,13 +96,14 @@ module.exports.updateById = async (req, res) => {
       });
     }
 
-    if (test.created_by !== userId) {
+    if (String(test.created_by) !== userId) {
       return res.status(403).json({
         status: 'Access rejected'
       });
     }
 
     await test.update({title, topic, questions});
+    console.log(test);
     await test.save();
     res.status(200).json({
       status: 'Test updated successfully'
