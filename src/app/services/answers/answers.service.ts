@@ -10,10 +10,10 @@ export class AnswersService {
   currentQuestion$ = new BehaviorSubject(null)
   userAnswers$: BehaviorSubject<any[]> = new BehaviorSubject([])
   currentAnswer$: BehaviorSubject<any[]> = new BehaviorSubject([])
-
+  maxScore: number
   isAnswered$ = new Subject();
 
-  constructor() { }
+  constructor() {}
 
   answer(answer) {
     if (answer.type === "radio") {
@@ -32,12 +32,8 @@ export class AnswersService {
     this.currentAnswer$.next(answer)
     console.log("VALUE", this.currentAnswer$.value)
   }
-
-
-
-  saveAnswer(qId) {
+  saveAnswer() {
     let userAnswer = {
-      questionId: qId,
       answers: this.currentAnswer$.value
     }
     this.userAnswers$.next([...this.userAnswers$.value, userAnswer])
@@ -45,36 +41,39 @@ export class AnswersService {
     this.currentAnswer$.next([])
   }
 
-  getResult(){
-    const answers=this.getAnswers()
-    const {correct,incorrect}=this.getCorrectNumber(answers)
-    const score= this.calculateScore(answers)
+  getResult(maxScore, quizTitle) {
+    const answers = this.getAnswers()
+    const { correct, incorrect } = this.getCorrectNumber(answers)
+    const score = this.calculateScore(answers)
+
+    const percentage = Math.round(score / maxScore * 100)
     return {
+      quizTitle,
       score,
       correct,
-      incorrect
+      incorrect,
+      percentage
     }
   }
-
-  getAnswers(){
-    let questions= this.userAnswers$.value
+  getAnswers() {
+    let questions = this.userAnswers$.value
     let allAnswers = []
-    questions.forEach(q=>{
-      allAnswers=[...allAnswers,...q.answers]
+    questions.forEach(q => {
+      allAnswers = [...allAnswers, ...q.answers]
     })
     return allAnswers
   }
 
-  calculateScore(answers){
-    let score:number=0;
-    
-    answers.forEach(answer=>{
-      if(answer.answer.isTrue && answer.type=="radio"){
-        score+=100
-      } else if (!answer.answer.isTrue && answer.type=="checkbox"){
-        score-=50
-      } else if(answer.answer.isTrue && answer.type=="checkbox"){
-        score+=50
+  calculateScore(answers) {
+    let score: number = 0;
+
+    answers.forEach(answer => {
+      if (answer.answer.isTrue && answer.type == "radio") {
+        score += 100
+      } else if (!answer.answer.isTrue && answer.type == "checkbox") {
+        score -= 50
+      } else if (answer.answer.isTrue && answer.type == "checkbox") {
+        score += 50
       } else {
         return
       }
@@ -82,20 +81,17 @@ export class AnswersService {
     return score
   }
 
-  getCorrectNumber(answers){
-    let correct=0;
-    let incorrect=0;
-    answers.forEach(a=>{
-      if(a.answer.isTrue){
+  getCorrectNumber(answers) {
+    let correct = 0;
+    let incorrect = 0;
+    answers.forEach(a => {
+      if (a.answer.isTrue) {
         correct++;
-      } else {incorrect++;}
+      } else { incorrect++; }
     })
 
-    return{correct,incorrect}
+    return { correct, incorrect }
   }
-
-
-
   setQuestionTimer(time) {
     console.log(time)
     return interval(time)
@@ -106,9 +102,7 @@ export class AnswersService {
       takeUntil(timer$)
     )
   }
-
-
-
-
-
 }
+
+
+

@@ -2,8 +2,9 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
 import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnswersService } from 'src/app/services/answers/answers.service';
 import { User } from '../../interfaces/user';
-import {logger} from "codelyzer/util/logger";
+import { logger } from "codelyzer/util/logger";
 
 @Component({
   selector: 'app-room',
@@ -22,6 +23,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
   constructor(
     private userService: UserService,
     private takequizService: TakeQuizService,
+    private answersService: AnswersService,
     private router: Router,
     private route: ActivatedRoute) { }
 
@@ -33,30 +35,36 @@ export class RoomComponent implements OnInit, AfterViewInit {
     this.user = this.userService.getUser();
   }
 
-  public ngAfterViewInit(){
+  public ngAfterViewInit() {
     this.socket.on('roomId', roomId =>
-    this.room = roomId);
+      this.room = roomId);
 
     this.socket.on('Join the game', (message) => {
       console.log(message);
+
     });
-    this.socket.on('joinedRoom', (message) => {
+
+    this.socket.on('joinedRoom', (message, userName, allUsers) => {
       console.log(message);
+      console.log(allUsers)
+      this.takequizService.addPlayer(allUsers)
     });
     this.socket.on('quiz created', quiz => console.log('QUIZ from server', quiz));
 
     this.socket.on('quiz', (quiz) => {
-      console.log('gotten quiz', quiz);
-      this.router.navigate(['home/takeQuiz', quiz._id], {state: {quiz, isCreator: this.isCreator}});
+      //console.log('gotten quiz', quiz);
+      this.answersService.currentQuiz$.next(quiz)
+      this.router.navigate(['home/takeQuiz', quiz._id], { state: { quiz, isCreator: this.isCreator } });
     });
- }
+  }
 
- createGame(){
+  createGame() {
     return this.takequizService.createGame(this.quiz, this.user.userId);
- }
+  }
 
- joinRoom(){
-   this.takequizService.joinRoom(this.room, this.user.userId, this.user.firstName);
+  joinRoom() {
+    console.log('clicked join room')
+    this.takequizService.joinRoom(this.room, this.user.userId, this.user.firstName);
   }
 
 
