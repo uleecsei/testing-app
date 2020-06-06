@@ -167,6 +167,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
 
   saveRusults(result, userId, userName) {
     if (this.isSinglePlayer) {
+      this.userService.setUserResults(result)
       this.takequizService.allResults$.next([{ ...result, userId, userName }])
       return;
     } else {
