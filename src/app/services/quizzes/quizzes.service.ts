@@ -23,7 +23,6 @@ export class QuizzesService  {
   url = environment.baseUrl;
   allQuizzes = new BehaviorSubject([]);
   myQuizzes = new BehaviorSubject([]);
-  myResults = new BehaviorSubject([]);
 
   createQuiz(form) {
     this.http.post<any>(
@@ -105,11 +104,6 @@ export class QuizzesService  {
   getAllQuizzesArray(): Observable<any> {
     this.getAllQuizzes();
     return this.allQuizzes.asObservable();
-  }
-
-  getMyResultsArray(): Observable<any> {
-    this.getUserQuizzes();
-    return this.myQuizzes.asObservable();
   }
 
 }
