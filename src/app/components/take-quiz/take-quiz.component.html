@@ -1,11 +1,13 @@
-<button
-  *ngIf="!gameStarted && !gameFinished && (isCreator || isSinglePlayer)"
-  (click)="(isCreator)?startByCreator():startGame()"
-  mat-flat-button
-  color="accent"
->
-  Start
-</button>
+<div class="start_buttonBlock">
+  <button
+    *ngIf="!gameStarted && !gameFinished && (isCreator || isSinglePlayer)"
+    (click)="(isCreator)?startByCreator():startGame()"
+    mat-flat-button
+    color="accent"
+  >
+    Start
+  </button>
+</div>
 
 <div *ngIf="gameStarted && !gameFinished" class="answers-container">
   <h3>Time left: 00:{{timeLeft/1000}}</h3>

@@ -9,7 +9,7 @@ import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {EditQuizComponent} from './components/edit-quiz/edit-quiz.component';
 import {TakeQuizComponent} from './components/take-quiz/take-quiz.component';
 import {CreateQuizComponent} from './components/create-quiz/create-quiz.component';
-import { AuthGuard } from "./services/auth.guard";
+import { AuthGuard } from './services/auth.guard';
 import { RoomComponent } from './components/room/room.component';
 
 
@@ -57,8 +57,8 @@ const routes: Routes = [
         canActivate: [AuthGuard]
       },
       {
-        path:'joinRoom',
-        component:RoomComponent,
+        path: 'joinRoom',
+        component: RoomComponent,
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full'}
     ]
