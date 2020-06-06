@@ -52,27 +52,33 @@ Socketio.of("/game").on("connection", (socket) => {
 
   socket.on("joinGameRoom", async (data) => {
     const {room, userId, firstName} = data;
+    
+
     if (roomExists(room)) {
       addNewUser(room, userId, firstName);
       socket.join(room);
-      socket.emit("joinedRoom", "You have joined the room");
+
+      
       let quiz;
        await getQuiz(room)
          .then( res => {
            quiz = res.quiz
          });
+
       Socketio.of("/game").in(room).emit("quiz",quiz);
       socket.on("gameStarted",()=>{
-        Socketio.of("/game").in(room).emit("startGame",quiz);
+        Socketio.of("/game").in(room).emit("startGame");
       })
+      let allUsers= await getGameUsers(room)
+      console.log(allUsers)
+      Socketio.of("/game").in(room).emit("joinedRoom", `${firstName} joined the room`,firstName,allUsers);
 
       socket.on("pushResults",async (result,userId,userName)=>{
         console.log(result,userId,userName)
         const game= await saveUserResults(room, userId, result)
-
-        console.log('SAVED GAME',game)
-        Socketio.of("/game").in(room).emit("showResults",game)
-        //Socketio.of("/game").in(room).emit("showResults",games.filter(e=>e.roomId==room)[0].result)
+        //console.log('SAVED GAME',game)
+        Socketio.of("/game").in(room).emit("showResults",{userName,...result})
+        
       })
 
     } else {
@@ -122,6 +128,13 @@ async function roomExists(room) {
         console.log(result);
       }
     });
+}
+
+async function getGameUsers(room){
+  const game= await Game.findOne({roomId: room});
+  console.log(game)
+  console.log(game.users)
+  return game.users;
 }
 
 async function saveUserResults(room, userId, result) {

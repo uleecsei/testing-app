@@ -1,9 +1,11 @@
 export default interface Result {
   id?: number | string;
   title: string;
-  userAnswers: UserAnswerResults[];
+  userAnswers?: UserAnswerResults[];
   totalScore: number;
   percentage?: number;
+  incorrect?:number;
+  correct?:number;
 }
 
 interface UserAnswerResults {

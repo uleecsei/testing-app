@@ -13,7 +13,7 @@ export class MyResultsComponent implements OnInit {
   constructor(private resultService: ResultsService) { }
 
   ngOnInit(): void {
-    this.resultsList = this.resultService.countPercentage(this.resultService.getResults());
+    // this.resultsList = this.resultService.countPercentage(this.resultService.getResults());
   }
 
 }

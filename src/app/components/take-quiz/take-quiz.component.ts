@@ -29,16 +29,19 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   timeLeft;
   isSinglePlayer;
   isCreator;
-
-  //new
-  user
-  displayedColumns: string[] = ['position', 'name'];
-  userTotalScore:number;
-  resultBoard=[]
-
   progressValue = 0;
   PROGRESS_BAR_SPEED = 100; // less = faster
   currentProgress: Subscription;
+
+  //new
+  user
+  displayedColumns: string[] = ['position', 'name','Total score','Correct answers','Wrong answers'];
+  players=[]
+  allResults=[]
+  questionsNumber:number;
+  maxScore:number;
+
+  
 
   private routeSubscription: Subscription;
   constructor(
@@ -51,33 +54,40 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     private userService: UserService
   ) {
     this.quiz = window.history.state.quiz;
+    this.questionsNumber=this.quiz.questions.length
+    
+    this.maxScore=getMaxScore(this.quiz)
+    this.answerService.currentQuestion$.next(this.currentQuestion)
     console.log(this.quiz);
     this.user = this.userService.getUser()
     console.log(this.user)
+    this.takequizService.socket.on("startGame", () => {
+      this.startGame()
+    })
+    this.takequizService.players$.subscribe(players=>{
+      this.players=players
+    })
+
+    
   }
 
 
   ngOnInit(): void {
     // Лена, это обьект теста переданный при переходе, по идее теперь не надо искать его по айди
 
-    this.quiz = window.history.state.quiz
     this.isSinglePlayer = window.history.state.isSinglePlayer || null
     this.isCreator = window.history.state.isCreator || null
     this.questionIndex = 0
-    this.currentQuestion = this.quiz.questions[this.questionIndex]
-    this.answerService.currentQuiz$.next(this.quiz)
-    this.answerService.currentQuestion$.next(this.currentQuestion)
-    this.takequizService.socket.on("startGame", () => {
-      this.startGame()
+    this.currentQuestion =(this.quiz)?this.quiz.questions[this.questionIndex]:null
+    this.takequizService.allResults$.subscribe(res=>{
+      this.allResults=res;
+      console.log(this.allResults)
     })
-
-    //this.users=users
-    this.takequizService.socket.on("showResults",(results)=>{
-      console.log("showing results")
-      console.log(results)
-    })
+   
 
   }
+
+  
   nextQuestion() {
     this.updateTimer()
     this.disableBtn()
@@ -90,7 +100,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   saveUserAnswer() {
-    return this.answerService.saveAnswer(this.currentQuestion.qId)
+    return this.answerService.saveAnswer()
   }
 
   disableBtn() {
@@ -121,7 +131,10 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     this.answerService.currentQuestion$.next(this.currentQuestion);
   }
 
-  isLastQuestion = () => this.questionIndex == this.quiz.questions.length - 1
+  isLastQuestion() {
+    console.log(this.questionsNumber )
+    return this.questionIndex == this.questionsNumber - 1
+  }
 
   updateUserAnswer() {
     this.answerService.userAnswers$.next([]);
@@ -141,11 +154,13 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   finishGame() {
     this.gameStarted = false;
     this.gameFinished = true;
-    let result =this.answerService.getResult()
+    console.log("MAX SCORE",this.maxScore)
+    let result =this.answerService.getResult(this.maxScore)
     let userId=this.user.userId;
     let userName=`${this.user.firstName} ${this.user.lastName}`
-    this.takequizService.pushResults(result,userId,userName)
+    this.takequizService.pushResults(result,userId,userName,this.isSinglePlayer)
     this.updateUserAnswer()
+    this.unsubscribeTimer()
   }
 
 
@@ -158,6 +173,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
       console.log('time stopped');
       this.timeOut = true;
       this.questionTimer.unsubscribe();
+      this.countdownTimer.unsubscribe();
       this.nextQuestion();
       
     });
@@ -177,6 +193,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
 
   updateProgressBar() {
     this.currentProgress.unsubscribe();
+    //this.currentProgress = this.reloadProgressBar();
   }
 
   reloadProgressBar() {
@@ -205,4 +222,27 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   //   return snackBarRef
   // }
 
+}
+function getMaxScore(quiz) {
+  let maxScore=0
+  
+  quiz.questions.forEach(question => {
+    question.answers.forEach(answer => {
+      console.log(" Q TYPE ", question.type)
+      if (answer.isTrue) {
+        console.log(answer)
+        console.log(" Q aaaaTYPE ", question.type)
+        if (question.type == "radio") {
+          maxScore+=100
+          console.log(" scoreeeee ", maxScore)
+
+        } else {
+          maxScore+=50
+          console.log(" scoreeeee ", maxScore)
+        }
+      }
+    })
+  })
+  console.log(" scoreeeee ", maxScore)
+  return maxScore;
 }
