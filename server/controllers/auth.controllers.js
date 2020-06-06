@@ -9,10 +9,7 @@ require("dotenv").config();
 getToken = (user) => {
   const token = jwt.sign({
     userId: user.id
-  }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
-  });
-
+  }, process.env.JWT_SECRET);
   return token;
 };
 
@@ -21,7 +18,9 @@ module.exports.login = async (req, res) => {
     const password = req.body.password;
     const email = req.body.email.toLowerCase();
 
-    const user = await User.findOne({email});
+    const user = await User.findOne({
+      email
+    });
 
     if (!user) {
       return res.status(400).json({
@@ -61,7 +60,9 @@ module.exports.googleLogin = async (req, res) => {
   try {
     const payload = await googleVerify(req.body.id_token);
 
-    const user = await User.findOne({googleId: payload.sub});
+    const user = await User.findOne({
+      googleId: payload.sub
+    });
 
     if (user) {
       const token = getToken(user);
@@ -81,14 +82,19 @@ module.exports.googleLogin = async (req, res) => {
       });
     }
 
-    const candidate = await User.findOne({email: payload.email});
+    const candidate = await User.findOne({
+      email: payload.email
+    });
 
     if (candidate) {
       const profilePicture = candidate.profilePicture ?
-            candidate.profilePicture :
-            payload.picture;
+        candidate.profilePicture :
+        payload.picture;
 
-      await candidate.update({googleId: payload.sub, profilePicture});
+      await candidate.update({
+        googleId: payload.sub,
+        profilePicture
+      });
       const newUser = await candidate.save();
 
       const userInfo = {
@@ -136,10 +142,16 @@ module.exports.googleLogin = async (req, res) => {
 
 module.exports.register = async (req, res) => {
   try {
-    const {password, firstName, lastName} = req.body;
+    const {
+      password,
+      firstName,
+      lastName
+    } = req.body;
     const email = req.body.email.toLowerCase();
 
-    const candidate = await User.findOne({email});
+    const candidate = await User.findOne({
+      email
+    });
     if (candidate) {
       return res.status(400).json({
         status: 'The email is already registered',
