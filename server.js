@@ -107,8 +107,6 @@ async function roomExists(room) {
 }
 
   function addNewUser(room, userId, firstName) {
-  console.log('Add user', userId);
-  console.log('Room', room);
    Game.findOneAndUpdate({roomId: room},
   { "$push": { "users": {
       userId: userId, userName: firstName, result: {},

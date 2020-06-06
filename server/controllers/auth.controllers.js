@@ -44,6 +44,7 @@ module.exports.login = async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       profilePicture: user.profilePicture,
+      tests: user.tests,
     }
 
     res.status(200).json({
@@ -69,8 +70,9 @@ module.exports.googleLogin = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        profilePicture: user.profilePicture
-      }
+        profilePicture: user.profilePicture,
+        tests: user.tests,
+      };
 
       return res.status(200).json({
         status: 'User authenticated successfully',
@@ -94,7 +96,8 @@ module.exports.googleLogin = async (req, res) => {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         email: newUser.email,
-        profilePicture: newUser.profilePicture
+        profilePicture: newUser.profilePicture,
+        tests: newUser.tests,
       }
       const token = getToken(candidate);
       return res.status(200).json({
@@ -109,7 +112,8 @@ module.exports.googleLogin = async (req, res) => {
       email: payload.email,
       firstName: payload.given_name,
       lastName: payload.family_name,
-      profilePicture: payload.picture
+      profilePicture: payload.picture,
+      tests: [],
     }
 
     const newUser = new User({
@@ -146,7 +150,8 @@ module.exports.register = async (req, res) => {
       email,
       password,
       firstName,
-      lastName
+      lastName,
+      tests: [],
     });
 
     await newUser.save();
@@ -172,7 +177,8 @@ module.exports.userInfo = async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      profilePicture: user.profilePicture
+      profilePicture: user.profilePicture,
+      tests: user.tests,
     }
 
     res.status(201).json({

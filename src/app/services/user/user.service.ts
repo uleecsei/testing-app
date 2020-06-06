@@ -144,4 +144,9 @@ export class UserService {
   public isAuthenticated(): boolean {
     return !!this.token.value;
   }
+
+  public setUserResults(test) {
+    return this.http.put<any>(
+      `${this.url}/api/tests/results`, test);
+  }
 }

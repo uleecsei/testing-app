@@ -90,7 +90,7 @@ module.exports.updateById = async (req, res) => {
 
     const test = await Test.findById(testId);
 
-    if(!test) {
+    if (!test) {
       return res.status(400).json({
         status: "Test doesn't exist"
       });
@@ -112,3 +112,28 @@ module.exports.updateById = async (req, res) => {
     errorHandler(res, 500, e);
   }
 };
+
+  module.exports.setResults = async (req, res) => {
+    try {
+      const userId = req.user.userId;
+
+      const test = req.body;
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(400).json({
+          status: "User doesn't find"
+        });
+      }
+
+      await user.tests.push(test);
+      console.log(user);
+      await user.save();
+      res.status(200).json({
+        status: 'Results added'
+      });
+    } catch (e) {
+      errorHandler(res, 500, e);
+    }
+  };
