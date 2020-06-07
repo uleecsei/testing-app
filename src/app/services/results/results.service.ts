@@ -14,7 +14,4 @@ export class ResultsService {
   constructor(private http: HttpClient){
   }
 
-  getResults(): Observable<Result[]> {
-    return this.http.get<Result[]>(`${this.url}/api/results`);
-  }
 }

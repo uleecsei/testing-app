@@ -1,7 +1,6 @@
 <mat-card class="my-results-card">
     <mat-progress-spinner mode="determinate" [value]="this.resultCard.percentage" [color]="spinColor"></mat-progress-spinner>
     <div class="my-results-card__percentage" [style]="leftIdent">{{this.resultCard.percentage}}%</div>
-    <div class="my-results-card__title">{{this.resultCard.title}}</div>
-    <div class="my-results-card__total-score">Total Score: {{this.resultCard.score}} <br> {{this.resultCard.Correct}} / {{this.resultCard.Incorrect + this.resultCard.Correct}}</div>
-    
+    <div class="my-results-card__title">{{this.resultCard.quizTitle}}</div>
+    <div class="my-results-card__total-score">Total Score: {{this.resultCard.score}} <br> {{this.resultCard.correct}} / {{(this.resultCard.incorrect + this.resultCard.correct)}}</div>
 </mat-card>

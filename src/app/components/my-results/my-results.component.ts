@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ResultsService } from 'src/app/services/results/results.service';
 import Result from 'src/app/services/results/Result';
 import { UserService } from '../../services/user/user.service';
+import { User } from 'src/app/interfaces/user';
 
 @Component({
   selector: 'app-my-results',
@@ -9,22 +10,24 @@ import { UserService } from '../../services/user/user.service';
   styleUrls: ['./my-results.component.scss']
 })
 export class MyResultsComponent implements OnInit {
-  user;
+  user: User;
   resultsList: Result[] = [];
 
   constructor(
     private resultService: ResultsService,
     private userService: UserService,
     ) {
-    this.user = this.userService.getUser();
-    console.log(this.user);
   }
 
   ngOnInit(): void {
     // this.resultsList = this.resultService.countPercentage(this.resultService.getResults());
-   this.resultService.getResults().subscribe(results => {
-     this.resultsList = results;
-   });
+    this.user = this.userService.getUser(); 
+    this.user.tests.forEach((test) => {
+      if(test.result){
+        this.resultsList.push(test.result);
+      }
+    })
+    console.log(this.resultsList);
   }
 
 }
