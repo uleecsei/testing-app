@@ -25,6 +25,7 @@ export class QuizzesService  {
   myQuizzes = new BehaviorSubject([]);
 
   createQuiz(form) {
+    console.log(form);
     this.http.post<any>(
       `${this.url}/api/tests`, form)
       .subscribe(
