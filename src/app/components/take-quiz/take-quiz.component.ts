@@ -174,13 +174,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     this.userService.getUser();
     this.updateUserAnswer();
     this.unsubscribeTimer();
-
-    setTimeout(this.returnHome, 6000);
   }
-
-  returnHome = () => {
-    this.router.navigate(['home/dashboard']);
-  };
 
   saveResults(result, userId, userName) {
     if (this.isSinglePlayer) {
