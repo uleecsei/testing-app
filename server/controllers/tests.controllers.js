@@ -1,4 +1,5 @@
 const Test = require('../models/Test');
+const User = require('../models/User');
 const errorHandler = require('../utils/errorHandler');
 
 module.exports.getAll = async (req, res) => {
@@ -58,12 +59,11 @@ module.exports.deleteById = async (req, res) => {
 
     const test = await Test.findById(testId);
 
-    if(!test) {
+    if (!test) {
       return res.status(400).json({
         status: "Test doesn't exist"
       });
     }
-
 
 
     if (String(test.created_by) !== userId) {
@@ -103,7 +103,6 @@ module.exports.updateById = async (req, res) => {
     }
 
     await test.update({title, topic, questions});
-    console.log(test);
     await test.save();
     res.status(200).json({
       status: 'Test updated successfully'
@@ -113,27 +112,25 @@ module.exports.updateById = async (req, res) => {
   }
 };
 
-  module.exports.setResults = async (req, res) => {
-    try {
-      const userId = req.user.userId;
+module.exports.setResults = async (req, res) => {
+  try {
+    const userId = req.user.userId;
 
-      const test = req.body;
+    const test = req.body;
 
-      const user = await User.findById(userId);
+    console.log('TEST', test);
 
-      if (!user) {
-        return res.status(400).json({
-          status: "User doesn't find"
-        });
-      }
-
-      await user.tests.push(test);
-      console.log(user);
-      await user.save();
-      res.status(200).json({
-        status: 'Results added'
+    User.findByIdAndUpdate(userId,
+      { "$push": { "tests": test } },
+      {new: true, useFindAndModify: false},
+      function (err, result) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('NOT FROM SOCKET', result);
+        }
       });
-    } catch (e) {
-      errorHandler(res, 500, e);
-    }
-  };
+  } catch (e) {
+    errorHandler(res, 500, e);
+  }
+};

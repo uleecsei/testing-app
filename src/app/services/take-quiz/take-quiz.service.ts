@@ -19,6 +19,7 @@ export class TakeQuizService {
         console.log("showing results")
         this.allResults$.next([...this.allResults$.value,results])
       })
+    this.socket.on("left",(msg)=>console.log(msg))
   }
 
   createGame(quiz, userId) {
