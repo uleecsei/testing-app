@@ -1,4 +1,5 @@
 const Test = require('../models/Test');
+const User = require('../models/User');
 const errorHandler = require('../utils/errorHandler');
 
 module.exports.getAll = async (req, res) => {
@@ -13,6 +14,7 @@ module.exports.getAll = async (req, res) => {
     errorHandler(res, 500, e);
   }
 };
+
 
 module.exports.create = async (req, res) => {
   try {
@@ -57,13 +59,14 @@ module.exports.deleteById = async (req, res) => {
 
     const test = await Test.findById(testId);
 
-    if(!test) {
+    if (!test) {
       return res.status(400).json({
         status: "Test doesn't exist"
       });
     }
 
-    if (test.created_by !== userId) {
+
+    if (String(test.created_by) !== userId) {
       return res.status(403).json({
         status: 'Access rejected'
       });
@@ -87,13 +90,13 @@ module.exports.updateById = async (req, res) => {
 
     const test = await Test.findById(testId);
 
-    if(!test) {
+    if (!test) {
       return res.status(400).json({
         status: "Test doesn't exist"
       });
     }
 
-    if (test.created_by !== userId) {
+    if (String(test.created_by) !== userId) {
       return res.status(403).json({
         status: 'Access rejected'
       });
@@ -107,4 +110,28 @@ module.exports.updateById = async (req, res) => {
   } catch (e) {
     errorHandler(res, 500, e);
   }
+};
+
+module.exports.setResults = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const test = req.body;
+
+
+    User.findByIdAndUpdate(userId,
+      { "$push": { "tests": test } },
+      {new: true, useFindAndModify: false},
+      function (err, result) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(result);
+        }
+      });
+  } catch (e) {
+    errorHandler(res, 500, e);
+  }
+
+
 };

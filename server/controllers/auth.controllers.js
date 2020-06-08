@@ -9,10 +9,7 @@ require("dotenv").config();
 getToken = (user) => {
   const token = jwt.sign({
     userId: user.id
-  }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
-  });
-
+  }, process.env.JWT_SECRET);
   return token;
 };
 
@@ -21,7 +18,9 @@ module.exports.login = async (req, res) => {
     const password = req.body.password;
     const email = req.body.email.toLowerCase();
 
-    const user = await User.findOne({email});
+    const user = await User.findOne({
+      email
+    });
 
     if (!user) {
       return res.status(400).json({
@@ -44,6 +43,7 @@ module.exports.login = async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       profilePicture: user.profilePicture,
+      tests: user.tests,
     }
 
     res.status(200).json({
@@ -60,7 +60,9 @@ module.exports.googleLogin = async (req, res) => {
   try {
     const payload = await googleVerify(req.body.id_token);
 
-    const user = await User.findOne({googleId: payload.sub});
+    const user = await User.findOne({
+      googleId: payload.sub
+    });
 
     if (user) {
       const token = getToken(user);
@@ -69,8 +71,9 @@ module.exports.googleLogin = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        profilePicture: user.profilePicture
-      }
+        profilePicture: user.profilePicture,
+        tests: user.tests,
+      };
 
       return res.status(200).json({
         status: 'User authenticated successfully',
@@ -79,14 +82,19 @@ module.exports.googleLogin = async (req, res) => {
       });
     }
 
-    const candidate = await User.findOne({email: payload.email});
+    const candidate = await User.findOne({
+      email: payload.email
+    });
 
     if (candidate) {
       const profilePicture = candidate.profilePicture ?
-            candidate.profilePicture :
-            payload.picture;
+        candidate.profilePicture :
+        payload.picture;
 
-      await candidate.update({googleId: payload.sub, profilePicture});
+      await candidate.update({
+        googleId: payload.sub,
+        profilePicture
+      });
       const newUser = await candidate.save();
 
       const userInfo = {
@@ -94,7 +102,8 @@ module.exports.googleLogin = async (req, res) => {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         email: newUser.email,
-        profilePicture: newUser.profilePicture
+        profilePicture: newUser.profilePicture,
+        tests: newUser.tests,
       }
       const token = getToken(candidate);
       return res.status(200).json({
@@ -105,11 +114,11 @@ module.exports.googleLogin = async (req, res) => {
     }
 
     const userInfo = {
-      userId: payload._id,
       email: payload.email,
       firstName: payload.given_name,
       lastName: payload.family_name,
-      profilePicture: payload.picture
+      profilePicture: payload.picture,
+      tests: [],
     }
 
     const newUser = new User({
@@ -123,7 +132,11 @@ module.exports.googleLogin = async (req, res) => {
     res.status(200).json({
       status: 'User authenticated successfully',
       token: `Bearer ${token}`,
-      user: userInfo,
+      user: 
+      {
+        userId: savedUser._id,
+        ...userInfo
+      },
     });
   } catch (e) {
     errorHandler(res, 500, e);
@@ -132,10 +145,16 @@ module.exports.googleLogin = async (req, res) => {
 
 module.exports.register = async (req, res) => {
   try {
-    const {password, firstName, lastName} = req.body;
+    const {
+      password,
+      firstName,
+      lastName
+    } = req.body;
     const email = req.body.email.toLowerCase();
 
-    const candidate = await User.findOne({email});
+    const candidate = await User.findOne({
+      email
+    });
     if (candidate) {
       return res.status(400).json({
         status: 'The email is already registered',
@@ -146,7 +165,8 @@ module.exports.register = async (req, res) => {
       email,
       password,
       firstName,
-      lastName
+      lastName,
+      tests: [],
     });
 
     await newUser.save();
@@ -172,7 +192,8 @@ module.exports.userInfo = async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      profilePicture: user.profilePicture
+      profilePicture: user.profilePicture,
+      tests: user.tests,
     }
 
     res.status(201).json({

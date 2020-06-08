@@ -25,6 +25,7 @@ export class QuizzesService  {
   myQuizzes = new BehaviorSubject([]);
 
   createQuiz(form) {
+    console.log(form);
     this.http.post<any>(
       `${this.url}/api/tests`, form)
       .subscribe(
@@ -36,6 +37,36 @@ export class QuizzesService  {
           console.log(error);
           this.flash.showError(error.status);
         });
+  }
+
+  editQuiz(id, form) {
+    this.http.put<any>(
+      `${this.url}/api/tests/${id}`, form)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.flash.showSuccess(data.status);
+        },
+        error => {
+          console.log(error);
+          this.flash.showError(error.status);
+        });
+  }
+
+  deleteQuiz(id) {
+    this.http.delete<any>(
+      `${this.url}/api/tests/${id}`)
+      .subscribe(
+        data => {
+          console.log(data);
+          this.flash.showSuccess(data.status);
+        },
+        error => {
+          console.log(error);
+          this.flash.showError(error.status);
+        });
+
+    this.myQuizzes.next(this.myQuizzes.getValue().filter(i => i._id !== id));
   }
 
   setInterval(speed: number){

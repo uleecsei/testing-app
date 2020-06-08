@@ -1,3 +1,9 @@
+.start_buttonBlock {
+  width: 400px;
+  margin: 30px auto;
+  text-align: center;
+}
+
 .answers-container{
     max-width: 50%;
     margin: 0 auto;
@@ -23,3 +29,16 @@ mat-progress-bar.mat-progress-bar.answers-container__progress-bar.mat-warn {
 }
 
 
+
+.start__container{
+    margin: 0 auto;
+    width: 90%;
+    text-align: center;
+    button{
+        margin: 100px 0 50px;
+    }
+}
+table {
+    width: 50%;
+    margin: 0 auto;
+  }

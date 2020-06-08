@@ -58,4 +58,8 @@ export class QuestionsService {
   clearQuestions() {
     this.questions.next([]);
   }
+
+  setQuestions(questions) {
+    this.questions.next(questions);
+  }
 }

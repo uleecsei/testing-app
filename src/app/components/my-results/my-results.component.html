@@ -1,4 +1,11 @@
 <div class="my-results">
     <h1 class="my-results__title">Testing results</h1>
-    <app-my-results-card *ngFor="let item of resultsList" [resultCard]="item"></app-my-results-card>
+    <div *ngIf="resultsList.length; else noResults">
+        <app-my-results-card *ngFor="let item of resultsList" [resultCard]="item"></app-my-results-card>
+    </div>
+    <ng-template #noResults>
+        <h2 class="my-results__title">
+            You haven't passed any tests yet.
+        </h2>
+    </ng-template>
 </div>

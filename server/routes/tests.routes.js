@@ -14,4 +14,6 @@ router.delete('/:id', auth, controller.deleteById);
 
 router.put('/:id', auth, controller.updateById);
 
+router.post('/results', auth, controller.setResults);
+
 module.exports = router;

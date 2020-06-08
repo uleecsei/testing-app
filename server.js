@@ -52,27 +52,36 @@ Socketio.of("/game").on("connection", (socket) => {
 
   socket.on("joinGameRoom", async (data) => {
     const {room, userId, firstName} = data;
+
+
     if (roomExists(room)) {
       addNewUser(room, userId, firstName);
       socket.join(room);
-      socket.emit("joinedRoom", "You have joined the room");
+
+
       let quiz;
        await getQuiz(room)
          .then( res => {
            quiz = res.quiz
          });
+
       Socketio.of("/game").in(room).emit("quiz",quiz);
       socket.on("gameStarted",()=>{
-        Socketio.of("/game").in(room).emit("startGame",quiz);
-      })
+        Socketio.of("/game").in(room).emit("startGame");
+      });
+      let allUsers= await getGameUsers(room);
+      Socketio.of("/game").in(room).emit("joinedRoom", `${firstName} joined the room`,firstName,allUsers, room);
 
       socket.on("pushResults",async (result,userId,userName)=>{
-        console.log(result,userId,userName)
-        const game= await saveUserResults(room, userId, result)
+        const game= await saveUserResults(room, userId, result);
+        Socketio.of("/game").in(room).emit("showResults",{userName,...result})
 
-        console.log('SAVED GAME',game)
-        Socketio.of("/game").in(room).emit("showResults",game)
-        //Socketio.of("/game").in(room).emit("showResults",games.filter(e=>e.roomId==room)[0].result)
+      })
+
+      socket.on("leave",()=>{
+
+        Socketio.of("/game").in(room).emit("left","Left game");
+        socket.leave(room)
       })
 
     } else {
@@ -107,8 +116,6 @@ async function roomExists(room) {
 }
 
   function addNewUser(room, userId, firstName) {
-  console.log('Add user', userId);
-  console.log('Room', room);
    Game.findOneAndUpdate({roomId: room},
   { "$push": { "users": {
       userId: userId, userName: firstName, result: {},
@@ -124,15 +131,21 @@ async function roomExists(room) {
     });
 }
 
+async function getGameUsers(room){
+  const game= await Game.findOne({roomId: room});
+  return game.users;
+}
+
 async function saveUserResults(room, userId, result) {
   const gameRoom = await Game.findOne({roomId: room});
   const user = gameRoom.users.filter(i => i.userId == userId)[0];
   const userFromUsers = await User.findById(userId);
-  console.log(userFromUsers)
   userFromUsers.tests.push({
     testId: gameRoom.testId,
     result: result,
   });
+
+  console.log(userFromUsers);
 
   user.result = result;
   await userFromUsers.save();

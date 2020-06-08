@@ -141,7 +141,28 @@ export class UserService {
     return this.user.value;
   }
 
+  public getUserWithUpdatedResults(){
+    return this.getUserHttp();
+  }
+
   public isAuthenticated(): boolean {
     return !!this.token.value;
   }
+
+  private setResultsHttp(test): Observable<any> {
+    return this.http.post<any>(
+      `${this.url}/api/tests/results`, test);
+  }
+
+  public setUserResults(test) {
+    this.setResultsHttp(test)
+      .subscribe(
+        data => {
+          console.log('Data', data);
+        },
+        error => {
+          console.log('Error', error);
+        });
+  }
+
 }
