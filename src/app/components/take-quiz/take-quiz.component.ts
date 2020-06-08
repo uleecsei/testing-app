@@ -18,18 +18,18 @@ import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
 })
 export class TakeQuizComponent implements OnInit, OnDestroy {
   quiz;
-  quizId:string;
-  questionIndex:number;
+  quizId: string;
+  questionIndex: number;
   currentQuestion;
-  isAnswered:boolean;
+  isAnswered: boolean;
   timeOut = false;
   questionTimer: Subscription;
   countdownTimer: Subscription;
-  gameStarted:boolean;
-  gameFinished:boolean;
-  timeLeft:number;
-  isSinglePlayer:boolean;
-  isCreator:boolean;
+  gameStarted: boolean;
+  gameFinished: boolean;
+  timeLeft: number;
+  isSinglePlayer: boolean;
+  isCreator: boolean;
   progressValue = 0;
   PROGRESS_BAR_SPEED = 100; // less = faster
   currentProgress: Subscription;
@@ -58,29 +58,26 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     private takequizService: TakeQuizService,
     private userService: UserService
   ) {
+
     this.quiz = window.history.state.quiz
     this.questionsNumber = this.quiz.questions.length
     this.quizTitle = this.quiz.title
     this.quizId=this.quiz.quizId
- 
+
 
     this.maxScore = getMaxScore(this.quiz);
     this.answerService.currentQuestion$.next(this.currentQuestion);
     console.log(this.quiz);
+
     this.user = this.userService.getUser();
     console.log(this.user);
-    this.takequizService.socket.on('startGame', () => {
-      this.startGame();
-    });
-    this.takequizService.players$.subscribe(players => {
-      this.players = players;
-    });
 
 
   }
 
 
   ngOnInit(): void {
+
 
     this.isSinglePlayer = window.history.state.isSinglePlayer || null
     this.isCreator = window.history.state.isCreator || null
@@ -97,6 +94,7 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
       this.players = players
     })
     console.log("is single PLAYER",this.isSinglePlayer)
+
 
 
   }
@@ -180,9 +178,11 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
 
   saveResults(result, userId, userName) {
     if (this.isSinglePlayer) {
+
       let quizId=this.quizId
       this.userService.setUserResults({result,quizId})
       this.takequizService.allResults$.next([{ ...result, userId, userName }])
+
       return;
     } else {
       this.takequizService.pushResults(result, userId, userName);
@@ -231,11 +231,13 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+
     this.takequizService.socket.emit("leave")
     this.takequizService.allResults$.next([])
     this.takequizService.players$.next([])
     this.allResultSubscription.unsubscribe()
     this.playersSubscription.unsubscribe()
+
     if (this.questionTimer !== undefined
       && this.currentProgress !== undefined
       && this.countdownTimer !== undefined) {
