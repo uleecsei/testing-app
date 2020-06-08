@@ -147,7 +147,7 @@ export class UserService {
 
   private setResultsHttp(test): Observable<any> {
     return this.http.post<any>(
-      `${this.url}/api/tests/results`, test, httpOptions);
+      `${this.url}/api/tests/results`, test);
   }
 
   public setUserResults(test) {

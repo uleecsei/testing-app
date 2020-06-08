@@ -22,7 +22,6 @@ export class MyResultsComponent implements OnInit {
   ngOnInit(): void {
     // this.resultsList = this.resultService.countPercentage(this.resultService.getResults());
     this.user = this.userService.getUser();
-    console.log('USER', this.user);
     this.user.tests.forEach((test) => {
       if (test.result && (test.result.correct || test.result.incorrect)){
         this.resultsList.push(test.result);
