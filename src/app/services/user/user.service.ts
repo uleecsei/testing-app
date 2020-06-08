@@ -141,6 +141,10 @@ export class UserService {
     return this.user.value;
   }
 
+  public getUserWithUpdatedResults(){
+    return this.getUserHttp();
+  }
+
   public isAuthenticated(): boolean {
     return !!this.token.value;
   }

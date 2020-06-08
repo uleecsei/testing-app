@@ -7,7 +7,7 @@ import { User } from 'src/app/interfaces/user';
 @Component({
   selector: 'app-my-results',
   templateUrl: './my-results.component.html',
-  styleUrls: ['./my-results.component.scss']
+  styleUrls: ['./my-results.component.scss'],
 })
 export class MyResultsComponent implements OnInit {
   user: User;
@@ -15,19 +15,25 @@ export class MyResultsComponent implements OnInit {
 
   constructor(
     private resultService: ResultsService,
-    private userService: UserService,
-    ) {
-  }
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    // this.resultsList = this.resultService.countPercentage(this.resultService.getResults());
-    this.user = this.userService.getUser();
-    this.user.tests.forEach((test) => {
-      if (test.result && (test.result.correct || test.result.incorrect)){
-        this.resultsList.push(test.result);
-      }
-    });
-    console.log(this.resultsList);
+    this.getResults();
   }
-
+  getResults() {
+    this.userService.getUserWithUpdatedResults().subscribe(
+      (data) => {
+        this.user = data.user;
+        this.user.tests.forEach((test) => {
+          if (test.result && (test.result.correct || test.result.incorrect)) {
+            this.resultsList.push(test.result);
+          }
+        });
+      },
+      (error) => {
+        console.log(error.message ? error.message : error);
+      }
+    );
+  }
 }
