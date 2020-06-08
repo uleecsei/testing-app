@@ -23,7 +23,7 @@ export class MyResultsComponent implements OnInit {
     // this.resultsList = this.resultService.countPercentage(this.resultService.getResults());
     this.user = this.userService.getUser(); 
     this.user.tests.forEach((test) => {
-      if(test.result){
+      if(test.result.correct || test.result.incorrect){
         this.resultsList.push(test.result);
       }
     })
