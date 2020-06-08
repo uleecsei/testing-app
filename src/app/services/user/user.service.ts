@@ -145,8 +145,19 @@ export class UserService {
     return !!this.token.value;
   }
 
+  private setResultsHttp(test): Observable<any> {
+    return this.http.post<any>(
+      `${this.url}/api/tests/results`, test, httpOptions);
+  }
+
   public setUserResults(test) {
-    return this.http.put<any>(
-      `${this.url}/api/tests/results`, test);
+    this.setResultsHttp(test)
+      .subscribe(
+        data => {
+          console.log('Data', data);
+        },
+        error => {
+          console.log('Error', error);
+        });
   }
 }
