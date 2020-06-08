@@ -46,7 +46,7 @@ export class AnswersService {
     const { correct, incorrect } = this.getCorrectNumber(answers)
     const score = this.calculateScore(answers)
 
-    const percentage = Math.round(score / maxScore);
+    const percentage = Math.round(score / maxScore * 100);
     return {
       quizTitle,
       score,
