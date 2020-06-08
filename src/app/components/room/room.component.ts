@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
 import { TakeQuizService } from 'src/app/services/take-quiz/take-quiz.service';
 import { UserService } from '../../services/user/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { logger } from "codelyzer/util/logger";
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.scss']
 })
-export class RoomComponent implements OnInit, AfterViewInit {
+export class RoomComponent implements OnInit, OnDestroy {
   quiz;
   isCreator;
   quizId;
@@ -33,9 +33,7 @@ export class RoomComponent implements OnInit, AfterViewInit {
     this.quizId = (this.quiz) ? this.quiz._id : null;
     this.socket = this.takequizService.socket;
     this.user = this.userService.getUser();
-  }
 
-  public ngAfterViewInit() {
     this.socket.on('roomId', roomId =>
       this.room = roomId);
 
@@ -44,9 +42,10 @@ export class RoomComponent implements OnInit, AfterViewInit {
 
     });
 
-    this.socket.on('joinedRoom', (message, userName, allUsers) => {
+    this.socket.on('joinedRoom', (message, userName, allUsers, room) => {
       console.log(message);
-      console.log(allUsers)
+      console.log(allUsers);
+      console.log('ROOM', room);
       this.takequizService.addPlayer(allUsers)
     });
     this.socket.on('quiz created', quiz => console.log('QUIZ from server', quiz));
@@ -58,6 +57,10 @@ export class RoomComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // public ngAfterViewInit() {
+  //
+  // }
+
   createGame() {
     return this.takequizService.createGame(this.quiz, this.user.userId);
   }
@@ -67,6 +70,15 @@ export class RoomComponent implements OnInit, AfterViewInit {
     this.takequizService.joinRoom(this.room, this.user.userId, this.user.firstName);
   }
 
+  ngOnDestroy(): void {
+    this.socket.off('roomId');
+    this.socket.off('Join the game');
+    this.socket.off('quiz created');
+    this.socket.off('quiz');
+    this.socket.off('joinedRoom');
+    this.socket.off('startGame');
+    // this.socket.off('showResults');
+  }
 
 
 }

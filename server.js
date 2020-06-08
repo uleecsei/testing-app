@@ -70,7 +70,7 @@ Socketio.of("/game").on("connection", (socket) => {
         Socketio.of("/game").in(room).emit("startGame");
       });
       let allUsers= await getGameUsers(room);
-      Socketio.of("/game").in(room).emit("joinedRoom", `${firstName} joined the room`,firstName,allUsers);
+      Socketio.of("/game").in(room).emit("joinedRoom", `${firstName} joined the room`,firstName,allUsers, room);
 
       socket.on("pushResults",async (result,userId,userName)=>{
         const game= await saveUserResults(room, userId, result);
@@ -79,7 +79,7 @@ Socketio.of("/game").on("connection", (socket) => {
       })
 
       socket.on("leave",()=>{
-       
+
         Socketio.of("/game").in(room).emit("left","Left game");
         socket.leave(room)
       })
@@ -144,6 +144,8 @@ async function saveUserResults(room, userId, result) {
     testId: gameRoom.testId,
     result: result,
   });
+
+  console.log(userFromUsers);
 
   user.result = result;
   await userFromUsers.save();

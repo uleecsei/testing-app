@@ -118,7 +118,6 @@ module.exports.setResults = async (req, res) => {
 
     const test = req.body;
 
-    console.log('TEST', test);
 
     User.findByIdAndUpdate(userId,
       { "$push": { "tests": test } },
@@ -127,10 +126,12 @@ module.exports.setResults = async (req, res) => {
         if (err) {
           console.log(err);
         } else {
-          console.log('NOT FROM SOCKET', result);
+          console.log(result);
         }
       });
   } catch (e) {
     errorHandler(res, 500, e);
   }
+
+
 };
