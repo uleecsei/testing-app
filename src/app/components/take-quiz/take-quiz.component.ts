@@ -33,11 +33,11 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   PROGRESS_BAR_SPEED = 100; // less = faster
   currentProgress: Subscription;
 
-  //new
-  user
+  // new
+  user;
   displayedColumns: string[] = ['position', 'name', 'Total score', 'Correct answers', 'Wrong answers'];
-  players = []
-  allResults = []
+  players = [];
+  allResults = [];
   questionsNumber: number;
   maxScore: number;
   quizTitle: string;
@@ -55,44 +55,43 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     private userService: UserService
   ) {
     this.quiz = window.history.state.quiz;
-    this.questionsNumber = this.quiz.questions.length
-    this.quizTitle = this.quiz.title
+    this.questionsNumber = this.quiz.questions.length;
+    this.quizTitle = this.quiz.title;
 
-    this.maxScore = getMaxScore(this.quiz)
-    this.answerService.currentQuestion$.next(this.currentQuestion)
+    this.maxScore = getMaxScore(this.quiz);
+    this.answerService.currentQuestion$.next(this.currentQuestion);
     console.log(this.quiz);
-    this.user = this.userService.getUser()
-    console.log(this.user)
-    this.takequizService.socket.on("startGame", () => {
-      this.startGame()
-    })
+    this.user = this.userService.getUser();
+    console.log(this.user);
+    this.takequizService.socket.on('startGame', () => {
+      this.startGame();
+    });
     this.takequizService.players$.subscribe(players => {
-      this.players = players
-    })
+      this.players = players;
+    });
 
 
   }
 
 
   ngOnInit(): void {
-    // Лена, это обьект теста переданный при переходе, по идее теперь не надо искать его по айди
 
-    this.isSinglePlayer = window.history.state.isSinglePlayer || null
-    this.isCreator = window.history.state.isCreator || null
-    this.questionIndex = 0
-    this.currentQuestion = (this.quiz) ? this.quiz.questions[this.questionIndex] : null
+    this.isSinglePlayer = window.history.state.isSinglePlayer || null;
+    this.isCreator = window.history.state.isCreator || null;
+    this.questionIndex = 0;
+    this.currentQuestion = (this.quiz) ? this.quiz.questions[this.questionIndex] : null;
     this.takequizService.allResults$.subscribe(res => {
       this.allResults = res;
-      console.log(this.allResults)
-    })
+      console.log(this.allResults);
+    });
 
 
   }
 
 
   nextQuestion() {
-    this.updateTimer()
-    this.disableBtn()
+    this.updateTimer();
+    this.disableBtn();
     setTimeout(() => {
       this.saveUserAnswer();
       this.enableBtn();
@@ -102,30 +101,30 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   saveUserAnswer() {
-    return this.answerService.saveAnswer()
+    return this.answerService.saveAnswer();
   }
 
   disableBtn() {
-    this.setIsAnswered()
-    this.answerService.isAnswered$.next(this.isAnswered)
+    this.setIsAnswered();
+    this.answerService.isAnswered$.next(this.isAnswered);
   }
-  enableBtn = () => this.setIsAnswered()
-  setIsAnswered = () => this.isAnswered = !this.isAnswered
+  enableBtn = () => this.setIsAnswered();
+  setIsAnswered = () => this.isAnswered = !this.isAnswered;
 
   updateTimer() {
-    return (this.timeOut) ? true : this.unsubscribeTimer()
+    return (this.timeOut) ? true : this.unsubscribeTimer();
   }
   unsubscribeTimer() {
-    this.questionTimer.unsubscribe()
-    this.countdownTimer.unsubscribe()
+    this.questionTimer.unsubscribe();
+    this.countdownTimer.unsubscribe();
   }
   goToNextQuestion() {
-    return (this.isLastQuestion()) ? this.finishGame() : this.getNewQuestion()
+    return (this.isLastQuestion()) ? this.finishGame() : this.getNewQuestion();
   }
 
   getNewQuestion() {
-    this.changeQuestion()
-    this.startTimer()
+    this.changeQuestion();
+    this.startTimer();
   }
 
   changeQuestion() {
@@ -134,8 +133,8 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   isLastQuestion() {
-    console.log(this.questionsNumber)
-    return this.questionIndex == this.questionsNumber - 1
+    console.log(this.questionsNumber);
+    return this.questionIndex == this.questionsNumber - 1;
   }
 
   updateUserAnswer() {
@@ -149,29 +148,30 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
   }
 
   startByCreator() {
-    this.takequizService.startGame()
+    this.takequizService.startGame();
   }
 
 
   finishGame() {
     this.gameStarted = false;
     this.gameFinished = true;
-    console.log("MAX SCORE", this.maxScore)
-    let result = this.answerService.getResult(this.maxScore, this.quizTitle)
-    let userId = this.user.userId;
-    let userName = `${this.user.firstName} ${this.user.lastName}`
-    this.saveRusults(result, userId, userName);
-    this.updateUserAnswer()
-    this.unsubscribeTimer()
+    console.log('MAX SCORE', this.maxScore);
+    const result = this.answerService.getResult(this.maxScore, this.quizTitle);
+    const userId = this.user.userId;
+    const userName = `${this.user.firstName} ${this.user.lastName}`;
+    this.saveResults(result, userId, userName);
+    this.userService.getUser();
+    this.updateUserAnswer();
+    this.unsubscribeTimer();
   }
 
-  saveRusults(result, userId, userName) {
+  saveResults(result, userId, userName) {
     if (this.isSinglePlayer) {
-      this.userService.setUserResults(result)
-      this.takequizService.allResults$.next([{ ...result, userId, userName }])
+      this.userService.setUserResults(result);
+      this.takequizService.allResults$.next([{ ...result, userId, userName }]);
       return;
     } else {
-      this.takequizService.pushResults(result, userId, userName)
+      this.takequizService.pushResults(result, userId, userName);
     }
   }
 
@@ -200,12 +200,12 @@ export class TakeQuizComponent implements OnInit, OnDestroy {
     });
   }
   shouldUpdateProgressBar(condition) {
-    return (condition) ? true : this.updateProgressBar()
+    return (condition) ? true : this.updateProgressBar();
   }
 
   updateProgressBar() {
     this.currentProgress.unsubscribe();
-    //this.currentProgress = this.reloadProgressBar();
+    // this.currentProgress = this.reloadProgressBar();
   }
 
   reloadProgressBar() {
@@ -243,14 +243,14 @@ function getMaxScore(quiz) {
   quiz.questions.forEach(question => {
     question.answers.forEach(answer => {
       if (answer.isTrue) {
-        if (question.type == "radio") {
-          maxScore += 100
+        if (question.type == 'radio') {
+          maxScore += 100;
         } else {
-          maxScore += 50
+          maxScore += 50;
         }
       }
-    })
-  })
+    });
+  });
 
   return maxScore;
 }
