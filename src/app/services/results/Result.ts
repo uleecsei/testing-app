@@ -5,4 +5,5 @@ export default interface Result {
   incorrect:number;
   correct:number;
   quizTitle:string;
+  quizId:string;
 }

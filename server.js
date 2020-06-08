@@ -81,6 +81,12 @@ Socketio.of("/game").on("connection", (socket) => {
         
       })
 
+      socket.on("leave",()=>{
+       
+        Socketio.of("/game").in(room).emit("left","Left game");
+        socket.leave(room)
+      })
+
     } else {
       return socket.emit("error","Not joined to the room")
     }

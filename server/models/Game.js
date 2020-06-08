@@ -2,7 +2,7 @@ const {Schema, model, Types} = require('mongoose');
 
 
 const GameSchema = new Schema({
-  created_by: {type: Types.ObjectId, ref: 'User', required: true},
+  created_by: {type: Types.ObjectId, ref: 'User'},
   testId: {type: Types.ObjectId, ref: 'Test', required: true},
   roomId: {type: String, required: true},
   status: {type: String, required: true},
